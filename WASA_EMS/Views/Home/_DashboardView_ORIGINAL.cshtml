@@ -1,0 +1,306 @@
+﻿@model System.Data.DataTable
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tubeWellTable').DataTable({
+            "scrollX": true,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "columnDefs": [
+                { "className": "dt-center", "targets": "_all" }
+            ]
+        });
+    });
+</script>
+<div class="main" style="min-height:460px">
+
+    <div class="container my-container"  style="text-align:center; background-color: white; overflow: hidden; position: relative;">
+
+        <div class="parent">
+
+            <img class="scadaBg" src="~/Images/scadaimage-removebg-preview.png" />
+            @if (Convert.ToInt32(ViewBag.PumpStatus) == 1)
+            {
+                <img class="MotorOn" src="~/Images/green_light.png" />
+            }
+            else
+            {
+                <img class="MotorOn" src="~/Images/red_light.png" />
+            }
+            @*<div class="flow-meter-data">@(ViewBag.FlowData)</div>*@
+            @if (Convert.ToInt32(ViewBag.ChlorineLevel) > 0)
+            {
+                <img class="Tank_Low" src="~/Images/green_light.png" />
+            }
+            else
+            {
+                <div class="TankLow">Tank Level Low</div>
+                <img class="Tank_Low" src="~/Images/red_light.png" />
+            }
+            @*<div class="VoltageError">VoltageError</div>
+                @if (Convert.ToInt32(ViewBag.FlowData) % 2 == 0)
+                {
+                    <img class="Voltage_Error" src="~/Images/red_light.png" />
+                }
+                else
+                {
+                    <img class="Voltage_Error" src="~/Images/green_light.png" />
+                }
+                <div class="CurrentError">CurrentError</div>
+                @if (Convert.ToInt32(ViewBag.FlowData) % 2 == 0)
+                {
+                    <img class="Current_Error" src="~/Images/green_light.png" />
+                }
+                else
+                {
+                    <img class="Current_Error" src="~/Images/red_light.png" />
+                }
+                <div class="WapdaGenerator">WapdaGenerator</div>
+                @if (Convert.ToInt32(ViewBag.FlowData) % 2 == 0)
+                {
+                    <img class="Wapda_Generator" src="~/Images/red_light.png" />
+                }
+                else
+                {
+                    <img class="Wapda_Generator" src="~/Images/green_light.png" />
+                }
+                <div class="MotorStatus">MotorStatus</div>
+                @if (Convert.ToInt32(ViewBag.FlowData) % 2 == 0)
+                {
+                    <img class="Motor_Status" src="~/Images/green_light.png" />
+                }
+                else
+                {
+                    <img class="Motor_Status" src="~/Images/red_light.png" />
+                }*@
+            <div class="container vertical flat">
+                <div class="progress-bar">
+                    <div class="progress-track">
+                        @*<div class="progress-fill" style="height:@(Convert.ToInt32(ViewBag.FlowData)/2)px !important;">*@
+                        <div class="progress-fill" style="height:50px !important;">
+                            <span>@(ViewBag.FlowData)%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<img class="wasaLogo" src="~/Images/sticker34.png" />
+                <img class="ituLogo" src="~/Images/itu_logo.png" />*@
+            <div class="Label_Electric_Valve">Electric Valve</div>
+            <div class="Label_Primiping_Tank">Priming Tank</div>
+            <div class="Label_Chlorine_Tank">Chlorine Tank</div>
+            <div class="Label_Chlorinator">Chlorinator</div>
+            <div class="Label_NRV">NRV</div>
+            <div class="Label_ARV">ARV</div>
+            <div class="flow-meter-data">@(ViewBag.WaterExtracted)</div>
+            @if (Convert.ToInt32(ViewBag.PumpStatus) == 1)
+            {
+                <div class="progress-fill-pipeUp"></div>
+                <div class="pipe-bend-right flow-right"></div>
+                <div class="pipe-bend-down flow-right"></div>
+                <div class="pipe-forward-1 flow-right"></div>
+                <div class="pipe-forward-2 flow-right"></div>
+                <div class="pipe-forward-3 flow-right"></div>
+                <div class="pipe-forward-4 flow-right"></div>
+                <div class="pipe-forward-5 flow-right"></div>
+                <div class="pipe-down flow-down"></div>
+           }
+        </div>
+    </div> <!-- /container -->
+    <div id="example" style="background-color: white; margin-top:20px; padding: 10px 10px;">
+        @*<table style="color:black; font-size:10px; width:100%; text-align:center">
+                <thead>
+                    <tr>
+                        @foreach (System.Data.DataRow row in Model.Rows)
+                        {
+                            <th>
+                                @row.ItemArray[0]
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (System.Data.DataRow row in Model.Rows)
+                        {
+                            <td>
+                                @row.ItemArray[1]
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>*@
+        <table id="tubeWellTable" class="cell-border" style="width:100%; font-size:10px;">
+            <thead>
+                <tr>
+                    <th>
+                        Location
+                    </th>
+                    <th>
+                        Pump Status
+                    </th>
+                    @*<th>
+                            Total Working Hours
+                        </th>
+                        <th>
+                            Water Flow
+                        </th>*@
+                    <th>
+                        Water Discharge
+                    </th>
+                    <th>
+                        Chlorine Level
+                    </th>
+                    <th>
+                        Power Factor
+                    </th>
+                    <th>
+                        Average Voltage
+                    </th>
+                    <th>
+                        Voltage Trip
+                    </th>
+                    <th>
+                        Average Current
+                    </th>
+                    <th>
+                        Current Trip
+                    </th>
+                    <th>
+                        Frequency
+                    </th>
+                    <th>
+                        PKVA
+                    </th>
+                    <th>
+                        PKVAR
+                    </th>
+                    <th>
+                        PKW
+                    </th>
+                    <th>
+                        Auto Mode
+                    </th>
+                    <th>
+                        Remote Control
+                    </th>
+                    <th>
+                        Scheduling Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight:bolder">
+                        @ViewBag.Location
+                    </td>
+                    @if (Convert.ToInt32(ViewBag.PumpStatus) == 1)
+                    {
+                        <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    else
+                    {
+                        <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    @*<td>
+                            @ViewBag.TotalWorkingHour
+                        </td>
+                        <td>
+                            @ViewBag.WaterFlow
+                        </td>*@
+                    <td>
+                        @ViewBag.WaterExtracted
+                    </td>
+                    @if (Convert.ToInt32(ViewBag.ChlorineLevel) > 0)
+                    {
+                        <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    else
+                    {
+                        <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    <td>
+                        @ViewBag.PF
+                    </td>
+                    <td>
+                        @ViewBag.averageVoltage
+                    </td>
+                    @if (Convert.ToInt32(ViewBag.VoltageTrip) == 1)
+                    {
+                        <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    else
+                    {
+                        <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    <td>
+                        @ViewBag.averageCurrent
+                    </td>
+                    @if (Convert.ToInt32(ViewBag.CurrentTrip) == 1)
+                    {
+                        <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    else
+                    {
+                        <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    <td>
+                        @ViewBag.Frequency
+                    </td>
+                    <td>
+                        @ViewBag.PKVA
+                    </td>
+                    <td>
+                        @ViewBag.PKVAR
+                    </td>
+                    <td>
+                        @ViewBag.PKW
+                    </td>
+                    @if (Convert.ToInt32(ViewBag.AutoModeOn) == 1)
+                    {
+                        <td>AUTO</td>
+                    }
+                    else
+                    {
+                        <td>MANUAL</td>
+                    }
+                    @if (Convert.ToInt32(ViewBag.RemoteControl) == 1)
+                    {
+                        <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    else
+                    {
+                        <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    @if (Convert.ToInt32(ViewBag.Scheduling) == 1)
+                    {
+                        <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                    else
+                    {
+                        <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /main -->
+@*<script type="text/javascript">
+            $(document).ready(function () {
+            var table = $('#example').DataTable({
+                bPaginate: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+        $('.vertical .progress-fill span').each(function () {
+            var percent = $(this).html();
+            var pTop = 100 - (percent.slice(0, percent.length - 1)) + "%";
+            $(this).parent().css({
+                'height': percent,
+                'top': pTop
+            });
+        });
+    </script>*@
+

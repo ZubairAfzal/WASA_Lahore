@@ -1,0 +1,305 @@
+﻿@model ResourceSellector
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#SwitchIT').click(function (e) {
+            startPump();
+            document.getElementById("SwitchIT").style.backgroundImage = "url('../../Content/images/SwitchON.png')";
+            $.getJSON('/Tubewells/SwitchON', function (data) {
+            })
+        });
+    });
+    var start_flag = true;
+    document.getElementById("opacqueBackground").style.opacity = "1";
+    //document.getElementById("DashboardTable").style.minHeight = "660px";
+    document.getElementById("hor-menu").style.marginTop = "-4.5%";
+    var refreshId = setInterval(function () {
+        var pumpStatus = null;
+        var chlorineStatus = null;
+        var primingStatus = null;
+        var flowRate = null;
+        var pressureRate = null;
+        var v1n = null;
+        var v2n = null;
+        var v3n = null;
+        var delTime = null;
+        var url = "/Tubewells/getHMIStatus";
+        var properID = $.get(url, { resourceName: '@Model.resourceName' }, function (data) {
+            var obj = JSON.parse(data);
+            pumpStatus = obj.pumpStatus;
+            delTime = obj.delTime;
+            chlorineStatus = obj.chlorineStatus;
+            primingStatus = obj.primingStatus;
+            flowRate = obj.flowRate;
+            v1n = obj.v1n;
+            v2n = obj.v2n;
+            v3n = obj.v3n;
+            var video = '';
+            //alert(delTime);
+            pressureRate = obj.pressureRate;
+            if (pumpStatus == 1 && delTime < 20 ) {
+
+                if (start_flag == true) {
+                    console.log(delTime);    
+                    //startPump();
+                    video = $('#start-tubewell');
+                    video.get(0).currentTime = 0;
+                    video.addClass('show');
+                    video.get(0).play();
+
+                    $('.main-panel-lights .green').removeClass('off');
+                    $('.main-panel-lights .red').addClass('off');
+
+                    $('.small-panel-lights .green').removeClass('off');
+                    $('.small-panel-lights .red').addClass('off');
+
+                    $('.flow-meter').addClass('op-1');
+                    $('.pressure-transmitter').addClass('op-1');
+
+                    start_flag = false;
+                }
+                
+            }
+            else {
+                start_flag = true;
+                console.log(pumpStatus);
+                video = $('#start-tubewell');
+                video.get(0).currentTime = 0;
+                video.removeClass('show');
+
+                video = $('#tubewell-seamless');
+                video.get(0).currentTime = 0;
+                video.removeClass('show');
+
+                $('.main-panel-lights .green').addClass('off');
+                $('.main-panel-lights .red').removeClass('off');
+
+                $('.small-panel-lights .green').addClass('off');
+                $('.small-panel-lights .red').removeClass('off');
+
+                $('.flow-meter').removeClass('op-1');
+                $('.pressure-transmitter').removeClass('op-1');
+
+                video.get(0).pause();
+                
+            }
+            $('.flow-meter .flow-meter-inner .meter-nib')
+                .css('transform', 'rotate(' + ((flowRate*45)+45) + 'deg)');
+            $('.reading-flow-meter').text(flowRate);
+            $('.pressure-transmitter .reading').text(pressureRate);
+
+
+            $('.meter1').text(v1n);
+            $('.meter2').text(v2n);
+            $('.meter3').text(v3n);
+            $('.pressure-transmitter-inner-span').text(pressureRate);
+            $('.pressure-transmitter-reading').text(pressureRate);
+
+
+        });
+        var resN = '@Model.resourceName';
+        var resT = '@Model.resourceType';
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '_TableRecords',
+            cache: false,
+            data: { resourceName: resN, resourceType: resT },
+            success: function (result) {
+                $('#DashboardTable').html(result);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $('#DashboardTable').html("");
+            },
+            async: true
+        });
+        if (properID > 0) {
+            clearInterval(refreshId);
+        }
+    }, 10000);
+
+
+    function startSeamlessVideo() {
+        var video = $('#tubewell-seamless');
+        video.get(0).currentTime = 0;
+        video.addClass('show');
+        video.get(0).play();
+    }
+
+    /*
+    function getPumpStatus() {
+        return pumpStatus;
+    }
+    */
+
+    $('#start-tubewell').on(
+        'timeupdate',
+        function (event) {
+
+            if (this.currentTime > (this.duration - 1)) {
+                startSeamlessVideo();
+                console.log('come here');
+            }
+
+        }
+    );
+
+</script>
+
+<script>
+    $('input[name="empty_chlorine_tank"]').keyup(function () {
+        var is_filled = $(this).val();
+
+        if (parseInt(is_filled) === 0) {
+            $('.empty-chlorine-tank').addClass('show');
+        } else {
+            $('.empty-chlorine-tank').removeClass('show');
+        }
+
+    });
+
+    $('input[name="empty_priming_tank"]').keyup(function () {
+        var is_filled = $(this).val();
+
+        if (parseInt(is_filled) === 0) {
+            $('.empty-priming-tank').addClass('show');
+        } else {
+            $('.empty-priming-tank').removeClass('show');
+        }
+
+    });
+
+    $('input[name="room_exaust"]').keyup(function () {
+        var is_running = $(this).val();
+
+        if (parseInt(is_running) === 0) {
+            $('.room-exaust').addClass('show');
+        } else {
+            $('.room-exaust').removeClass('show');
+        }
+
+    });
+
+    $('input[name="no_water_supply"]').keyup(function () {
+        var is_running = $(this).val();
+
+        if (parseInt(is_running) === 0) {
+            $('.no-water-supply').addClass('show');
+        } else {
+            $('.no-water-supply').removeClass('show');
+        }
+
+    });
+</script>
+<script src="~/Scripts/animationTubeWell.js"></script>
+
+<div class="main" style="min-height:460px">
+
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="outer-container">
+                    <div class="assets-container">
+                        <div class="main-panel-lights">
+                            <span class="green off"></span>
+                            <span class="red"></span>
+                        </div>
+                        <div class="small-panel-lights">
+                            <span class="green off"></span>
+                            <span class="red"></span>
+                        </div>
+                        <div class="meters">
+                            <span class="meter1"></span>
+                            <span class="meter2"></span>
+                            <span class="meter3"></span>
+                        </div>
+                        <div class="flow-meter">
+                            <span class="reading"></span>
+                            <div class="flow-meter-inner">
+                                <hr class="meter-nib">
+                            </div>
+                        </div>
+                        <div class="pressure-transmitter">
+                            <span class="reading"></span>
+                            <div class="pressure-transmitter-inner">
+                                <span class="pressure-transmitter-inner-span"></span>
+                            </div>
+                        </div>
+
+                        <img src="~/Content/images/lights-off.jpg" alt="Initial state" class="img-responsive embed-responsive-16by9 initial-state">
+                        <video preload muted id="start-tubewell" class="custom-responsive embed-responsive-16by9">
+                            <source src="~/Content/videos/tubvel-animation.mp4" type="video/mp4">
+                        </video>
+                        <video preload muted loop id="tubewell-seamless" class="custom-responsive embed-responsive-16by9">
+                            <source src="~/Content/videos/seamless-loop.mp4" type="video/mp4">
+                        </video>
+                        <img src="~/Content/images/empty-chlorine-tank.png" alt="Empty chlorine tank" class="img-responsive embed-responsive-16by9 empty-chlorine-tank">
+                        <img src="~/Content/images/empty-priming-tank.png" alt="Empty priming tank" class="img-responsive embed-responsive-16by9 empty-priming-tank">
+                        <img src="~/Content/images/off-room-exaust.png" alt="Room exaust" class="img-responsive embed-responsive-16by9 room-exaust">
+                        <img src="~/Content/images/no-water-supply-with-motor-on.png" alt="No Water supply" class="img-responsive embed-responsive-16by9 no-water-supply">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @*<div class="col-md-12">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>
+                SCADA TUBEWELL : 01
+            </h3>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>
+                <b>@Model.resourceName</b>
+            </h3>
+        </div>
+    </div>*@
+    @*<div style="position:absolute; height:30px; width:30%; left:60%; top:250px;">
+        
+    </div>
+    <div style="position:absolute; height:30px; width:30%; left:20%; top:250px;">
+        
+    </div>*@
+    @*<div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Start/stop motor</label>
+                    <input type="text" class="form-control" name="start_tubwell" value="0">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Empty/fill chlorine tank</label>
+                    <input type="text" class="form-control" name="empty_chlorine_tank" value="1">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Empty/fill priming tank</label>
+                    <input type="text" class="form-control" name="empty_priming_tank" value="1">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Start/Stop exaust fan</label>
+                    <input type="text" class="form-control" name="room_exaust" value="1">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>No water supply</label>
+                    <input type="text" class="form-control" name="no_water_supply" value="1">
+                </div>
+            </div>
+        </div>
+    </div>*@
+    <div id="DashboardTable" style="background-color: white; margin-top:20px; padding: 10px 10px; min-height:100px !important">
+
+    </div>
+</div> <!-- /main -->
+
+
+

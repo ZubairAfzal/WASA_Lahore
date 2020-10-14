@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c3161d80b2544f02bc0694ff7752853f" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblCompany" Width="1.5" PointX="0.75" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblParameter" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblResource" Width="1.5" PointX="5.25" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblResourceType" Width="1.5" PointX="3" PointY="14.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblResourceTypeParameter" Width="1.5" PointX="5.25" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblSheet" Width="1.5" PointX="5.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblSubResource" Width="1.5" PointX="7.5" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ttlogixc_rmsWasa01Model.tblUser" Width="1.5" PointX="3" PointY="18.125" IsExpanded="true" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblParameter_CompanyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResource_companyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResourceType_CompanyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResourceTypeParameter_CompanyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblSheet_companyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblSubResource_companyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblUser_CompanyID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResourceTypeParameter_Parameter" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblSheet_Parameter" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResource_tblResourceType" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResource_UserID" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblSheet_Resource" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblSubResource_tblResource" ManuallyRouted="false" />
+        <AssociationConnector Association="ttlogixc_rmsWasa01Model.FK_tblResourceTypeParameter_resourceType" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,59 @@
+﻿@model WASA_EMS.Models.tblParameter
+
+@*@if (string.IsNullOrEmpty(Session["CompanyID"].ToString() as string))
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@
+@*@{ string c_ID = Session["CompanyID"].ToString();}
+
+    @if (c_ID == null)
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@
+@using (Html.BeginForm())
+{
+    @*@Html.AntiForgeryToken()*@
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.ParameterID)
+
+
+    <div class="form-group">
+        <div style="float:left; margin-right:10px">
+            @Html.LabelFor(model => model.ParameterName, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ParameterName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ParameterName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+        <br />
+
+        <div class="form-group">
+            <div style="float:left; margin-right:10px">
+                @Html.LabelFor(model => model.ParameterOrder, htmlAttributes: new { @class = "control-label col-md-2" })
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ParameterOrder, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ParameterOrder, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <div style="float:left; margin-right:10px">
+                @Html.LabelFor(model => model.Mainformula, htmlAttributes: new { @class = "control-label col-md-2" })
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Mainformula, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Mainformula, "", new { @class = "text-danger" })
+            </div>
+        </div>
+}
+
+
+
+

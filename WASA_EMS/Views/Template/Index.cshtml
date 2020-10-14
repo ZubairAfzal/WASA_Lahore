@@ -1,0 +1,158 @@
+﻿@model IEnumerable<WASA_EMS.Models.tblTemplate>
+
+    @{
+        ViewBag.Title = "Index";
+    }
+@*@if (string.IsNullOrEmpty(Session["CompanyID"].ToString() as string))
+{
+    Response.Redirect("~/Account/LogOn");
+}*@
+@*@{ string c_ID = Session["CompanyID"].ToString();}
+
+    @if (c_ID == null)
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@
+    <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="@Url.Content("~/Scripts/Highcharts-2.2.1/js/highcharts.src.js")" type="text/javascript"></script>
+    <script src="~/Scripts/js/date-picker/date.js"></script>
+
+    <div class="main">
+
+        <div class="container"  style="background-color:white; padding:20px 40px; opacity:0.9">
+            <div class="row">
+
+                <div class="span12">
+
+                    <div class="widget stacked">
+
+                        <div class="widget-header">
+                            <h3>Index-Templates</h3>
+                        </div> <!-- /widget-header -->
+
+                        <div class="widget-content">
+                            <p>
+                                @*@{ Response.Redirect("~/Template.aspx");}*@
+                                @*@Html.ActionLink("Create New Template"*@
+                                <a href='~/Template.aspx' title="Create New Template">Create New Template</a>
+                                @*<a href='~/Template.aspx' title="Create New Template"></a>*@
+                            </p>
+
+                            @*<table class="table table-bordered table-highlight ">
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.UserName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.UserPassword)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserPassword)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.UserID }) |
+                                                @Html.ActionLink("Details", "Details", new { id = item.UserID }) |
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.UserID })
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>*@
+
+                            <table class="table">
+                                <tr>
+                                    <th></th>
+
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TemplateName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ParameterCount)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Separator)
+                                    </th>
+                                </tr>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.TemplateID })
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TemplateName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ParameterCount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Separator)
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<style type='text/css'>
+            /*設定 數字靠右*/
+            td:nth-child(1){text-align: right;}
+            td:nth-child(3){text-align: right;}
+        </style>
+        <h2>Index</h2>
+        <h4></h4>
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TemplateName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ParameterCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Separator)
+                </th>
+            </tr>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.TemplateID })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TemplateName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParameterCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Separator)
+                </td>
+
+            </tr>
+        }
+
+        </table>*@

@@ -1,0 +1,1158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WASA_EMS_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CompanyDescription" Type="varchar" MaxLength="2000" />
+        </EntityType>
+        <EntityType Name="Energy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InsertionDateTime" Type="datetime" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="ParameterID" Type="int" Nullable="false" />
+          <Property Name="ParameterValue" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="fmsFile">
+          <Key>
+            <PropertyRef Name="FileID" />
+          </Key>
+          <Property Name="FileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileType" Type="int" Nullable="false" />
+          <Property Name="FileNumber" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FileVolumnNumber" Type="int" Nullable="false" />
+          <Property Name="FileRemarks" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="FileInitiatedBy" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MessageIn">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sender" Type="varchar" MaxLength="30" />
+          <Property Name="msg" Type="nvarchar" MaxLength="4000" />
+          <Property Name="senttime" Type="datetime" />
+          <Property Name="receivedtime" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Parameter">
+          <Key>
+            <PropertyRef Name="ParameterID" />
+          </Key>
+          <Property Name="ParameterID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParameterName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParameterUnit" Type="varchar" MaxLength="50" />
+          <Property Name="ParameterOrder" Type="int" Nullable="false" />
+          <Property Name="AggFunc" Type="varchar" MaxLength="50" />
+          <Property Name="ParameterScale" Type="float" />
+        </EntityType>
+        <EntityType Name="Resource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MobileNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResourceName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ResourceCategoryID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResourceCategory">
+          <Key>
+            <PropertyRef Name="ResourceCatagoryID" />
+          </Key>
+          <Property Name="ResourceCatagoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CatagoryName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="ResourceParameter">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="ParameterID" Type="int" />
+          <Property Name="ParameterOrder" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tblEnergy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InsertionDateTime" Type="datetime" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="ParameterID" Type="int" Nullable="false" />
+          <Property Name="ParameterValue" Type="float" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+        </EntityType>
+        <EntityType Name="tblNotifications">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateID" Type="int" />
+          <Property Name="ResourceID" Type="int" />
+          <Property Name="ParameterID" Type="int" />
+          <Property Name="ParameterValue" Type="float" />
+          <Property Name="Comment" Type="varchar" MaxLength="100" />
+          <Property Name="forUser" Type="int" />
+          <Property Name="fromUser" Type="int" />
+          <Property Name="notificationTime" Type="datetime" />
+          <Property Name="markRead" Type="int" />
+          <Property Name="readTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblParameter">
+          <Key>
+            <PropertyRef Name="ParameterID" />
+          </Key>
+          <Property Name="ParameterID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParameterName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParameterOrder" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+          <Property Name="Mainformula" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="tblParamForm">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="ParameterID" Type="int" Nullable="false" />
+          <Property Name="Formala" Type="nvarchar" MaxLength="100" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPowerStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResourceNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="ResourceID" Type="int" />
+          <Property Name="LastUpdatedStatus" Type="bit" />
+          <Property Name="LastStatusUpdateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblRemoteSensor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResourceID" Type="int" />
+          <Property Name="ModeManualAuto" Type="bit" />
+          <Property Name="PreviousMotorOnOffStatus" Type="bit" />
+          <Property Name="CurrentMotorOnOffStatus" Type="bit" />
+        </EntityType>
+        <EntityType Name="tblResource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MobileNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResourceLocation" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TemplateID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+          <Property Name="CooridatesGoogle" Type="nvarchar(max)" />
+          <Property Name="resourceName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="tblResourceScheduler">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+          </Key>
+          <Property Name="ScheduleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="ScheduleTimeFrom" Type="datetime" />
+          <Property Name="ScheduleTimeTo" Type="datetime" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblTemplate">
+          <Key>
+            <PropertyRef Name="TemplateID" />
+          </Key>
+          <Property Name="TemplateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ParameterCount" Type="int" Nullable="false" />
+          <Property Name="Separator" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+        </EntityType>
+        <EntityType Name="tblTemplateParameter">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateID" Type="int" Nullable="false" />
+          <Property Name="ParameterID" Type="int" />
+          <Property Name="ParameterOrder" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ttlogixc_NUST-EMS.dbo.ValueParameter' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ValueParameter">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="time" Type="datetime" />
+          <Property Name="name" Type="varchar" MaxLength="30" />
+          <Property Name="mobileNumber" Type="nvarchar" MaxLength="160" />
+          <Property Name="VP1" Type="varchar" MaxLength="30" />
+          <Property Name="VP2" Type="varchar" MaxLength="30" />
+          <Property Name="VP3" Type="varchar" MaxLength="30" />
+          <Property Name="VP4" Type="varchar" MaxLength="30" />
+          <Property Name="VP5" Type="varchar" MaxLength="30" />
+          <Property Name="VP6" Type="varchar" MaxLength="30" />
+          <Property Name="VP7" Type="varchar" MaxLength="30" />
+          <Property Name="VP8" Type="varchar" MaxLength="30" />
+          <Property Name="VP9" Type="varchar" MaxLength="30" />
+          <Property Name="VP10" Type="varchar" MaxLength="30" />
+          <Property Name="VP11" Type="varchar" MaxLength="30" />
+          <Property Name="VP12" Type="varchar" MaxLength="30" />
+          <Property Name="VP13" Type="varchar" MaxLength="30" />
+          <Property Name="VP14" Type="varchar" MaxLength="30" />
+          <Property Name="VP15" Type="varchar" MaxLength="30" />
+          <Property Name="VP16" Type="varchar" MaxLength="30" />
+          <Property Name="VP17" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <Association Name="FK_tblEnergy_Parameter">
+          <End Role="tblParameter" Type="Self.tblParameter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblEnergy" Type="Self.tblEnergy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblParameter">
+              <PropertyRef Name="ParameterID" />
+            </Principal>
+            <Dependent Role="tblEnergy">
+              <PropertyRef Name="ParameterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEnergy_Resource">
+          <End Role="tblResource" Type="Self.tblResource" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblEnergy" Type="Self.tblEnergy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblResource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="tblEnergy">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblParamForm_Parameter">
+          <End Role="tblParameter" Type="Self.tblParameter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblParamForm" Type="Self.tblParamForm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblParameter">
+              <PropertyRef Name="ParameterID" />
+            </Principal>
+            <Dependent Role="tblParamForm">
+              <PropertyRef Name="ParameterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblParamForm_Resource">
+          <End Role="tblResource" Type="Self.tblResource" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblParamForm" Type="Self.tblParamForm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblResource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="tblParamForm">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblResource_Template">
+          <End Role="tblTemplate" Type="Self.tblTemplate" Multiplicity="1" />
+          <End Role="tblResource" Type="Self.tblResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTemplate">
+              <PropertyRef Name="TemplateID" />
+            </Principal>
+            <Dependent Role="tblResource">
+              <PropertyRef Name="TemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblResourceScheduler_Resource">
+          <End Role="tblResource" Type="Self.tblResource" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblResourceScheduler" Type="Self.tblResourceScheduler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblResource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="tblResourceScheduler">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTemplateParameter_Parameter">
+          <End Role="tblParameter" Type="Self.tblParameter" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblTemplateParameter" Type="Self.tblTemplateParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblParameter">
+              <PropertyRef Name="ParameterID" />
+            </Principal>
+            <Dependent Role="tblTemplateParameter">
+              <PropertyRef Name="ParameterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTemplateParameter_Template">
+          <End Role="tblTemplate" Type="Self.tblTemplate" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblTemplateParameter" Type="Self.tblTemplateParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTemplate">
+              <PropertyRef Name="TemplateID" />
+            </Principal>
+            <Dependent Role="tblTemplateParameter">
+              <PropertyRef Name="TemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_CompanyID">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WASA_EMS_ModelStoreContainer">
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Energy" EntityType="Self.Energy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fmsFile" EntityType="Self.fmsFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MessageIn" EntityType="Self.MessageIn" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Parameter" EntityType="Self.Parameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Resource" EntityType="Self.Resource" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceCategory" EntityType="Self.ResourceCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceParameter" EntityType="Self.ResourceParameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblEnergy" EntityType="Self.tblEnergy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblNotifications" EntityType="Self.tblNotifications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblParameter" EntityType="Self.tblParameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblParamForm" EntityType="Self.tblParamForm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPowerStatus" EntityType="Self.tblPowerStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblRemoteSensor" EntityType="Self.tblRemoteSensor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblResource" EntityType="Self.tblResource" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblResourceScheduler" EntityType="Self.tblResourceScheduler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTemplate" EntityType="Self.tblTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTemplateParameter" EntityType="Self.tblTemplateParameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ValueParameter" EntityType="Self.ValueParameter" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[ValueParameter].[id] AS [id], 
+[ValueParameter].[time] AS [time], 
+[ValueParameter].[name] AS [name], 
+[ValueParameter].[mobileNumber] AS [mobileNumber], 
+[ValueParameter].[VP1] AS [VP1], 
+[ValueParameter].[VP2] AS [VP2], 
+[ValueParameter].[VP3] AS [VP3], 
+[ValueParameter].[VP4] AS [VP4], 
+[ValueParameter].[VP5] AS [VP5], 
+[ValueParameter].[VP6] AS [VP6], 
+[ValueParameter].[VP7] AS [VP7], 
+[ValueParameter].[VP8] AS [VP8], 
+[ValueParameter].[VP9] AS [VP9], 
+[ValueParameter].[VP10] AS [VP10], 
+[ValueParameter].[VP11] AS [VP11], 
+[ValueParameter].[VP12] AS [VP12], 
+[ValueParameter].[VP13] AS [VP13], 
+[ValueParameter].[VP14] AS [VP14], 
+[ValueParameter].[VP15] AS [VP15], 
+[ValueParameter].[VP16] AS [VP16], 
+[ValueParameter].[VP17] AS [VP17]
+FROM [dbo].[ValueParameter] AS [ValueParameter]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_tblEnergy_Parameter" Association="Self.FK_tblEnergy_Parameter">
+            <End Role="tblParameter" EntitySet="tblParameter" />
+            <End Role="tblEnergy" EntitySet="tblEnergy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEnergy_Resource" Association="Self.FK_tblEnergy_Resource">
+            <End Role="tblResource" EntitySet="tblResource" />
+            <End Role="tblEnergy" EntitySet="tblEnergy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblParamForm_Parameter" Association="Self.FK_tblParamForm_Parameter">
+            <End Role="tblParameter" EntitySet="tblParameter" />
+            <End Role="tblParamForm" EntitySet="tblParamForm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblParamForm_Resource" Association="Self.FK_tblParamForm_Resource">
+            <End Role="tblResource" EntitySet="tblResource" />
+            <End Role="tblParamForm" EntitySet="tblParamForm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblResource_Template" Association="Self.FK_tblResource_Template">
+            <End Role="tblTemplate" EntitySet="tblTemplate" />
+            <End Role="tblResource" EntitySet="tblResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblResourceScheduler_Resource" Association="Self.FK_tblResourceScheduler_Resource">
+            <End Role="tblResource" EntitySet="tblResource" />
+            <End Role="tblResourceScheduler" EntitySet="tblResourceScheduler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTemplateParameter_Parameter" Association="Self.FK_tblTemplateParameter_Parameter">
+            <End Role="tblParameter" EntitySet="tblParameter" />
+            <End Role="tblTemplateParameter" EntitySet="tblTemplateParameter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTemplateParameter_Template" Association="Self.FK_tblTemplateParameter_Template">
+            <End Role="tblTemplate" EntitySet="tblTemplate" />
+            <End Role="tblTemplateParameter" EntitySet="tblTemplateParameter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_CompanyID" Association="Self.FK_User_CompanyID">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WASA_EMS_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MessageIn">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sender" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="msg" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="senttime" Type="DateTime" Precision="3" />
+          <Property Name="receivedtime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tblEnergy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InsertionDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterValue" Type="Double" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <NavigationProperty Name="tblParameter" Relationship="Self.FK_tblEnergy_Parameter" FromRole="tblEnergy" ToRole="tblParameter" />
+          <NavigationProperty Name="tblResource" Relationship="Self.FK_tblEnergy_Resource" FromRole="tblEnergy" ToRole="tblResource" />
+        </EntityType>
+        <EntityType Name="tblParameter">
+          <Key>
+            <PropertyRef Name="ParameterID" />
+          </Key>
+          <Property Name="ParameterID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParameterName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ParameterOrder" Type="Int32" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <Property Name="Mainformula" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblEnergies" Relationship="Self.FK_tblEnergy_Parameter" FromRole="tblParameter" ToRole="tblEnergy" />
+          <NavigationProperty Name="tblTemplateParameters" Relationship="Self.FK_tblTemplateParameter_Parameter" FromRole="tblParameter" ToRole="tblTemplateParameter" />
+          <NavigationProperty Name="tblParamForms1" Relationship="WASA_EMS_Model.FK_tblParamForm_Parameter1" FromRole="tblParameter" ToRole="tblParamForm1" />
+        </EntityType>
+        <EntityType Name="tblPowerStatu">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceID" Type="Int32" />
+          <Property Name="LastUpdatedStatus" Type="Boolean" />
+          <Property Name="LastStatusUpdateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tblRemoteSensor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceID" Type="Int32" />
+          <Property Name="ModeManualAuto" Type="Boolean" />
+          <Property Name="PreviousMotorOnOffStatus" Type="Boolean" />
+          <Property Name="CurrentMotorOnOffStatus" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="tblResource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ResourceLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TemplateID" Type="Int32" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <Property Name="CooridatesGoogle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblEnergies" Relationship="Self.FK_tblEnergy_Resource" FromRole="tblResource" ToRole="tblEnergy" />
+          <NavigationProperty Name="tblTemplate" Relationship="Self.FK_tblResource_Template" FromRole="tblResource" ToRole="tblTemplate" />
+          <Property Name="resourceName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblParamForms1" Relationship="WASA_EMS_Model.FK_tblParamForm_Resource1" FromRole="tblResource" ToRole="tblParamForm1" />
+          <NavigationProperty Name="tblResourceSchedulers1" Relationship="WASA_EMS_Model.FK_tblResourceScheduler_Resource1" FromRole="tblResource" ToRole="tblResourceScheduler1" />
+        </EntityType>
+        <EntityType Name="tblTemplate">
+          <Key>
+            <PropertyRef Name="TemplateID" />
+          </Key>
+          <Property Name="TemplateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ParameterCount" Type="Int32" Nullable="false" />
+          <Property Name="Separator" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <NavigationProperty Name="tblResources" Relationship="Self.FK_tblResource_Template" FromRole="tblTemplate" ToRole="tblResource" />
+          <NavigationProperty Name="tblTemplateParameters" Relationship="Self.FK_tblTemplateParameter_Template" FromRole="tblTemplate" ToRole="tblTemplateParameter" />
+        </EntityType>
+        <EntityType Name="tblTemplateParameter">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterID" Type="Int32" />
+          <Property Name="ParameterOrder" Type="Int32" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <NavigationProperty Name="tblParameter" Relationship="Self.FK_tblTemplateParameter_Parameter" FromRole="tblTemplateParameter" ToRole="tblParameter" />
+          <NavigationProperty Name="tblTemplate" Relationship="Self.FK_tblTemplateParameter_Template" FromRole="tblTemplateParameter" ToRole="tblTemplate" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <NavigationProperty Name="Company" Relationship="WASA_EMS_Model.FK_User_CompanyID" FromRole="User" ToRole="Company" />
+        </EntityType>
+        <Association Name="FK_tblEnergy_Parameter">
+          <End Role="tblParameter" Type="Self.tblParameter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblEnergy" Type="Self.tblEnergy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblParameter">
+              <PropertyRef Name="ParameterID" />
+            </Principal>
+            <Dependent Role="tblEnergy">
+              <PropertyRef Name="ParameterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEnergy_Resource">
+          <End Role="tblResource" Type="Self.tblResource" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblEnergy" Type="Self.tblEnergy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblResource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="tblEnergy">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTemplateParameter_Parameter">
+          <End Role="tblParameter" Type="Self.tblParameter" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblTemplateParameter" Type="Self.tblTemplateParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblParameter">
+              <PropertyRef Name="ParameterID" />
+            </Principal>
+            <Dependent Role="tblTemplateParameter">
+              <PropertyRef Name="ParameterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblResource_Template">
+          <End Role="tblTemplate" Type="Self.tblTemplate" Multiplicity="1" />
+          <End Role="tblResource" Type="Self.tblResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTemplate">
+              <PropertyRef Name="TemplateID" />
+            </Principal>
+            <Dependent Role="tblResource">
+              <PropertyRef Name="TemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTemplateParameter_Template">
+          <End Role="tblTemplate" Type="Self.tblTemplate" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblTemplateParameter" Type="Self.tblTemplateParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTemplate">
+              <PropertyRef Name="TemplateID" />
+            </Principal>
+            <Dependent Role="tblTemplateParameter">
+              <PropertyRef Name="TemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WASA_EMS_Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MessageIns" EntityType="Self.MessageIn" />
+          <EntitySet Name="tblEnergies" EntityType="Self.tblEnergy" />
+          <EntitySet Name="tblParameters" EntityType="Self.tblParameter" />
+          <EntitySet Name="tblPowerStatus" EntityType="Self.tblPowerStatu" />
+          <EntitySet Name="tblRemoteSensors" EntityType="Self.tblRemoteSensor" />
+          <EntitySet Name="tblResources" EntityType="Self.tblResource" />
+          <EntitySet Name="tblTemplates" EntityType="Self.tblTemplate" />
+          <EntitySet Name="tblTemplateParameters" EntityType="Self.tblTemplateParameter" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_tblEnergy_Parameter" Association="Self.FK_tblEnergy_Parameter">
+            <End Role="tblParameter" EntitySet="tblParameters" />
+            <End Role="tblEnergy" EntitySet="tblEnergies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEnergy_Resource" Association="Self.FK_tblEnergy_Resource">
+            <End Role="tblResource" EntitySet="tblResources" />
+            <End Role="tblEnergy" EntitySet="tblEnergies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTemplateParameter_Parameter" Association="Self.FK_tblTemplateParameter_Parameter">
+            <End Role="tblParameter" EntitySet="tblParameters" />
+            <End Role="tblTemplateParameter" EntitySet="tblTemplateParameters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblResource_Template" Association="Self.FK_tblResource_Template">
+            <End Role="tblTemplate" EntitySet="tblTemplates" />
+            <End Role="tblResource" EntitySet="tblResources" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTemplateParameter_Template" Association="Self.FK_tblTemplateParameter_Template">
+            <End Role="tblTemplate" EntitySet="tblTemplates" />
+            <End Role="tblTemplateParameter" EntitySet="tblTemplateParameters" />
+          </AssociationSet>
+          <EntitySet Name="tblNotifications" EntityType="WASA_EMS_Model.tblNotification" />
+          <EntitySet Name="Companies" EntityType="WASA_EMS_Model.Company" />
+          <EntitySet Name="Energies" EntityType="WASA_EMS_Model.Energy" />
+          <EntitySet Name="fmsFiles" EntityType="WASA_EMS_Model.fmsFile" />
+          <EntitySet Name="Parameters" EntityType="WASA_EMS_Model.Parameter" />
+          <EntitySet Name="Resources" EntityType="WASA_EMS_Model.Resource" />
+          <EntitySet Name="ResourceCategories" EntityType="WASA_EMS_Model.ResourceCategory" />
+          <EntitySet Name="ResourceParameters" EntityType="WASA_EMS_Model.ResourceParameter" />
+          <EntitySet Name="sysdiagrams" EntityType="WASA_EMS_Model.sysdiagram" />
+          <EntitySet Name="ValueParameters" EntityType="WASA_EMS_Model.ValueParameter" />
+          <AssociationSet Name="FK_User_CompanyID" Association="WASA_EMS_Model.FK_User_CompanyID">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="tblParamForm1" EntityType="WASA_EMS_Model.tblParamForm1" />
+          <EntitySet Name="tblResourceScheduler1" EntityType="WASA_EMS_Model.tblResourceScheduler1" />
+          <AssociationSet Name="FK_tblParamForm_Parameter1" Association="WASA_EMS_Model.FK_tblParamForm_Parameter1">
+            <End Role="tblParameter" EntitySet="tblParameters" />
+            <End Role="tblParamForm1" EntitySet="tblParamForm1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblParamForm_Resource1" Association="WASA_EMS_Model.FK_tblParamForm_Resource1">
+            <End Role="tblResource" EntitySet="tblResources" />
+            <End Role="tblParamForm1" EntitySet="tblParamForm1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblResourceScheduler_Resource1" Association="WASA_EMS_Model.FK_tblResourceScheduler_Resource1">
+            <End Role="tblResource" EntitySet="tblResources" />
+            <End Role="tblResourceScheduler1" EntitySet="tblResourceScheduler1" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tblNotification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateID" Type="Int32" />
+          <Property Name="ResourceID" Type="Int32" />
+          <Property Name="ParameterID" Type="Int32" />
+          <Property Name="ParameterValue" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="forUser" Type="Int32" />
+          <Property Name="fromUser" Type="Int32" />
+          <Property Name="notificationTime" Type="DateTime" Precision="3" />
+          <Property Name="markRead" Type="Int32" />
+          <Property Name="readTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Users" Relationship="WASA_EMS_Model.FK_User_CompanyID" FromRole="Company" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Energy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InsertionDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterValue" Type="Double" Nullable="false" />
+        </EntityType>
+        <EntityType Name="fmsFile">
+          <Key>
+            <PropertyRef Name="FileID" />
+          </Key>
+          <Property Name="FileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileType" Type="Int32" Nullable="false" />
+          <Property Name="FileNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FileVolumnNumber" Type="Int32" Nullable="false" />
+          <Property Name="FileRemarks" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FileInitiatedBy" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Parameter">
+          <Key>
+            <PropertyRef Name="ParameterID" />
+          </Key>
+          <Property Name="ParameterID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParameterName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParameterUnit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParameterOrder" Type="Int32" Nullable="false" />
+          <Property Name="AggFunc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParameterScale" Type="Double" />
+        </EntityType>
+        <EntityType Name="Resource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MobileNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ResourceName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ResourceCategoryID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResourceCategory">
+          <Key>
+            <PropertyRef Name="ResourceCatagoryID" />
+          </Key>
+          <Property Name="ResourceCatagoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CatagoryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ResourceParameter">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterID" Type="Int32" />
+          <Property Name="ParameterOrder" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="ValueParameter">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="time" Type="DateTime" Precision="3" />
+          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="mobileNumber" Type="String" MaxLength="160" FixedLength="false" Unicode="true" />
+          <Property Name="VP1" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP2" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP3" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP4" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP5" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP6" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP7" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP8" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP9" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP10" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP11" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP12" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP13" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP14" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP15" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP16" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VP17" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_User_CompanyID">
+          <End Type="WASA_EMS_Model.Company" Role="Company" Multiplicity="0..1" />
+          <End Type="WASA_EMS_Model.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblParamForm1">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="ParameterID" Type="Int32" Nullable="false" />
+          <Property Name="Formala" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblParameter" Relationship="WASA_EMS_Model.FK_tblParamForm_Parameter1" FromRole="tblParamForm1" ToRole="tblParameter" />
+          <NavigationProperty Name="tblResource" Relationship="WASA_EMS_Model.FK_tblParamForm_Resource1" FromRole="tblParamForm1" ToRole="tblResource" />
+        </EntityType>
+        <EntityType Name="tblResourceScheduler1">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+          </Key>
+          <Property Name="ScheduleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="ScheduleTimeFrom" Type="DateTime" Precision="3" />
+          <Property Name="ScheduleTimeTo" Type="DateTime" Precision="3" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblResource" Relationship="WASA_EMS_Model.FK_tblResourceScheduler_Resource1" FromRole="tblResourceScheduler1" ToRole="tblResource" />
+        </EntityType>
+        <Association Name="FK_tblParamForm_Parameter1">
+          <End Type="WASA_EMS_Model.tblParameter" Role="tblParameter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="WASA_EMS_Model.tblParamForm1" Role="tblParamForm1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblParameter">
+              <PropertyRef Name="ParameterID" />
+            </Principal>
+            <Dependent Role="tblParamForm1">
+              <PropertyRef Name="ParameterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblParamForm_Resource1">
+          <End Type="WASA_EMS_Model.tblResource" Role="tblResource" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="WASA_EMS_Model.tblParamForm1" Role="tblParamForm1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblResource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="tblParamForm1">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblResourceScheduler_Resource1">
+          <End Type="WASA_EMS_Model.tblResource" Role="tblResource" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="WASA_EMS_Model.tblResourceScheduler1" Role="tblResourceScheduler1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblResource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="tblResourceScheduler1">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WASA_EMS_ModelStoreContainer" CdmEntityContainer="WASA_EMS_Entities">
+          <EntitySetMapping Name="MessageIns">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.MessageIn">
+              <MappingFragment StoreEntitySet="MessageIn">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="sender" ColumnName="sender" />
+                <ScalarProperty Name="msg" ColumnName="msg" />
+                <ScalarProperty Name="senttime" ColumnName="senttime" />
+                <ScalarProperty Name="receivedtime" ColumnName="receivedtime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEnergies">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblEnergy">
+              <MappingFragment StoreEntitySet="tblEnergy">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="InsertionDateTime" ColumnName="InsertionDateTime" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ParameterValue" ColumnName="ParameterValue" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblParameters">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblParameter">
+              <MappingFragment StoreEntitySet="tblParameter">
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ParameterName" ColumnName="ParameterName" />
+                <ScalarProperty Name="ParameterOrder" ColumnName="ParameterOrder" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="Mainformula" ColumnName="Mainformula" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPowerStatus">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblPowerStatu">
+              <MappingFragment StoreEntitySet="tblPowerStatus">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ResourceNumber" ColumnName="ResourceNumber" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="LastUpdatedStatus" ColumnName="LastUpdatedStatus" />
+                <ScalarProperty Name="LastStatusUpdateTime" ColumnName="LastStatusUpdateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblRemoteSensors">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblRemoteSensor">
+              <MappingFragment StoreEntitySet="tblRemoteSensor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="ModeManualAuto" ColumnName="ModeManualAuto" />
+                <ScalarProperty Name="PreviousMotorOnOffStatus" ColumnName="PreviousMotorOnOffStatus" />
+                <ScalarProperty Name="CurrentMotorOnOffStatus" ColumnName="CurrentMotorOnOffStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblResources">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblResource">
+              <MappingFragment StoreEntitySet="tblResource">
+                <ScalarProperty Name="resourceName" ColumnName="resourceName" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="ResourceLocation" ColumnName="ResourceLocation" />
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CooridatesGoogle" ColumnName="CooridatesGoogle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTemplates">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblTemplate">
+              <MappingFragment StoreEntitySet="tblTemplate">
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="ParameterCount" ColumnName="ParameterCount" />
+                <ScalarProperty Name="Separator" ColumnName="Separator" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTemplateParameters">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblTemplateParameter">
+              <MappingFragment StoreEntitySet="tblTemplateParameter">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ParameterOrder" ColumnName="ParameterOrder" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblNotifications">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblNotification">
+              <MappingFragment StoreEntitySet="tblNotifications">
+                <ScalarProperty Name="readTime" ColumnName="readTime" />
+                <ScalarProperty Name="markRead" ColumnName="markRead" />
+                <ScalarProperty Name="notificationTime" ColumnName="notificationTime" />
+                <ScalarProperty Name="fromUser" ColumnName="fromUser" />
+                <ScalarProperty Name="forUser" ColumnName="forUser" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ParameterValue" ColumnName="ParameterValue" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="CompanyDescription" ColumnName="CompanyDescription" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Energies">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.Energy">
+              <MappingFragment StoreEntitySet="Energy">
+                <ScalarProperty Name="ParameterValue" ColumnName="ParameterValue" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="InsertionDateTime" ColumnName="InsertionDateTime" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fmsFiles">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.fmsFile">
+              <MappingFragment StoreEntitySet="fmsFile">
+                <ScalarProperty Name="FileInitiatedBy" ColumnName="FileInitiatedBy" />
+                <ScalarProperty Name="FileRemarks" ColumnName="FileRemarks" />
+                <ScalarProperty Name="FileVolumnNumber" ColumnName="FileVolumnNumber" />
+                <ScalarProperty Name="FileNumber" ColumnName="FileNumber" />
+                <ScalarProperty Name="FileType" ColumnName="FileType" />
+                <ScalarProperty Name="FileID" ColumnName="FileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Parameters">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.Parameter">
+              <MappingFragment StoreEntitySet="Parameter">
+                <ScalarProperty Name="ParameterScale" ColumnName="ParameterScale" />
+                <ScalarProperty Name="AggFunc" ColumnName="AggFunc" />
+                <ScalarProperty Name="ParameterOrder" ColumnName="ParameterOrder" />
+                <ScalarProperty Name="ParameterUnit" ColumnName="ParameterUnit" />
+                <ScalarProperty Name="ParameterName" ColumnName="ParameterName" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Resources">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.Resource">
+              <MappingFragment StoreEntitySet="Resource">
+                <ScalarProperty Name="ResourceCategoryID" ColumnName="ResourceCategoryID" />
+                <ScalarProperty Name="ResourceName" ColumnName="ResourceName" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceCategories">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.ResourceCategory">
+              <MappingFragment StoreEntitySet="ResourceCategory">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CatagoryName" ColumnName="CatagoryName" />
+                <ScalarProperty Name="ResourceCatagoryID" ColumnName="ResourceCatagoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceParameters">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.ResourceParameter">
+              <MappingFragment StoreEntitySet="ResourceParameter">
+                <ScalarProperty Name="ParameterOrder" ColumnName="ParameterOrder" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ValueParameters">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.ValueParameter">
+              <MappingFragment StoreEntitySet="ValueParameter">
+                <ScalarProperty Name="VP17" ColumnName="VP17" />
+                <ScalarProperty Name="VP16" ColumnName="VP16" />
+                <ScalarProperty Name="VP15" ColumnName="VP15" />
+                <ScalarProperty Name="VP14" ColumnName="VP14" />
+                <ScalarProperty Name="VP13" ColumnName="VP13" />
+                <ScalarProperty Name="VP12" ColumnName="VP12" />
+                <ScalarProperty Name="VP11" ColumnName="VP11" />
+                <ScalarProperty Name="VP10" ColumnName="VP10" />
+                <ScalarProperty Name="VP9" ColumnName="VP9" />
+                <ScalarProperty Name="VP8" ColumnName="VP8" />
+                <ScalarProperty Name="VP7" ColumnName="VP7" />
+                <ScalarProperty Name="VP6" ColumnName="VP6" />
+                <ScalarProperty Name="VP5" ColumnName="VP5" />
+                <ScalarProperty Name="VP4" ColumnName="VP4" />
+                <ScalarProperty Name="VP3" ColumnName="VP3" />
+                <ScalarProperty Name="VP2" ColumnName="VP2" />
+                <ScalarProperty Name="VP1" ColumnName="VP1" />
+                <ScalarProperty Name="mobileNumber" ColumnName="mobileNumber" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblParamForm1">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblParamForm1">
+              <MappingFragment StoreEntitySet="tblParamForm">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="Formala" ColumnName="Formala" />
+                <ScalarProperty Name="ParameterID" ColumnName="ParameterID" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblResourceScheduler1">
+            <EntityTypeMapping TypeName="WASA_EMS_Model.tblResourceScheduler1">
+              <MappingFragment StoreEntitySet="tblResourceScheduler">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="ScheduleTimeTo" ColumnName="ScheduleTimeTo" />
+                <ScalarProperty Name="ScheduleTimeFrom" ColumnName="ScheduleTimeFrom" />
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

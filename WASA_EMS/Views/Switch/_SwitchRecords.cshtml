@@ -1,0 +1,268 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+
+@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+<style>
+    .modal-backdrop {
+        position: static !important;
+    }
+
+    .btnMasterOn {
+        border: 6px solid #00d873;
+        background: #16ac62;
+        width: 160px;
+        height: 160px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        margin-right: 142px;
+        line-height: 30px !important;
+        text-align: center;
+        font-weight: bolder;
+        border-radius: 50% !important;
+        color: white;
+        font-size: large;
+    }
+
+    .btnMasterOff {
+        border: 6px solid #942124;
+        background: #fb1d20;
+        width: 160px;
+        height: 160px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        margin-right: 56px;
+        line-height: 18px;
+        text-align: center;
+        font-weight: bolder;
+        border-radius: 50% !important;
+        color: white;
+        font-size: large;
+    }
+    .buttonsDiv {
+        position: relative;
+        z-index: 10000;
+        right: 0px;
+        top: 0;
+        color: red;
+        transform: scale(0.9) translate(341px, 407px);
+        font-size: 10px;
+    }
+</style>
+
+<script>
+    $(function () {
+        $('#modalCloseOFFCross').on('click', function () {
+            $('#myModal').hide();
+        })
+    })
+</script>
+<script>
+    $(function () {
+        $('#modalCloseOFFCancle').on('click', function () {
+            $('#myModal').hide();
+        })
+    })
+</script>
+<script>
+    $(function () {
+        $('#modalCloseOnCross').on('click', function () {
+            $('#myModalON').hide();
+        })
+    })
+</script>
+<script>
+    $(function () {
+        $('#modalCloseOnCancle').on('click', function () {
+            $('#myModalON').hide();
+        })
+    })
+</script>
+
+<div class="container" style="position: relative; min-width: 1140px; min-height: 712px; max-height: 712px; overflow: hidden;">
+    <div class="col-md-12" style="padding-left: 0px;  padding-right: 0px;">
+        <img src="~/Content/images/InaugurationSwitch.jpg" class="img-responsive" style="position: absolute !important;">
+    </div>
+    <div class="buttonsDiv">
+        <input class="fas fa-power-off btnMasterOn" type="button" value="Master ON" onclick="location.href='@Url.Action("MasterOn", "Switch")'" />
+        <input class="fas fa-power-off btnMasterOff" type="button" value="Master OFF" onclick="location.href='@Url.Action("MasterOff", "Switch")'" />
+    </div>
+</div>
+
+@*<div class="col-md-12" style="padding: 20px !important;">
+        <div class="col-md-8">
+        </div>
+        <div class="col-md-2 col-xs-6">
+            <input class="btn btn-success" type="button" data-toggle="modal" data-target="#myModalON" value="Master ON" />
+        </div>
+        <div class="col-md-2 col-xs-6">
+            <input class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal" value="Master OFF" />
+        </div>
+    </div>
+
+    <div class="col-md-12" style="padding-top: 20px !important;">
+        <table class="table table-bordered table-striped table-highlight" style="color: black; font-size:11px;">
+            <thead style="font-weight: bolder; text-align: center;">
+                <tr>
+                    <td>Resource Name</td>
+                    <td>Mode</td>
+                    <td>Status</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < 14 ; i+=2)
+                {
+
+                    <tr>
+                        <td>@Model.Rows[i][1]</td>
+                        @if (Convert.ToInt32(Model.Rows[i][5]) == 0)
+                        {
+                            <td style=" text-align: center;">
+                                Manual
+                            </td>
+                        }
+                        else
+                        {
+                            <td style=" text-align: center;">
+                                Auto
+                            </td>
+                        }
+                        @if (Convert.ToInt32(Model.Rows[i+1][5]) == 0)
+                        {
+                            <td style=" text-align: center;">
+                                OFF
+                            </td>
+                        }
+                        else
+                        {
+                            <td style=" text-align: center;">
+                                ON
+                            </td>
+                        }
+                        @if (Convert.ToInt32(Model.Rows[i][5]) == 0)
+                        {
+                            if (Convert.ToInt32(Model.Rows[i+1][5]) == 0)
+                            {
+                                <td style=" text-align: center; cursor: not-allowed">
+                                    TURN ON
+                                </td>
+                            }
+                            else
+                            {
+                                <td style=" text-align: center; cursor: not-allowed">
+                                    TURN OFF
+                                </td>
+                            }
+                        }
+                        else
+                        {
+                            if (Convert.ToInt32(Model.Rows[i+1][5]) == 0)
+                            {
+                                <td style=" text-align: center;">
+                                    @Html.ActionLink("TURN ON", "Edit", new { id = Model.Rows[i+1][0] })
+                                </td>
+                            }
+                            else
+                            {
+                                <td style=" text-align: center;">
+                                    @Html.ActionLink("TURN OFF", "Edit", new { id = Model.Rows[i+1][0] })
+                                </td>
+                            }
+                        }
+                    </tr>
+
+                }
+                @
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="modalCloseOFFCross" class="close" data-dismiss="#myModal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Warning !!</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to SWITCH OFF all tubewells ?
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("MasterOff", "Switch"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="button" id="modalCloseOFFCancle" class="btn btn-default" data-dismiss="#myModal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">Confirm</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalON" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="modalCloseOnCross" class="close" data-dismiss="#myModalON" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Warning !!</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to SWITCH ON all tubewells ?
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("MasterOn", "Switch"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="button" class="btn btn-default" id="modalCloseOnCancle" data-dismiss="#myModalON">Cancel</button>
+                        <button type="submit" class="btn btn-warning">Confirm</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*@foreach (DataRow row in Model.Rows)
+{
+    if (row["Resource"].ToString() == "ShokatKhanamWell1" || row["Resource"].ToString() == "ShokatKhanamWell2")
+    {
+
+    }
+    else
+    {
+        <tr>
+            <td> @row["Resource"]</td>
+            @if (row["Mode"].ToString() == "Manual")
+            {
+                <td style=" text-align: center;">
+                    AUTO
+                </td>
+            }
+            else if (row["Mode"].ToString() == "AUTO")
+            {
+                <td style=" text-align: center;">
+                    Manual
+                </td>
+            }
+            <td style=" text-align: center;"> @row["Status"]</td>
+            @if (row["Mode"].ToString() == "AUTO")
+            {
+                <td style=" text-align: center; cursor: not-allowed">
+                    @row["Action"].ToString()
+                </td>
+            }
+            else
+            {
+                <td style=" text-align: center;">
+                    @Html.ActionLink(row["Action"].ToString(), "Edit", new { id = row["ID"] })
+                </td>
+            }
+        </tr>
+    }
+}*@

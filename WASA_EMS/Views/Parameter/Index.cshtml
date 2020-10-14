@@ -1,0 +1,164 @@
+﻿@model IEnumerable<WASA_EMS.Models.tblParameter>
+
+@{
+    ViewBag.Title = "Index";
+}
+@*@if (string.IsNullOrEmpty(Session["CompanyID"].ToString() as string))
+{
+    Response.Redirect("~/Account/LogOn");
+}*@
+@*@{ string c_ID = Session["CompanyID"].ToString();}
+
+    @if (c_ID == null)
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@
+<script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="@Url.Content("~/Scripts/Highcharts-2.2.1/js/highcharts.src.js")" type="text/javascript"></script>
+<script src="~/Scripts/js/date-picker/date.js"></script>
+
+
+                      <div class="main">
+
+                          <div class="container" style="background-color:white; padding:20px 40px; opacity:0.9">
+                              <div class="row">
+
+                                  <div class="span12">
+
+                                      <div class="widget stacked">
+
+                                          <div class="widget-header">
+                                              <h3>Index-Parameters</h3>
+                                          </div> <!-- /widget-header -->
+
+                                          <div class="widget-content">
+                                              <p>
+                                                  @Html.ActionLink("Create New Parameter", "Create")
+                                              </p>
+
+                                              @*<table class="table table-bordered table-highlight ">
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.UserName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.UserPassword)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserPassword)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.UserID }) |
+                                                @Html.ActionLink("Details", "Details", new { id = item.UserID }) |
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.UserID })
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>*@
+
+                                              <table class="table table-bordered table-highlight ">
+                                                  <thead>
+                                                      <tr>
+                                                          <td></td>
+                                                          <td>Parameter</td>
+                                                          <td>Parameter Order</td>
+                                                          <td>Formula</td>
+                                                          
+                                                      </tr>
+
+                                                  </thead>
+                                                  @foreach (WASA_EMS.Models.tblParameter u in ViewBag.parameterList)
+                                                  {
+                                                      <tr>
+                                                          <td width="10px">
+                                                              @Html.ActionLink("Edit", "Edit", new { id = u.ParameterID })
+                                                          </td>
+                                                            <td>@u.ParameterName</td>
+                                                            <td>@u.ParameterOrder</td>
+                                                            <td>@u.Mainformula</td>
+                                                            
+                                                            
+                                                      </tr>
+                                                  }
+                                                  <tbody>
+                                                      @*@if (ViewBag.parameterList != null)
+                                        {
+                                            foreach (NUST_EMS.Parameter item in ViewBag.parameterList)
+                                            {
+                                                <tr>
+                                                    <td>@item.ParameterName</td>
+                                                    @foreach (NUST_EMS.Resource r in ViewBag.resourceList)
+                                                    {
+                                                        NUST_EMS.DBEntities db = new NUST_EMS.DBEntities();
+                                                        var query = db.Database.SqlQuery<String>("select * from User").ToList();
+                                                        if (query.Count > 0)
+                                                        {
+                                                            <td>@query[0]</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>-</td>
+                                                        }
+                                                    }
+
+                                                </tr>
+                                            }
+                                        }*@
+                                                  </tbody>
+
+                                              </table>
+
+
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+
+
+
+@*<h2>Index</h2>
+<h4>Parameter</h4>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParameterName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParameterOrder)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ParameterID })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ParameterName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ParameterOrder)
+        </td>
+
+    </tr>
+}
+
+</table>*@

@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<iframe width="100%" height="700px" src="https://app.powerbi.com/view?r=eyJrIjoiODRlNWI1MjEtNDkxZS00MGI1LTkwMTctOTczYzVkY2JjMzEzIiwidCI6Ijc1ZGYwOTZjLThiNzItNDhlNC05YjkxLWNiZjc5ZDg3ZWUzYSIsImMiOjl9" frameborder="0" allowFullScreen="true"></iframe>*@
+<link href="~/Content/custom.css" rel="stylesheet" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlT_-WIkJ_8eKmEGZZFOGzugRIHjviICI"
+        type="text/javascript"></script>
+<div id="map_canvas">
+    <div id="maps" style="height: 800px; width:100%; text-align:center; margin-top:20px"></div>
+</div>
+<script type="text/javascript">
+    var markers = [{ 'Status': 'False', 'Template': 'D', 'title': 'ShokatKhanamWell2', 'lat': '31.429429', 'lnt': ' 74.252204', 'DelTime': '2.15', 'description': '<b>Disposal.</b><br /><b>ShokatKhanamWell2</b><br />18/06/2020 11:23:18 AM<br />PumpStatus6.: OFF<br />PumpStatus7.: OFF<br />PumpStatus8.: OFF<br />PumpStatus9.: OFF<br />PumpStatuss10.: OFF<br />Well2Level(ft): 6.02<br />' }];
+            window.onload = function () {
+
+                var mapOptions = {
+                    center: new google.maps.LatLng(31.428300, 74.250978),
+                    //center: new google.maps.LatLng(markers[0].lat, markers[0].lnt),
+                    zoom: 11,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var infoWindow = new google.maps.InfoWindow();
+                var map = new google.maps.Map(document.getElementById("maps"), mapOptions);
+                for (i = 0; i < markers.length; i++) {
+                    var data = markers[i]
+                    var myLatlng = new google.maps.LatLng(data.lat, data.lnt);
+                    var Status = data.Status;
+                    var delt = data.DelTime;
+                    var Letter = data.Template;
+                    var iconcolor = "";
+                    //alert(Status);
+                    //if (Status == "")
+                    //if (Status == "")
+                    //if (data.title == "C-II Johar Town") {
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|45|FFFF42|11|_|C-II|Johar+Town";
+                    //}
+                    //else if (data.title == "A-III Johar Town")
+                    //{
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|45|FFFF42|11|_|A-III|Johar+Town";
+                    //}
+                    //else if (data.title == "D-II Johar Town") {
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|45|FFFF42|11|_|D-II|Johar+Town";
+                    //}
+                    //else if (data.title == "E Block Johar Town") {
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|270|FFFF42|11|_|E+Block|Johar+Town";
+                    //}
+                    //else if (data.title == "Campus View Johar Town") {
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|45|FFFF42|11|_|Campus+View|Johar+Town";
+                    //}
+                    //else if (data.title == "F-I Johar Town") {
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|45|FFFF42|11|_|F-I|Johar+Town";
+                    //}
+                    //else if (data.title == "Jubilee Town C Block") {
+                    //    iconcolor = "http://chart.apis.google.com/chart?chst=d_map_spin&chld=3|45|FFFF42|11|_|C+Block|Jubilee+Town";
+                    //}
+                    //chst=d_map_spin&chld=3|45|FFFF42|11|_|First+line|Second+line
+                    iconcolor = "https://chart.apis.google.com/chart?chst=d_map_spin&chld=0.5|0|FF0000|15|b|D";
+                    //iconcolor = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=";
+                    //iconcolor = iconcolor + "";
+                    //iconcolor = iconcolor + " |FF0000|000000";
+                    var marker = new google.maps.Marker({
+                        position: myLatlng,
+                        map: map,
+                        title: data.title,
+                        //label: {text:Letter,color: "#000",fontWeight:"bold", fontsize:"12px" ,labelOrigin: new google.maps.Point(0, 0)},
+                        icon: {url:iconcolor,origin: {x: 0, y: 0}}
+                    });
+                    (function (marker, data) {
+                        google.maps.event.addListener(marker, "click", function (e) {
+                            //infoWindow.setContent(data.description);
+                            //infoWindow.open(map, marker);
+                        });
+                    })(marker, data);
+                }
+            }
+</script>

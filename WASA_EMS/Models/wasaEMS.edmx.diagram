@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cbc9a0e14e2649bebbf7b6b160ebc830" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="WASA_EMS_Model.MessageIn" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblEnergy" Width="1.5" PointX="5.25" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblParameter" Width="1.5" PointX="0.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblPowerStatu" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblRemoteSensor" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblResource" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblTemplate" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblTemplateParameter" Width="1.5" PointX="3" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.User" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblEnergy_Parameter" ManuallyRouted="false" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblEnergy_Resource" ManuallyRouted="false" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblTemplateParameter_Parameter" ManuallyRouted="false" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblResource_Template" ManuallyRouted="false" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblTemplateParameter_Template" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblNotification" Width="1.5" PointX="7.375" PointY="9.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.Company" Width="1.5" PointX="0.75" PointY="12.875" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.Energy" Width="1.5" PointX="3.375" PointY="9.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.fmsFile" Width="1.5" PointX="9.375" PointY="9.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.Parameter" Width="1.5" PointX="10.375" PointY="3.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.Resource" Width="1.5" PointX="10.375" PointY="6.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.ResourceCategory" Width="1.5" PointX="7.375" PointY="3.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.ResourceParameter" Width="1.5" PointX="11.375" PointY="9.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.sysdiagram" Width="1.5" PointX="12.375" PointY="0.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.ValueParameter" Width="1.5" PointX="12.375" PointY="3.75" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_User_CompanyID" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblParamForm1" Width="1.5" PointX="5.25" PointY="0.75" />
+        <EntityTypeShape EntityType="WASA_EMS_Model.tblResourceScheduler1" Width="1.5" PointX="4.75" PointY="16.625" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblParamForm_Parameter1" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblParamForm_Resource1" />
+        <AssociationConnector Association="WASA_EMS_Model.FK_tblResourceScheduler_Resource1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

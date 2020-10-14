@@ -1,0 +1,51 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+
+@{
+    ViewBag.Title = "Set mode";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/custom.css" rel="stylesheet" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<br />
+<div class="main">
+    <div class="container" style="padding: 40px; background: white;">
+        <div class="row">
+            <div class="span12">
+                <div class="widget stacked">
+                    <div class="widget-header">
+                            <i class="icon-reorder"></i>
+                            <h3 style="font-weight:bolder;">Auto Mode Management </h3>
+                        </div> <!-- /widget-header -->
+                    <div class="widget-content">
+                        <div id="SwitchRecords">
+                            <div style="float: right;">
+                                <img src="~/Content/images/loading.gif" style="height: 48px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '_ModeRecords',
+            cache: false,
+            success: function (result) {
+                $('#SwitchRecords').html(result);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr + " - " + ajaxOptions + " - " + thrownError);
+                $('#SwitchRecords').html("");
+            },
+            async: true
+        });
+    });
+</script>

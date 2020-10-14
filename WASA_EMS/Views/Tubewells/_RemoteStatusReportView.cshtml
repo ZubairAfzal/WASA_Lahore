@@ -1,0 +1,142 @@
+﻿@using System.Data;
+@using System.Data.SqlClient;
+@using Newtonsoft.Json;
+@model IEnumerable<TubewellDataClass>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @Html.Raw(ViewData["chartData"])
+        chart1.render();
+        function toogleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            chart1.render();
+        }
+        if (!$.fn.DataTable.isDataTable('#tubeWellTable')) {
+            $('#tubeWellTable').DataTable({
+                "scrollX": true,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "columnDefs": [
+                    { "className": "dt-center", "targets": "_all" }
+                ],
+                dom: 'Bfrtip',
+                //buttons: [
+                //    'copy', 'csv', 'excel', 'pdf', 'print'
+                //]
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: '@Session["ReportTitle"]'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: '@Session["ReportTitle"]'
+                    }
+                ]
+            });
+        }
+    });
+</script>
+<div class="portlet-title">
+    <div class="row" style="opacity:0.9">
+        <div class="portlet-body">
+            <div class="widget stacked">
+                <div class="widget-content">
+                    <div>
+                        <center>
+                            <div id="chartContainer1" style="width: 95%; height: 500px"></div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
+
+<div class="row" style="opacity:0.9">
+    <div class="portlet-body">
+        <div class="widget stacked" style="margin-top:70px; ">
+            <div class="widget-content">
+                <div>
+                    <center>
+
+
+                        <table id="tubeWellTable" class="display" style="width:100%">
+                            <thead>
+                                <tr style="background-color: #a8c9cd;">
+                                    <th>Name Of Location</th>
+                                    <th>Pump Status</th>
+
+                                    <th>Manual Mode</th>
+                                    <th>Remote Mode</th>
+                                    <th>Scheduling Mode</th>
+                                    <th>Total Working Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>@item.locationName</td>
+                                    @if (item.pumpStatus.Count == 0)
+                                    {
+                                        <td>Inactive</td>
+                                    }
+                                    else
+                                    {
+                                        if (item.pumpStatus.FirstOrDefault() == 0)
+                                        {
+                                            <td>OFF</td>
+                                        }
+                                        else
+                                        {
+                                            <td>ON</td>
+                                        }
+                                    }
+                                    <td>@item.workingHoursTodayManual</td>
+                                    <td>@item.workingHoursTodayRemote</td>
+                                    <td>@item.workingHoursTodayScheduling</td>
+                                    <td>@item.workingHoursToday</td>
+                                    @*@if (item.manualStatus.FirstOrDefault() == 0)
+        {
+            <td>OFF</td>
+        }
+        else
+        {
+            <td>ON</td>
+        }
+        @if (item.remoteControll.FirstOrDefault() == 0)
+        {
+            <td>OFF</td>
+        }
+        else
+        {
+            <td>ON</td>
+        }
+        @if (item.schedulingStatus.FirstOrDefault() == 0)
+        {
+            <td>OFF</td>
+        }
+        else
+        {
+            <td>ON</td>
+        }*@
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,262 @@
+﻿
+<style>
+    .chartCont, 
+    .statusTitle {
+        display: none !important;
+    }
+</style>
+
+<script src="~/Scripts/animationDisposal.js"></script>
+
+<script type="text/javascript">
+    document.getElementById("opacqueBackground").style.opacity = "1";
+    document.getElementById("hor-menu").style.marginTop = "-4.5%";
+    var refreshId = setInterval(function () {
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var well1Level = null;
+        var well2Level = null;
+        var video = '';
+        var url = "/Disposals/getHMIStatus";
+        var properID = $.get(url, { resourceName: ' ' }, function (data) {
+            var obj = JSON.parse(data);
+            //console.log(data);
+            pumpStatus1 = obj.pumpStatus1;
+            pumpStatus2 = obj.pumpStatus2;
+            pumpStatus3 = obj.pumpStatus3;
+            pumpStatus4 = obj.pumpStatus4;
+            pumpStatus5 = obj.pumpStatus5;
+            pumpStatus6 = obj.pumpStatus6;
+            pumpStatus7 = obj.pumpStatus7;
+            pumpStatus8 = obj.pumpStatus8;
+            pumpStatus9 = obj.pumpStatus9;
+            pumpStatus10 = obj.pumpStatus10;
+            well1Level = obj.wellLevel1;
+            well2Level = obj.wellLevel2;
+            var totalPumps = parseInt(pumpStatus1) + parseInt(pumpStatus2) + parseInt(pumpStatus3) + parseInt(pumpStatus4) + parseInt(pumpStatus5) + parseInt(pumpStatus6) + parseInt(pumpStatus7) + parseInt(pumpStatus8) + parseInt(pumpStatus9) + parseInt(pumpStatus10);
+            if (parseInt(totalPumps) >= 1) {
+                console.log(totalPumps);
+                video = $('#top-view-seamless');
+                video.get(0).currentTime = 0;
+                video.addClass('show');
+                //$('#seamless-stop-flow').removeClass('show');
+                video.get(0).play();
+            }
+            else {
+                console.log(totalPumps);
+                video = $('#seamless-stop-flow');
+                video.get(0).currentTime = 0;
+                video.addClass('show');
+                $('#top-view-seamless').removeClass('show');
+                video.get(0).play();
+            }
+            
+        });
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '_StatusReportView',
+            cache: false,
+            success: function (result) {
+                $('#StatusReportDiv').html(result);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $('#StatusReportDiv').html("");
+            },
+            async: true
+        });
+        if (properID > 0) {
+            clearInterval(refreshId);
+        }
+    }, 30000);
+
+
+</script>
+
+<script>
+    var video = '';
+    $('input[name="toggle_flow"]').keyup(function () {
+        var value = $(this).val();
+
+        if (parseInt(value) === 1) {
+            video = $('#top-view-seamless');
+            video.get(0).currentTime = 0;
+            video.addClass('show');
+            $('#seamless-stop-flow').removeClass('show');
+            video.get(0).play();
+        } else {
+            video = $('#seamless-stop-flow');
+            video.get(0).currentTime = 0;
+            video.addClass('show');
+            $('#top-view-seamless').removeClass('show');
+            video.get(0).play();
+        }
+
+    });
+
+    $('input[name="toggle_hints"]').keyup(function () {
+        var value = $(this).val();
+
+        if (parseInt(value) === 1) {
+            $('.main-scene-elements').addClass('show');
+        } else {
+            $('.main-scene-elements').removeClass('show');
+        }
+    });
+
+
+    $('input[name="well_1"]').change(function () {
+        var value = $(this).val();
+
+        $('.well-1').html(value);
+    });
+
+
+    $('input[name="well1_status"]').change(function () {
+        if ($(this).prop('checked') === false) {
+            $('.well-1').addClass('off-state');
+        } else {
+            $('.well-1').removeClass('off-state');
+        }
+    });
+</script>
+
+<div class="main" style="min-height:460px">
+
+    <div class="col-sm-12" style="padding-top:15px">
+        <div class="responsive-container-for-video">
+            <div class="video-box">
+
+                <video autoplay preload muted loop id="top-view-seamless" style="width: 100%;">
+                    <source src="~/Content/videos/top-view/seamless.mp4" type="video/mp4">
+                </video>
+                <video autoplay preload muted loop id="seamless-stop-flow" style="width: 100%;">
+                    <source src="~/Content/videos/stop-motors/seamless-stop-flow.mp4" type="video/mp4">
+                </video>
+
+                @*<video preload muted id="empty-holes" style="width: 100%;">
+                        <source src="~/Content/videos/stop-motors/empty-holes.mp4" type="video/mp4">
+                    </video>
+
+                    <video preload muted id="start-holes-flow" style="width: 100%;">
+                        <source src="~/Content/videos/stop-motors/start-holes-flow.mp4" type="video/mp4">
+                    </video>*@
+                <div class="main-scene-elements show">
+                    <span class="well on-state well-2">Wet Well No. 1 : @(Convert.ToInt32(ViewBag.WellLevel1)) ft</span>
+                    <span class="well on-state well-3">Wet Well No. 2 : @(Convert.ToInt32(ViewBag.WellLevel2)) ft</span>
+                    @if (Convert.ToInt32(ViewBag.PumpStatus10) == 1)
+                    {
+                        <span class="on-state motor motor-10">Pump No. 10: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-10">Pump No. 10: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus9) == 1)
+                    {
+                        <span class="on-state motor motor-9">Pump No. 9: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-9">Pump No. 9: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus8) == 1)
+                    {
+                        <span class="on-state motor motor-8">Pump No. 8: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-8">Pump No. 8: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus7) == 1)
+                    {
+                        <span class="on-state motor motor-7">Pump No. 7: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-7">Pump No. 7: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus6) == 1)
+                    {
+                        <span class="on-state motor motor-6">Pump No. 6: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-6">Pump No. 6: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus5) == 1)
+                    {
+                        <span class="on-state motor motor-5">Pump No. 5: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-5">Pump No. 5: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus4) == 1)
+                    {
+                        <span class="on-state motor motor-4">Pump No. 4: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-4">Pump No. 4: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus3) == 1)
+                    {
+                        <span class="on-state motor motor-3">Pump No. 3: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-3">Pump No. 3: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus2) == 1)
+                    {
+                        <span class="on-state motor motor-2">Pump No. 2: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-2">Pump No. 2: OFF</span>
+                    }
+                    @if (Convert.ToInt32(ViewBag.PumpStatus1) == 1)
+                    {
+                        <span class="on-state motor motor-1">Pump No. 1: ON</span>
+                    }
+                    else
+                    {
+                        <span class="off-state motor motor-1">Pump No. 1: OFF</span>
+                    }
+                    <span class="generator">Gen Set</span>
+                    <span class="transformer">Transformer</span>
+
+                    <span class="main-left-text">
+                        Shaukat Khanum Disposal Station
+                    </span>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="portlet light bordered">        
+        <div class="portlet-body">
+            <div id="StatusReportDiv">
+
+                <div style="float: right;">
+                    <img src="~/Content/images/loading.gif" style="height: 48px;" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div> <!-- /main -->

@@ -1,0 +1,659 @@
+﻿﻿
+@{
+    ViewBag.Title = "Tubewell Schedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="~/Content/custom.css" rel="stylesheet" />
+<link href="~/Metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    .modal-backdrop {
+        position: static !important;
+    }
+
+    .btnMasterOn {
+        border: 6px solid #00d873;
+        background: #16ac62;
+        width: 160px;
+        height: 160px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        margin-right: 142px;
+        line-height: 30px !important;
+        text-align: center;
+        font-weight: bolder;
+        border-radius: 50% !important;
+        color: white;
+        font-size: large;
+    }
+
+    .btnMasterOff {
+        border: 6px solid #942124;
+        background: #fb1d20;
+        width: 160px;
+        height: 160px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        margin-right: 56px;
+        line-height: 18px;
+        text-align: center;
+        font-weight: bolder;
+        border-radius: 50% !important;
+        color: white;
+        font-size: large;
+    }
+
+    .buttonsDiv {
+        position: relative;
+        z-index: 10000;
+        right: 0px;
+        top: 0;
+        color: red;
+        transform: scale(0.9) translate(341px, 407px);
+        font-size: 10px;
+    }
+</style>
+
+<script src="~/Scripts/jquery.min.js"></script>
+
+<script src="~/Scripts/jquery-ui.js"></script>
+<script src="~/Metronic/assets/global/plugins/moment.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#resource").change(function () {
+            var t1From = $('#time1From');
+            var t1To = $('#time1To');
+            var t2From = $('#time2From');
+            var t2To = $('#time2To');
+            var t3From = $('#time3From');
+            var t3To = $('#time3To');
+            var t4From = $('#time4From');
+            var t4To = $('#time4To');
+            $.getJSON('/Home/ScheduleIndexChanged', { value: $("#resource :selected").val() }, function (data) {
+                if ($("#resource :selected").val() == "Update for All Locations") { }
+                else { 
+                    t1From.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tF1 = i;
+                        if (tF1 < 10) {
+                            tF1 = '0' + i.toString();
+                        }
+                        tF1 += ':00';
+                        if (parseInt(data.data.time1From) == parseInt(tF1)) {
+                            t1From.append("<option value='" + tF1 + "' selected=\"selected\">" + tF1 + "</option>")
+                        }
+                        else {
+                            t1From.append("<option value='" + tF1 + "'>" + tF1 + "</option>")
+                        }
+                    }
+                    t1To.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tT1 = i;
+                        if (tT1 < 10) {
+                            tT1 = '0' + i.toString();
+                        }
+                        tT1 += ':00';
+                        if (parseInt(data.data.time1To) == parseInt(tT1)) {
+                            t1To.append("<option value='" + tT1 + "' selected=\"selected\">" + tT1 + "</option>")
+                        }
+                        else {
+                            t1To.append("<option value='" + tT1 + "'>" + tT1 + "</option>")
+                        }
+                    }
+
+
+                    t2From.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tF1 = i;
+                        if (tF1 < 10) {
+                            tF1 = '0' + i.toString();
+                        }
+                        tF1 += ':00';
+                        if (parseInt(data.data.time2From) == parseInt(tF1)) {
+                            t2From.append("<option value='" + tF1 + "' selected=\"selected\">" + tF1 + "</option>")
+                        }
+                        else {
+                            t2From.append("<option value='" + tF1 + "'>" + tF1 + "</option>")
+                        }
+                    }
+
+                    t2To.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tT1 = i;
+                        if (tT1 < 10) {
+                            tT1 = '0' + i.toString();
+                        }
+                        tT1 += ':00';
+                        if (parseInt(data.data.time2To) == parseInt(tT1)) {
+                            t2To.append("<option value='" + tT1 + "' selected=\"selected\">" + tT1 + "</option>")
+                        }
+                        else {
+                            t2To.append("<option value='" + tT1 + "'>" + tT1 + "</option>")
+                        }
+                    }
+
+                    t3From.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tF1 = i;
+                        if (tF1 < 10) {
+                            tF1 = '0' + i.toString();
+                        }
+                        tF1 += ':00';
+                        if (parseInt(data.data.time3From) == parseInt(tF1)) {
+                            t3From.append("<option value='" + tF1 + "' selected=\"selected\">" + tF1 + "</option>")
+                        }
+                        else {
+                            t3From.append("<option value='" + tF1 + "'>" + tF1 + "</option>")
+                        }
+                    }
+                    t3To.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tT1 = i;
+                        if (tT1 < 10) {
+                            tT1 = '0' + i.toString();
+                        }
+                        tT1 += ':00';
+                        if (parseInt(data.data.time3To) == parseInt(tT1)) {
+                            t3To.append("<option value='" + tT1 + "' selected=\"selected\">" + tT1 + "</option>")
+                        }
+                        else {
+                            t3To.append("<option value='" + tT1 + "'>" + tT1 + "</option>")
+                        }
+                    }
+
+                    t4From.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tF1 = i;
+                        if (tF1 < 10) {
+                            tF1 = '0' + i.toString();
+                        }
+                        tF1 += ':00';
+                        if (parseInt(data.data.time4From) == parseInt(tF1)) {
+                            t4From.append("<option value='" + tF1 + "' selected=\"selected\">" + tF1 + "</option>")
+                        }
+                        else {
+                            t4From.append("<option value='" + tF1 + "'>" + tF1 + "</option>")
+                        }
+                    }
+                    t4To.empty();
+                    for (var i = 0; i < 24; i++) {
+                        var tT1 = i;
+                        if (tT1 < 10) {
+                            tT1 = '0' + i.toString();
+                        }
+                        tT1 += ':00';
+                        if (parseInt(data.data.time4To) == parseInt(tT1)) {
+                            t4To.append("<option value='" + tT1 + "' selected=\"selected\">" + tT1 + "</option>")
+                        }
+                        else {
+                            t4To.append("<option value='" + tT1 + "'>" + tT1 + "</option>")
+                        }
+                    }
+                }
+            })
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $('#modalCloseOnCross').on('click', function () {
+            $('#myModalON').hide();
+        })
+    })
+</script>
+<script>
+    $(function () {
+        $('#modalCloseOnCancle').on('click', function () {
+            $('#myModalON').hide();
+        })
+    })
+</script>
+
+<div class="row">
+    <div class="col-lg-12 col-xs-12 col-md-12">
+        <div class="portlet light ">
+            <div class="portlet-body">
+
+
+                <!-- DataTable Row -->
+
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12 col-md-12">
+                        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption font-dark">
+                                    <i class="icon-docs font-dark"></i>
+                                    <span class="caption-subject bold uppercase">Tubewell Schedule</span>
+                                </div>
+                                <div class="tools"> </div>
+                            </div>
+
+                            <div class="portlet-title">
+                                <div class="caption font-dark">
+
+                                    <div class="row">
+                                        <div class="widget stacked">
+                                            <div class="form-group">
+                                                <center>
+                                                    <div class="col-md-12 col-xs-12 col-lg-12">
+                                                        <input class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModalON" value="Reset All Schedules" />
+                                                    </div>
+                                                </center>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @using (Html.BeginForm("Schedule", "Home"))
+                                    {
+                                        <div class="row">
+                                            <div class="widget stacked">
+                                                <div class="form-group">
+                                                    <center>
+                                                        <div class=" col-lg-12 col-xs-12 col-md-12 portlet light bordered">
+                                                            <div class="col-lg-offset-4 col-md-offset-3 col-lg-4 col-xs-12 col-md-6" style="text-align:center">
+                                                                @if (ViewBag.SelectedResource != null)
+                                                                {
+                                                                    @Html.DropDownList("resource", new SelectList(ViewBag.ResourceList, ViewBag.SelectedResource), new { @class = "span6 form-control", @style = " color:black;" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownList("resource", new SelectList(ViewBag.ResourceList), new { @class = "span6 form-control", @style = " color:black;" })
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                        <div class=" col-lg-12 col-xs-12 col-md-12 portlet light bordered">
+                                                            <div class="col-lg-2 col-xs-12 col-md-2" style="border-bottom: 1px solid #d9dde1;">
+                                                                <label class="form-control caption-subject bold uppercase" style="border:0px;">Time Slot 1</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">From</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time1from != null)
+                                                                {
+                                                                    string abc = ViewBag.time1from.ToString();
+                                                                    <select name="time1From" id="time1From" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">To</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time1to != null)
+                                                                {
+                                                                    string abc = ViewBag.time1to.ToString();
+                                                                    <select name="time1To" id="time1To" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class=" col-lg-12 col-xs-12 col-md-12 portlet light bordered">
+                                                            <div class="col-lg-2 col-xs-12 col-md-2" style="border-bottom: 1px solid #d9dde1;">
+                                                                <label class="form-control caption-subject bold uppercase" style="border:0px;">Time Slot 2</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">From</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time2from != null)
+                                                                {
+                                                                    string abc = ViewBag.time2from.ToString();
+                                                                    <select name="time2From" id="time2From" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">To</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time2to != null)
+                                                                {
+                                                                    string abc = ViewBag.time2to.ToString();
+                                                                    <select name="time2To" id="time2To" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class=" col-lg-12 col-xs-12 col-md-12 portlet light bordered">
+                                                            <div class="col-lg-2 col-xs-12 col-md-2" style="border-bottom: 1px solid #d9dde1;">
+                                                                <label class="form-control caption-subject bold uppercase" style="border:0px;">Time Slot 3</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">From</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time3from != null)
+                                                                {
+                                                                    string abc = ViewBag.time3from.ToString();
+                                                                    <select name="time3From" id="time3From" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">To</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time3to != null)
+                                                                {
+                                                                    string abc = ViewBag.time3to.ToString();
+                                                                    <select name="time3To" id="time3To" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class=" col-lg-12 col-xs-12 col-md-12 portlet light bordered">
+                                                            <div class="col-lg-2 col-xs-12 col-md-2" style="border-bottom: 1px solid #d9dde1;">
+                                                                <label class="form-control caption-subject bold uppercase" style="border:0px;">Time Slot 4</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">From</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time4from != null)
+                                                                {
+                                                                    string abc = ViewBag.time4from.ToString();
+                                                                    <select name="time4From" id="time4From" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-1 col-xs-12 col-md-1">
+                                                                <label class="form-control" style="border:0px">To</label>
+                                                            </div>
+                                                            <div class="col-lg-offset-1 col-md-offset-1 col-lg-2 col-xs-12 col-md-2">
+                                                                @if (ViewBag.time4to != null)
+                                                                {
+                                                                    string abc = ViewBag.time4to.ToString();
+                                                                    <select name="time4To" id="time4To" class="form-control">
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                        <option value="01:00" @if (abc == "01:00") { <text> selected="selected" </text> }>01:00</option>
+                                                                        <option value="02:00" @if (abc == "02:00") { <text> selected="selected" </text> }>02:00</option>
+                                                                        <option value="03:00" @if (abc == "03:00") { <text> selected="selected" </text> }>03:00</option>
+                                                                        <option value="04:00" @if (abc == "04:00") { <text> selected="selected" </text> }>04:00</option>
+                                                                        <option value="05:00" @if (abc == "05:00") { <text> selected="selected" </text> }>05:00</option>
+                                                                        <option value="06:00" @if (abc == "06:00") { <text> selected="selected" </text> }>06:00</option>
+                                                                        <option value="07:00" @if (abc == "07:00") { <text> selected="selected" </text> }>07:00</option>
+                                                                        <option value="08:00" @if (abc == "08:00") { <text> selected="selected" </text> }>08:00</option>
+                                                                        <option value="09:00" @if (abc == "09:00") { <text> selected="selected" </text> }>09:00</option>
+                                                                        <option value="10:00" @if (abc == "10:00") { <text> selected="selected" </text> }>10:00</option>
+                                                                        <option value="11:00" @if (abc == "11:00") { <text> selected="selected" </text> }>11:00</option>
+                                                                        <option value="12:00" @if (abc == "12:00") { <text> selected="selected" </text> }>12:00</option>
+                                                                        <option value="13:00" @if (abc == "13:00") { <text> selected="selected" </text> }>13:00</option>
+                                                                        <option value="14:00" @if (abc == "14:00") { <text> selected="selected" </text> }>14:00</option>
+                                                                        <option value="15:00" @if (abc == "15:00") { <text> selected="selected" </text> }>15:00</option>
+                                                                        <option value="16:00" @if (abc == "16:00") { <text> selected="selected" </text> }>16:00</option>
+                                                                        <option value="17:00" @if (abc == "17:00") { <text> selected="selected" </text> }>17:00</option>
+                                                                        <option value="18:00" @if (abc == "18:00") { <text> selected="selected" </text> }>18:00</option>
+                                                                        <option value="19:00" @if (abc == "19:00") { <text> selected="selected" </text> }>19:00</option>
+                                                                        <option value="20:00" @if (abc == "20:00") { <text> selected="selected" </text> }>20:00</option>
+                                                                        <option value="21:00" @if (abc == "21:00") { <text> selected="selected" </text> }>21:00</option>
+                                                                        <option value="22:00" @if (abc == "22:00") { <text> selected="selected" </text> }>22:00</option>
+                                                                        <option value="23:00" @if (abc == "23:00") { <text> selected="selected" </text> }>23:00</option>
+                                                                        <option value="00:00" @if (abc == "00:00") { <text> selected="selected" </text> }>00:00</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 col-xs-12 col-lg-12" style="margin-top:20px">
+                                                            <button type="submit" class="btn-success" style="height: 40px;width: 200px;border-radius: 5px !important;">
+                                                                Update
+                                                            </button>
+                                                        </div>
+                                                    </center>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- END EXAMPLE TABLE PORTLET-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal" id="myModalON" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="modalCloseOnCross" class="close" data-dismiss="#myModalON" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Warning !!</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to RESET all Schedules ? <br/> It will Clear Schedules for all Locations
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("ResetSchedule", "Home"))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="button" class="btn btn-default" id="modalCloseOnCancle" data-dismiss="#myModalON">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Confirm</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

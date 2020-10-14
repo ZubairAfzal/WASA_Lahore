@@ -1,0 +1,138 @@
+﻿@model ResourceSellector
+<script type="text/javascript">
+    
+    document.getElementById("opacqueBackground").style.opacity = "1";
+    document.getElementById("DashboardTable").style.minHeight = "660px";
+    document.getElementById("hor-menu").style.marginTop = "-4.5%";
+    var refreshId = setInterval(function () {
+        var pumpStatus = null;
+        var chlorineStatus = null;
+        var primingStatus = null;
+        var flowRate = null;
+        var pressureRate = null;
+        var url = "/Tubewells/getHMIStatus";
+        var properID = $.get(url, { resourceName: '@Model.resourceName' }, function (data) {
+            var obj = JSON.parse(data);
+            pumpStatus = obj.pumpStatus;
+            chlorineStatus = obj.chlorineStatus;
+            primingStatus = obj.primingStatus;
+            flowRate = obj.flowRate;
+            pressureRate = obj.pressureRate;
+            if (pumpStatus == 1) {
+                stopPump();
+                
+            }
+            else {
+                startPump();
+                
+            }
+            $('.flow-meter .flow-meter-inner .meter-nib')
+                .css('transform', 'rotate(' + ((flowRate*45)+45) + 'deg)');
+            $('.pressure-transmitter .pressure-transmitter-inner .meter-nib')
+                .css('transform', 'rotate(' + ((pressureRate*45)+45) + 'deg)');
+            $('.reading-flow-meter').text(flowRate);
+            $('.reading-pressure-transmitter').text(pressureRate);
+        });
+        var resN = '@Model.resourceName';
+        var resT = '@Model.resourceType';
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '_TableRecords',
+            cache: false,
+            data: { resourceName: resN, resourceType: resT },
+            success: function (result) {
+                $('#DashboardTable').html(result);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $('#DashboardTable').html("");
+            },
+            async: true
+        });
+        if (properID > 0) {
+            clearInterval(refreshId);
+        }
+    }, 10000);
+
+
+</script>
+<script src="~/Scripts/animationTubeWell.js"></script>
+
+<div class="main" style="min-height:460px">
+
+    <div class="col-sm-12">
+        <div class="videos-container">
+
+                	<div class="main-panel-lights">
+                		<span class="green off"></span>
+                		<span class="red"></span>
+                	</div>
+
+                	<div class="small-panel-lights">
+                		<span class="green off"></span>
+                		<span class="red"></span>
+                	</div>
+
+                	<div class="meters">
+                		<span class="meter1">124</span>
+                		<span class="meter2">126</span>
+                		<span class="meter3">224</span>
+                	</div>
+
+                    <img src="~/Content/images/motor-status-with-fan.png" alt="Motor fan" class="motor-status-with-fan" id="motor-status-with-fan">
+                    <img src="~/Content/images/off-room-exaust.png" alt="Room exaust fan" class="room-exaust" id="room-exaust-status">
+                    <img src="~/Content/images/empty-chlorine-tank.png" alt="Empty chlorine tank" class="empty-chlorine-tank" id="chlorine-tank-status">
+                    <img src="~/Content/images/empty-priming-tank.png" alt="Empty priming tank" class="empty-priming-tank" id="priming-tank-status">
+                    <div id="startvideo"></div>
+                    <div class="chlorine-drops-parent">
+                        <div id="chlorine-drops">
+							<video muted>
+								<source src="~/Content/videos/chlorine-drops.mp4" type="video/mp4">
+							</video>
+                        </div>
+                    </div>
+                    <button class="btn-chlorine-drops-magnify"></button>
+                    <img id="lightsOff" src="~/Content/images/lights-off.jpg" alt="Lights off">
+					<video muted id="tubvelVideo-loop">
+						<source src="~/Content/videos/tubvel-animation-loop.mp4" type="video/mp4">
+					</video>
+                    <div class="flow-meter">
+                        <span class="reading">2.4</span>
+                        <div class="flow-meter-inner">
+                            <hr class="meter-nib">
+                        </div>
+                    </div>
+
+                    <div class="pressure-transmitter">
+                        <span class="reading">2.6</span>
+                        <div class="pressure-transmitter-inner">
+                            <span>2.6</span>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    <div class="col-md-12" style="position:absolute; top:250px; height: 30px; width:1100px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>
+                SCADA TUBEWELL : 01
+            </h3>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>
+                <b>@Model.resourceName</b>
+            </h3>
+        </div>
+    </div>
+    @*<div style="position:absolute; height:30px; width:30%; left:60%; top:250px;">
+        
+    </div>
+    <div style="position:absolute; height:30px; width:30%; left:20%; top:250px;">
+        
+    </div>*@
+    
+    <div id="DashboardTable" style="background-color: white; margin-top:20px; padding: 10px 10px;">
+
+    </div>
+</div> <!-- /main -->

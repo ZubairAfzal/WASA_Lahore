@@ -1,0 +1,125 @@
+﻿@model WASA_EMS.Models.tblParameter
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@*@if (string.IsNullOrEmpty(Session["CompanyID"].ToString() as string))
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@
+@*@{ string c_ID = Session["CompanyID"].ToString();}
+
+    @if (c_ID == null)
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@
+<script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="@Url.Content("~/Scripts/Highcharts-2.2.1/js/highcharts.src.js")" type="text/javascript"></script>
+<script src="~/Scripts/js/date-picker/date.js"></script>
+
+
+<div class="main">
+
+    <div class="container"  style="background-color:white; padding:20px 40px; opacity:0.9">
+        <div class="row">
+
+            <div class="span12">
+
+                <div class="widget stacked">
+
+                    <div class="widget-header">
+                        <h3>Create New Parameter</h3>
+                    </div> <!-- /widget-header -->
+
+                    <br />
+
+                    <div class="widget-content">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+
+
+                            <div class="form-horizontal">
+                                <h4>New Parameter</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                @*@Html.Partial("EditForm")*@
+
+
+                                <div class="form-group">
+                                    <div style="float:left; margin-right:10px">
+                                        @Html.LabelFor(model => model.ParameterName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    </div>
+
+
+                                    <div class="col-md-10" style="margin-left:10px">
+                                        @Html.EditorFor(model => model.ParameterName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ParameterName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="form-group">
+                                    <div style="float:left; margin-right:10px">
+                                        @Html.LabelFor(model => model.ParameterOrder, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ParameterOrder, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ParameterOrder, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="form-group">
+                                    <div style="float:left; margin-right:10px">
+                                        @Html.LabelFor(model => model.Mainformula, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Mainformula, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Mainformula, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Create" class="btn btn-primary" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="widget-header">
+                                    <b style="text-align:left; vertical-align:central; text-align; font-size:12px; margin-left:10px">
+                                        @Html.ActionLink("Back to Parameters List", "Index")
+                                    </b>
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@

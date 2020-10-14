@@ -1,0 +1,75 @@
+﻿@model IEnumerable<WASA_EMS.Models.tblResource>
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="@Url.Content("~/Scripts/Highcharts-2.2.1/js/highcharts.src.js")" type="text/javascript"></script>
+<script src="~/Scripts/js/date-picker/date.js"></script>
+
+<div class="main">
+
+    <div class="container" style="background-color:white; padding:20px 40px; opacity:0.9">
+        <div class="row">
+            <div class="span12">
+
+                <div class="widget stacked">
+
+                    <div class="widget-header">
+                        <h3>Resources</h3>
+                    </div> <!-- /widget-header -->
+
+                    <div class="widget-content">
+                        <p>
+                            @Html.ActionLink("Create New Resource", "Create")
+                        </p>
+
+                        <table class="table">
+                            <tr>
+                                <th></th>
+
+                                <th>
+                                    Resource Location
+                                </th>
+                                <th>
+                                    Mobile Number
+                                </th>
+                                <th>
+                                    Template Name
+                                </th>
+                                <th>
+                                    Location
+                                </th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ResourceID })
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ResourceLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MobileNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.tblTemplate.TemplateName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CooridatesGoogle)
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

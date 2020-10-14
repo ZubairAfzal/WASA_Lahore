@@ -1,0 +1,57 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+
+@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+
+
+
+<div class="col-md-12" style="padding-top: 20px !important;">
+    <table class="table table-bordered table-striped table-highlight" style="color: black; font-size:11px;">
+        <thead style="font-weight: bolder; text-align: center;">
+            <tr>
+                <td>Tubewell Location</td>
+                <td>Auto Operation Mode</td>
+                <td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < 7; i ++)
+            {
+
+                <tr>
+                    <td>@Model.Rows[i][1]</td>
+                    @if (Convert.ToInt32(Model.Rows[i][2]) == 0)
+                    {
+                        <td style=" text-align: center;">
+                            Time Scheduling
+                        </td>
+                    }
+                    else
+                    {
+                        <td style=" text-align: center;">
+                            Remote Control
+                        </td>
+                    }
+                    @if (Convert.ToInt32(Model.Rows[i][2]) == 0)
+                    {
+                    <td style=" text-align: center;">
+                        @Html.ActionLink("Switch to Remote Control", "EditMode", new { id = Model.Rows[i][0] , mode = Model.Rows[i][2] })
+                    </td>
+                    }
+                    else
+                    {
+                    <td style=" text-align: center;">
+                        @Html.ActionLink("Switch to Time Scheduling", "EditMode", new { id = Model.Rows[i][0] , mode = Model.Rows[i][2]})
+                    </td>
+                    }
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+</div>

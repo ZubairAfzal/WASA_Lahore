@@ -1,0 +1,95 @@
+﻿@model System.Data.DataTable
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    $('#tubeWellTable').DataTable({
+    //        "scrollX": true,
+    //        "paging": false,
+    //        "ordering": false,
+    //        "info": false,
+    //        "columnDefs": [
+    //            { "className": "dt-center", "targets": "_all" }
+    //        ]
+    //    });
+    //});
+    document.getElementById("opacqueBackground").style.opacity = "1";
+    var refreshId = setInterval(function () {
+        var pumpStatus = null;
+        var chlorineStatus = null;
+        var primingStatus = null;
+        var flowRate = null;
+        var pressureRate = null;
+        var url = "/Home/getHMIStatus";
+        var properID = $.get(url, null, function (data) {
+            var obj = JSON.parse(data);
+            pumpStatus = obj.pumpStatus;
+            chlorineStatus = obj.chlorineStatus;
+            primingStatus = obj.primingStatus;
+            flowRate = obj.flowRate;
+            pressureRate = obj.pressureRate;
+            if (pumpStatus == 1) {
+                startPump();
+            }
+            else {
+                stopPump();
+            }
+            $('.flow-meter .flow-meter-inner .meter-nib')
+                .css('transform', 'rotate(' + ((flowRate*45)+45) + 'deg)');
+            $('.pressure-transmitter .pressure-transmitter-inner .meter-nib')
+                .css('transform', 'rotate(' + ((pressureRate*45)+45) + 'deg)');
+            $('.reading-flow-meter').text(flowRate);
+            $('.reading-pressure-transmitter').text(pressureRate);
+        });
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '_TableRecords',
+            cache: false,
+            success: function (result) {
+                $('#DashboardTable').html(result);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $('#DashboardTable').html("");
+            },
+            async: true
+        });
+        if (properID > 0) {
+            clearInterval(refreshId);
+        }
+    }, 10000);
+
+
+</script>
+<script src="~/Scripts/animationTubeWell.js"></script>
+
+<div class="main" style="min-height:460px">
+
+    <div class="col-sm-12">
+        <div class="videos-container">
+            <!-- The video -->
+            <video muted id="tubvelVideo">
+                <source src="~/Content/videos/tubvel-animation.mp4" type="video/mp4">
+            </video>
+            <video muted id="tubvelVideo-loop">
+                <source src="~/Content/videos/tubvel-animation-loop.mp4" type="video/mp4">
+            </video>
+            <div id="motorStatusDiv" style="display:none">1</div>
+            <div class="flow-meter">
+                <span class="reading reading-flow-meter"></span>
+                <div class="flow-meter-inner">
+                    <hr class="meter-nib">
+                </div>
+            </div>
+
+            <div class="pressure-transmitter">
+                <span class="reading reading-pressure-transmitter"></span>
+                <div class="pressure-transmitter-inner">
+                    <hr class="meter-nib">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="DashboardTable" style="background-color: white; margin-top:20px; padding: 10px 10px;">
+        
+    </div>
+</div> <!-- /main -->

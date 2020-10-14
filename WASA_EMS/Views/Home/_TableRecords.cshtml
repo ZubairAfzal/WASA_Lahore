@@ -1,0 +1,160 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tubeWellTable').DataTable({
+            "scrollX": true,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "columnDefs": [
+                { "className": "dt-center", "targets": "_all" }
+            ]
+        });
+    });
+</script>
+<table id="tubeWellTable" class="cell-border" style="width:100%; font-size:10px;">
+    <thead>
+        <tr>
+            <th>
+                Location
+            </th>
+            <th>
+                Pump Status
+            </th>
+            <th>
+                Total Working Hours
+            </th>
+            <th>
+                Water Discharge
+            </th>
+            <th>
+                Chlorine Level
+            </th>
+            <th>
+                Power Factor
+            </th>
+            <th>
+                Average Voltage
+            </th>
+            <th>
+                Voltage Trip
+            </th>
+            <th>
+                Average Current
+            </th>
+            <th>
+                Current Trip
+            </th>
+            <th>
+                Frequency
+            </th>
+            <th>
+                PKVA
+            </th>
+            <th>
+                PKVAR
+            </th>
+            <th>
+                PKW
+            </th>
+            <th>
+                Auto Mode
+            </th>
+            <th>
+                Remote Control
+            </th>
+            <th>
+                Scheduling Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="font-weight:bolder">
+                @ViewBag.Location
+            </td>
+            @if (Convert.ToInt32(ViewBag.PumpStatus) == 1)
+            {
+                <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            else
+            {
+                <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            <td>
+                @ViewBag.TotalWorkingHour
+            </td>
+            <td>
+                @ViewBag.WaterExtracted
+            </td>
+            @if (Convert.ToInt32(ViewBag.ChlorineLevel) > 0)
+            {
+                <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            else
+            {
+                <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            <td>
+                @ViewBag.PF
+            </td>
+            <td>
+                @ViewBag.averageVoltage
+            </td>
+            @if (Convert.ToInt32(ViewBag.VoltageTrip) == 1)
+            {
+                <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            else
+            {
+                <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            <td>
+                @ViewBag.averageCurrent
+            </td>
+            @if (Convert.ToInt32(ViewBag.CurrentTrip) == 1)
+            {
+                <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            else
+            {
+                <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            <td>
+                @ViewBag.Frequency
+            </td>
+            <td>
+                @ViewBag.PKVA
+            </td>
+            <td>
+                @ViewBag.PKVAR
+            </td>
+            <td>
+                @ViewBag.PKW
+            </td>
+            @if (Convert.ToInt32(ViewBag.AutoModeOn) == 1)
+            {
+                <td>AUTO</td>
+            }
+            else
+            {
+                <td>MANUAL</td>
+            }
+            @if (Convert.ToInt32(ViewBag.RemoteControl) == 1)
+            {
+                <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            else
+            {
+                <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            @if (Convert.ToInt32(ViewBag.Scheduling) == 1)
+            {
+                <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+            else
+            {
+                <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
+            }
+        </tr>
+    </tbody>
+</table>

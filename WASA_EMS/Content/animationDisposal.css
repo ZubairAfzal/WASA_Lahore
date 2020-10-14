@@ -1,0 +1,409 @@
+﻿.video-box {
+    position: relative;
+}
+
+    .video-box video:not(:first-of-type) {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+
+    .video-box #start-holes-flow,
+    .video-box #empty-holes,
+    .video-box #seamless-stop-flow,
+    .video-box #main-to-top {
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+        -o-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        -webkit-transition: all 0.3s ease-in-out;
+    }
+
+    .video-box #start-holes-flow,
+    .video-box #empty-holes,
+    .video-box #seamless-stop-flow,
+    .video-box #main-to-top {
+        transition: all 0.7s ease-in-out;
+        -o-transition: all 0.7s ease-in-out;
+        -moz-transition: all 0.7s ease-in-out;
+        -webkit-transition: all 0.7s ease-in-out;
+    }
+
+        .video-box #start-holes-flow.show,
+        .video-box #empty-holes.show,
+        .video-box #seamless-stop-flow.show,
+        .video-box #main-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+/**
+-------------------------------------------------
+            Tooltips and hints
+-------------------------------------------------
+ */
+
+.main-scene-elements {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(11px, 10px);
+}
+
+    .main-scene-elements.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+.well,
+.motor,
+.transformer,
+.generator,
+.disposal-canal {
+    position: absolute;
+    padding: 9px 37px;
+    background: rgba(57, 215, 111, 0.72);
+    color: #fff;
+    text-align: center;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+    .well:after,
+    .motor:after,
+    .transformer:after,
+    .generator:after,
+    .disposal-canal:after {
+        content: "";
+        width: 50px;
+        height: 2px;
+        display: block;
+        position: absolute;
+        background: rgba(57, 215, 111, 0.72);
+        transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+
+    .well.on-state:after,
+    .motor.on-state:after,
+    .on-state,
+    .off-state {
+        transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+
+    .well.on-state:after,
+    .motor.on-state:after,
+    .on-state {
+        background: rgba(57, 215, 111, 0.72);
+    }
+
+    .well.off-state:after,
+    .motor.off-state:after,
+    .off-state {
+        background-color: rgba(215, 57, 57, 0.72);
+    }
+
+
+.well-1 {
+    top: 210px;
+    left: 50px;
+}
+
+    .well-1::after {
+        top: -13px;
+        left: 109px;
+        transform: rotate(-34deg);
+    }
+
+.well-2 {
+    left: 207px;
+    top: 31px;
+}
+
+    .well-2::after {
+        transform: rotate(64deg);
+        top: 58px;
+        right: -34px;
+    }
+
+.well-3 {
+    left: 174px;
+    top: 237px;
+}
+
+    .well-3::after {
+        top: -13px;
+        right: -25px;
+        transform: rotate(-52deg);
+        width: 33px;
+    }
+
+/*------------------- Motors ---------------------------*/
+.motor-10 {
+    left: 462px;
+    padding: 3px 10px;
+    font-size: 14px;
+    top: 14px;
+}
+
+    .motor-10:after {
+        right: -28px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-9 {
+    left: 641px;
+    top: 41px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-9:after {
+        right: 102px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-8 {
+    left: 455px;
+    top: 67px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-8:after {
+        right: -28px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-7 {
+    left: 623px;
+    top: 96px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-7:after {
+        right: 102px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-6 {
+    left: 437px;
+    top: 128px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-6:after {
+        right: -28px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-5 {
+    left: 609px;
+    top: 158px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-5:after {
+        right: 107px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-4 {
+    left: 415px;
+    top: 191px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-4:after {
+        right: -28px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-3 {
+    left: 589px;
+    top: 225px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-3:after {
+        right: 108px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-2 {
+    left: 393px;
+    top: 261px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-2:after {
+        right: -28px;
+        bottom: 0;
+        width: 50px;
+    }
+
+.motor-1 {
+    left: 558px;
+    top: 297px;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+    .motor-1:after {
+        right: 97px;
+        bottom: 0;
+        width: 50px;
+    }
+
+/*------------ Generator -----------------*/
+.generator {
+    top: 463px;
+    left: 319px;
+}
+
+    .generator:after {
+        right: -46px;
+        bottom: -8px;
+        transform: rotate(21deg);
+    }
+
+/*------------ Transformer --------------------*/
+.transformer {
+    top: 484px;
+    left: 677px;
+}
+
+    .transformer:after {
+        left: -36px;
+        bottom: -22px;
+        transform: rotate(-60deg);
+    }
+
+/*------------ Disposal canal -------------------*/
+.disposal-canal {
+    left: 910px;
+    top: 80px;
+}
+
+    .disposal-canal:after {
+        left: -40px;
+        bottom: -14px;
+        transform: rotate(-40deg);
+    }
+
+/*----------------- main left text ----------------*/
+.main-left-text {
+    position: absolute;
+    top: 270px;
+    left: 20px;
+    color: #fff;
+    font-family: Arial;
+    background: transparent;
+    font-size: 30px;
+    max-width: 322px;
+    min-width: 300px;
+    transform: rotate3d(1, -2.1, 1, 51deg);
+    text-shadow: 7px 6px 8px rgb(0, 0, 0);
+}
+
+
+/*
+    ---------------------------------------------------------
+            Responsive style
+    ---------------------------------------------------------
+*/
+
+.video-box {
+    transform-origin: top left;
+    min-width: 1140px;
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+    .video-box {
+        transform: scale(0.8);
+    }
+
+    .responsive-container-for-video {
+        width: 912px;
+        height: 516px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .video-box {
+        transform: scale(0.58);
+    }
+
+    .responsive-container-for-video {
+        width: 661px;
+        height: 371px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 767px) {
+    .video-box {
+        transform: scale(0.46)
+    }
+
+    .responsive-container-for-video {
+        width: 524px;
+        height: 295px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 599px) {
+    .video-box {
+        transform: scale(0.36)
+    }
+
+    .responsive-container-for-video {
+        width: 410px;
+        height: 230px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px) {
+    .video-box {
+        transform: scale(0.26)
+    }
+
+    .responsive-container-for-video {
+        width: 296px;
+        height: 166px;
+        margin: 0 auto;
+    }
+}

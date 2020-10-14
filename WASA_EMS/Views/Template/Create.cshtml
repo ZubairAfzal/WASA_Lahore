@@ -1,0 +1,46 @@
+﻿@model WASA_EMS.Models.tblTemplate
+
+@{
+    ViewBag.Title = "Create";
+}
+@*@if (string.IsNullOrEmpty(Session["CompanyID"].ToString() as string))
+{
+    Response.Redirect("~/Account/LogOn");
+}*@
+@*@{ string c_ID = Session["CompanyID"].ToString();}
+
+    @if (c_ID == null)
+    {
+        Response.Redirect("~/Account/LogOn");
+    }*@<script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="@Url.Content("~/Scripts/Highcharts-2.2.1/js/highcharts.src.js")" type="text/javascript"></script>
+<script src="~/Scripts/js/date-picker/date.js"></script>
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4></h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.Partial("EditForm")
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@

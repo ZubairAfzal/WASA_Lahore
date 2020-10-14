@@ -1,0 +1,393 @@
+﻿.custom-container {
+    width: calc(1280px + 30px);
+}
+
+.assets-container {
+    position: relative;
+    min-width: 1140px;
+    min-height: 712px;
+    max-height: 712px;
+    overflow: hidden;
+}
+
+.initial-state {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    z-index: 0;
+    transition: all 0.5s ease-in-out;
+}
+
+.no-water-supply,
+.room-exaust,
+.empty-priming-tank,
+.empty-chlorine-tank,
+#start-tubewell,
+#tubewell-seamless {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.no-water-supply,
+.room-exaust,
+.empty-priming-tank,
+.empty-chlorine-tank,
+#start-tubewell,
+#tubewell-seamless {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+    .no-water-supply.show,
+    .room-exaust.show,
+    .empty-priming-tank.show,
+    .empty-chlorine-tank.show,
+    #start-tubewell.show,
+    #tubewell-seamless.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+/*-------------------------------------------------------------*/
+
+.meters {
+    position: absolute;
+    z-index: 10000;
+    right: 0;
+    top: 0;
+    color: red;
+    transform: scale(0.9) translate(-42px, 278px);
+    font-size: 10px;
+}
+
+    .meters span {
+        border: 1px solid #000;
+        background: rgba(0, 0, 0, 1);
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        margin-right: 9px;
+        line-height: 18px;
+        text-align: center;
+        font-weight:bolder;
+    }
+
+
+.main-panel-lights,
+.small-panel-lights {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10000
+}
+
+.main-panel-lights {
+    top: 314px;
+    right: 83px;
+}
+
+.small-panel-lights {
+    top: 346px;
+    right: 358px;
+}
+
+    .main-panel-lights span,
+    .small-panel-lights span {
+        width: 7px;
+        height: 7px;
+        display: block;
+        float: left;
+        border-radius: 50% !important;
+        margin-right: 4px;
+        transition: all 0.5s ease-in-out;
+    }
+
+        .main-panel-lights span.green,
+        .small-panel-lights span.green {
+            background-color: #3af83a;
+            box-shadow: 0px 0px 10px 5px #3af83a;
+        }
+
+
+        .main-panel-lights span.red,
+        .small-panel-lights span.red {
+            background-color: red;
+            box-shadow: 0px 0px 10px 5px red;
+        }
+
+        .main-panel-lights span.green.off,
+        .small-panel-lights span.green.off {
+            background-color: rgba(0, 128, 0, 0.2);
+            box-shadow: 0px 0px 10px 5px rgba(0, 128, 0, 0.2);
+        }
+
+        .main-panel-lights span.red.off,
+        .small-panel-lights span.red.off {
+            background-color: rgba(128, 0, 0, 0.2);
+            box-shadow: 0px 0px 10px 5px rgba(128, 0, 0, 0.2);
+        }
+
+
+/*--------------------------------------------------------------
+            Transmitters
+---------------------------------------------------------------*/
+
+.flow-meter,
+.pressure-transmitter {
+    width: 23px;
+    height: 23px;
+    background-color: transparent;
+    position: absolute;
+    right: 466px;
+    top: 426px;
+    border-radius: 50% !important;
+    opacity: 0.3;
+    background-image: url(../Content/images/flow-meter.png);
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    z-index: 99999;
+    transition: all 0.5s ease-in-out;
+}
+
+    .flow-meter.op-1,
+    .pressure-transmitter.op-1 {
+        opacity: 1;
+    }
+
+.pressure-transmitter {
+    right: 397px;
+    top: 394px;
+    width: 19px;
+    height: 19px;
+    background-image: none;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    z-index: 10000;
+    background-color: #bcbcbc;
+}
+
+
+
+.flow-meter-inner,
+.pressure-transmitter-inner {
+    width: 100px;
+    height: 100px;
+    display: block;
+    background: #fff;
+    background-image: url("../Content/images/flow-meter.png");
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 6px;
+    top: -87px;
+    border-radius: 50% !important;
+    box-shadow: 12px -4px 10px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.30);
+}
+
+.pressure-transmitter-inner {
+    background-color: #bcbcbc;
+    background-image: none;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    border-color: #000;
+}
+
+    .pressure-transmitter-inner span {
+        position: relative;
+        display: block;
+        text-align: center;
+        font-size: 30px;
+        line-height: 92px;
+    }
+
+    .pressure-transmitter-inner:before {
+        content: "Pressure Transmitter";
+        position: absolute;
+        left: 3px;
+        top: 8px;
+        width: 88px;
+        font-size: 10px;
+        text-align: center;
+        line-height: 11px;
+        font-weight: 600;
+    }
+
+.flow-meter-inner:before {
+    content: "Flow Meter";
+    position: absolute;
+    left: 15px;
+    top: -23px;
+    width: 136px;
+}
+
+.flow-meter:hover .flow-meter-inner,
+.pressure-transmitter:hover .pressure-transmitter-inner {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.flow-meter .flow-meter-inner.show,
+.pressure-transmitter .pressure-transmitter-inner.show {
+    visibility: visible;
+    opacity: 1;
+}
+/* Meter style */
+.flow-meter .flow-meter-inner .meter-nib,
+.pressure-transmitter .pressure-transmitter-inner .meter-nib {
+    width: 6px;
+    height: 50px;
+    display: block;
+    background-color: transparent;
+    background-image: url(../Content/images/meter-nib.png);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0px auto;
+    background-position-y: 0px;
+    position: absolute;
+    top: 44px;
+    left: calc(50% - 3px);
+    transform-origin: 3px 4px;
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Safari 3-8 */
+    transform: rotate(45deg);
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+.pressure-transmitter .pressure-transmitter-inner .meter-nib {
+    background-image: url(../Content/images/meter-nib-white.png);
+}
+
+.flow-meter .reading,
+.pressure-transmitter .reading {
+    position: absolute;
+    bottom: 34px;
+    left: 0;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.pressure-transmitter .reading {
+    bottom: 2px;
+    left: 3px;
+    font-size: 11px;
+}
+
+.flow-meter .reading {
+    bottom: 26px;
+}
+
+.flow-meter:hover .reading,
+.pressure-transmitter:hover .reading {
+    opacity: 0;
+}
+
+.custom-responsive {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.custom-container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/*
+    ---------------------------------------------------------
+            Responsive style
+    ---------------------------------------------------------
+*/
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+    .outer-container {
+        width: 912px;
+        height: 570px;
+        margin: 0 auto;
+    }
+
+    .assets-container {
+        transform: scale(0.8);
+        transform-origin: top left;
+    }
+
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .outer-container {
+        width: 684px;
+        height: 427px;
+        margin: 0 auto;
+    }
+
+    .assets-container {
+        transform: scale(0.6);
+        transform-origin: top left;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 767px) {
+    .outer-container {
+        width: 535px;
+        height: 334px;
+        margin: 0 auto;
+    }
+
+    .assets-container {
+        transform: scale(0.47);
+        transform-origin: top left;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 599px) {
+    .outer-container {
+        width: 421px;
+        height: 263px;
+        margin: 0 auto;
+    }
+
+    .assets-container {
+        transform: scale(0.37);
+        transform-origin: top left;
+    }
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px) {
+    .outer-container {
+        width: 307px;
+        height: 192px;
+        margin: 0 auto;
+    }
+
+    .assets-container {
+        transform: scale(0.27);
+        transform-origin: top left;
+    }
+}

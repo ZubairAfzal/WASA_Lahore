@@ -1,0 +1,234 @@
+﻿@using System.Data;
+@using System.Data.SqlClient;
+@using Newtonsoft.Json;
+@model IEnumerable<TubewellDataClass>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @Html.Raw(ViewData["chartData"])
+        chart1.render();
+        function toogleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            chart1.render();
+        }
+        if (!$.fn.DataTable.isDataTable('#tubeWellTable')) {
+            $('#tubeWellTable').DataTable({
+                "scrollX": true,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "columnDefs": [
+                    { "className": "dt-center", "targets": "_all" }
+                ],
+                dom: 'Bfrtip',
+                //buttons: [
+                //    'copy', 'csv', 'excel', 'pdf', 'print'
+                //]
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: '@Session["ReportTitle"]'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: '@Session["ReportTitle"]'
+                    }
+                ]
+            });
+        }
+    });
+</script>
+<div class="portlet-title">
+    <div class="row" style="opacity:0.9">
+        <div class="portlet-body">
+            <div class="widget stacked">
+                <div class="widget-content">
+                    <div>
+                        <center>
+                            <div id="chartContainer1" style="width: 95%; height: 500px"></div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
+
+<div class="row" style="opacity:0.9">
+    <div class="portlet-body">
+        <div class="widget stacked" style="margin-top:70px; ">
+            <div class="widget-content">
+                <div>
+                    <center>
+
+                        <table id="tubeWellTable" class="display" style="width:100%;">
+                            <thead>
+                                <tr style="background-color: #a8c9cd;">
+                                    <th>Name of Location</th>
+                                    <th>
+                                        Water Level (m)
+                                    </th>
+                                    <th>
+                                        Pumping Water Level (hpl)
+                                    </th>
+                                    <th>
+                                        Rated Discharge (Q)
+                                    </th>
+                                    <th>
+                                        Rated Head ( H )
+                                    </th>
+                                    <th>Avg Water Flow (m3/h)</th>
+                                    <th>Avg Water Flow (cfs)</th>
+                                    <th>Avg Pressure (Bar)</th>
+                                    <th>Water Discharged (Gallon)</th>
+                                    <th>Water Discharged (Litre)</th>
+                                    <th>
+                                        Energy consumption per m^3
+                                    </th>
+                                    <th>
+                                        Discharge Dia. (Dd)
+                                    </th>
+                                    <th>Chlorination Rate</th>
+                                    <th>Total Chlorine Added</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>@item.locationName</td>
+                                    <td>@item.WaterLevel_m</td>
+                                    <td>@item.PumpingWaterLevel_hpl</td>
+                                    <td>@item.RatedDischarge_Q Cfs</td>
+                                    <td>@item.RatedHead_H ft</td>
+                                    @if (item.pumpStatus.Count == 0)
+                                    {
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>@item.Discharge_Dia_Dd Inch</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    }
+                                    else
+                                    {
+                                        double waterFlows = 0;
+                                        double pkws = 0;
+                                        double pressures = 0;
+                                        int counter = 0;
+                                        int counterP = 0;
+                                        for (int i = 0; i < item.pumpStatus.Count; i++)
+                                        {
+                                            if (item.pumpStatus[i] == 1)
+                                            {
+                                                if (item.waterFlow[i] > 50)
+                                                {
+                                                    waterFlows += item.waterFlow[i];
+                                                    pkws += item.pkw[i];
+                                                    counter++;
+                                                }
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        }
+                                        if (counter == 0)
+                                        {
+                                            counter = 1;
+                                        }
+                                        for (int i = 0; i < item.pumpStatus.Count; i++)
+                                        {
+                                            if (item.pumpStatus[i] == 1)
+                                            {
+                                                if (item.pressure[i] > 0.1)
+                                                {
+                                                    pressures += item.pressure[i];
+                                                    counterP++;
+                                                }
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        }
+                                        if (counterP == 0)
+                                        {
+                                            counterP = 1;
+                                        }
+                                        pkws = Math.Round((pkws / counter), 2);
+                                        waterFlows = Math.Round((waterFlows / counter), 2);
+                                        pressures = Math.Round((pressures / counterP), 2);
+                                        if (waterFlows == 0)
+                                        {
+                                            <td>N/A</td>
+                                            <td>N/A</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@waterFlows</td>
+                                            <td>@Math.Round((waterFlows / 101), 2)</td>
+                                        }
+                                        <td>@pressures</td>
+                                        if (waterFlows == 0)
+                                        {
+                                            <td>N/A</td>
+                                            <td>N/A</td>
+                                        }
+                                        else
+                                        {
+                                            @*<td>@(String.Format("{0:n0}", (Math.Round(Convert.ToDouble(waterFlows) * (Convert.ToDouble(item.WorkingInHours) * 219.969), 0)))) </td>*@
+                                            <td>@(String.Format("{0:n0}", (Math.Round(Convert.ToDouble(waterFlows) * (Convert.ToDouble(item.WorkingInHours) * 264.1721), 0)))) </td>
+                                            <td>@(String.Format("{0:n0}", (Math.Round(((Convert.ToDouble(waterFlows) * (Convert.ToDouble(item.WorkingInHours)))), 2) * 1000))) </td>
+                                        }
+                                        if (waterFlows == 0)
+                                        {
+                                            <td>N/A</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Math.Round((pkws / waterFlows), 2)</td>
+                                        }
+                                        <td>@item.Discharge_Dia_Dd Inch</td>
+                                        <td>1mg Per Litre</td>
+                                        if (item.chlorineLevel.Average() == 0)
+                                        {
+                                            <td>Low Chlorine</td>
+                                        }
+                                        else
+                                        {
+                                            if (waterFlows == 0)
+                                            {
+                                                <td>N/A</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(Math.Round(((Convert.ToDouble(waterFlows)) * (Convert.ToDouble(item.WorkingInHours)) * 1000 * 0.001 * 0.001 * (item.chlorineLevel.Average())), 2)) Kg</td>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
