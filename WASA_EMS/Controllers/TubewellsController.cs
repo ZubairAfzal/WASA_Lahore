@@ -118,7 +118,7 @@ namespace WASA_EMS.Controllers
             //query += " and ResourceID = '" + ResID + "' ";
             //query += " order by ResourceID,ParameterID ";
             string query = "";
-            query += "SELECT e.ID, r.ResourceLocation as Location, p.ParameterName, e.ParameterValue, e.InsertionDateTime ";
+            query += "SELECT e.ID, r.ResourceLocation as Location, p.ParameterName, e.ParameterValue, e.InsertionDateTime  ";
             query += "FROM tblEnergy e ";
             query += "inner join tblParameter p on e.ParameterID = p.ParameterID ";
             query += "inner join tblResource r on e.ResourceID = r.ResourceID ";
