@@ -30,6 +30,7 @@
     //setInterval("$('#DashboardDiagram').load('_DashboardView') ", 2000);
     var refreshId = setInterval(function () {
         var properID = $('#WelcomeDiv').load('_Welcome');
+        console.log('proper id value: ' + parseInt(properID));
         if (properID > 0) {
             clearInterval(refreshId);
         }

@@ -84,7 +84,7 @@
     })
 </script>
 
-<div class="container" style="position: relative; min-width: 1140px; min-height: 712px; max-height: 712px; overflow: hidden;">
+@*<div class="container" style="position: relative; min-width: 1140px; min-height: 712px; max-height: 712px; overflow: hidden;">
     <div class="col-md-12" style="padding-left: 0px;  padding-right: 0px;">
         <img src="~/Content/images/InaugurationSwitch.jpg" class="img-responsive" style="position: absolute !important;">
     </div>
@@ -92,9 +92,9 @@
         <input class="fas fa-power-off btnMasterOn" type="button" value="Master ON" onclick="location.href='@Url.Action("MasterOn", "Switch")'" />
         <input class="fas fa-power-off btnMasterOff" type="button" value="Master OFF" onclick="location.href='@Url.Action("MasterOff", "Switch")'" />
     </div>
-</div>
+</div>*@
 
-@*<div class="col-md-12" style="padding: 20px !important;">
+<div class="col-md-12" style="padding: 20px !important;">
         <div class="col-md-8">
         </div>
         <div class="col-md-2 col-xs-6">
@@ -178,7 +178,6 @@
                     </tr>
 
                 }
-                @
             </tbody>
         </table>
 
@@ -226,7 +225,7 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>
 
 @*@foreach (DataRow row in Model.Rows)
 {

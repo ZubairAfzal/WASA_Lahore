@@ -11,7 +11,7 @@ using WASA_EMS.Models;
 
 namespace WASA_EMS.Controllers
 {
-    public class DisposalsController : Controller
+    public class DisposalsController_With_13Hours_Increment : Controller
     {
         // GET: Disposals
         public ActionResult Home()
@@ -106,8 +106,8 @@ namespace WASA_EMS.Controllers
             DateTime FinalTimeTo = DateTime.Now;
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeFrom = DateTime.Now.AddHours(13).Date;
+                FinalTimeTo = DateTime.Now.AddHours(13).AddDays(1).Date;
             }
             else
             {
@@ -166,7 +166,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -227,7 +227,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -428,8 +428,8 @@ namespace WASA_EMS.Controllers
             DateTime FinalTimeTo = DateTime.Now;
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeFrom = DateTime.Now.AddHours(13).Date;
+                FinalTimeTo = DateTime.Now.AddHours(13).AddDays(1).Date;
             }
             else
             {
@@ -496,7 +496,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -557,7 +557,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -610,7 +610,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -663,7 +663,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -716,7 +716,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -769,7 +769,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -830,7 +830,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -883,7 +883,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -936,7 +936,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -989,7 +989,7 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -1215,14 +1215,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1059  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1275,14 +1275,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1059  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1327,14 +1327,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1059  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1379,14 +1379,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour,0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour,13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1059  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1431,14 +1431,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour,0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour,13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1059  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1483,14 +1483,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1060  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1543,14 +1543,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1060  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1595,14 +1595,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1060  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1647,14 +1647,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1060  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1699,14 +1699,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID =  1060  and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1755,7 +1755,7 @@ namespace WASA_EMS.Controllers
                 }
                 conn.Close();
             }
-            Session["ReportTitle"] = "Current Status of Shaukat Khanum Disposal Station at  " + DateTime.Now.AddHours(0).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " (Reflected for Today)";
+            Session["ReportTitle"] = "Current Status of Shaukat Khanum Disposal Station at  " + DateTime.Now.AddHours(13).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " (Reflected for Today)";
 
             /////////////////////////////////////////////////////////////////////////////
 

@@ -225,6 +225,9 @@
                                         double pkvas = 0;
                                         double pkvars = 0;
                                         double pkws = 0;
+                                        double vlns = 0;
+                                        double vlls = 0;
+                                        double freqs = 0;
                                         int counter = 0;
                                         for (int i = 0; i < item.pumpStatus.Count; i++)
                                         {
@@ -237,6 +240,9 @@
                                                 pkvas += item.pkva[i];
                                                 pkvars += item.pkvar[i];
                                                 pkws += item.pkw[i];
+                                                vlns += item.V1N[i] + item.V2N[i] + item.V3N[i];
+                                                vlls += item.V12[i] + item.V13[i] + item.V23[i];
+                                                freqs += item.frequency[i];
                                                 counter++;
                                             }
                                             else
@@ -255,18 +261,22 @@
                                         pkvas = Math.Round((pkvas / counter), 2);
                                         pkvars = Math.Round((pkvars / counter), 2);
                                         pkws = Math.Round((pkws / counter), 2);
+                                        vlns = Math.Round((vlns / (counter*3)), 2);
+                                        vlls = Math.Round((vlls / (counter*3)), 2);
+                                        freqs = Math.Round((freqs / counter), 2);
                                         double averageis = Math.Round(((i1s + i2s + i3s) / 3), 2);
                                         var pp = TimeSpan.FromMinutes((item.WorkingInHours) * 60);
                                         int phour = (int)pp.TotalHours;
                                         int pmin = (int)pp.Minutes;
                                         int psec = (int)pp.Seconds;
                                         string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
-                                        <td>@pstr</td>
+                                        @*<td>@pstr</td>*@
+                                        <td>@item.workingHoursToday</td>
                                         <td>@pff</td>
-                                        <td>@(Math.Round(((item.V1N.FirstOrDefault() + item.V2N.FirstOrDefault() + item.V3N.FirstOrDefault()) / 3), 2))</td>
-                                        <td>@(Math.Round(((item.V12.FirstOrDefault() + item.V13.FirstOrDefault() + item.V23.FirstOrDefault()) / 3), 2))</td>
+                                        <td>@vlns</td>
+                                        <td>@vlls</td>
                                         <td>@averageis</td>
-                                        <td>@item.frequency.FirstOrDefault()</td>
+                                        <td>@freqs</td>
                                         <td>@pkvas</td>
                                         <td>@pkvars</td>
                                         <td>@pkws</td>

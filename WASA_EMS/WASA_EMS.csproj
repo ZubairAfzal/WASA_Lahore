@@ -267,6 +267,8 @@
     <Compile Include="Controllers\ParameterController.cs" />
     <Compile Include="Controllers\PondingController.cs" />
     <Compile Include="Controllers\RainController.cs" />
+    <Compile Include="Controllers\RecyclingPlantController - Copy.cs" />
+    <Compile Include="Controllers\RecyclingPlantController.cs" />
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Controllers\SwitchController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
@@ -274,8 +276,10 @@
     <Compile Include="Controllers\TubewellsController - Copy.cs" />
     <Compile Include="Controllers\TubewellsController.cs" />
     <Compile Include="DataPoint.cs" />
+    <Compile Include="DisposalDataClass - Copy.cs" />
     <Compile Include="DisposalDataClassFinal.cs" />
     <Compile Include="DisposalDataClass.cs" />
+    <Compile Include="DisposalsController_With_13Hours_Increment.cs" />
     <Compile Include="DisposalTableClass.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -405,6 +409,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RainTableClass.cs" />
     <Compile Include="RangeAndResourceSelector.cs" />
+    <Compile Include="RecyclingPlantController_With_13Hours_Increment.cs" />
     <Compile Include="ResourceSellector.cs" />
     <Compile Include="saveData.asmx.cs">
       <DependentUpon>saveData.asmx</DependentUpon>
@@ -423,6 +428,7 @@
     </Compile>
     <Compile Include="TubewellDataClass.cs" />
     <Compile Include="DisposalSpellData.cs" />
+    <Compile Include="TubewellsController_With_13Hours_Increment.cs" />
     <Compile Include="TubewellSpellData.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -528,6 +534,8 @@
     <Content Include="Content\images\empty-chlorine-tank.png" />
     <Content Include="Content\images\empty-priming-tank.png" />
     <Content Include="Content\images\flow-meter.png" />
+    <Content Include="Content\images\Inauguration.jpeg" />
+    <Content Include="Content\images\InaugurationSwitch.jpg" />
     <Content Include="Content\images\lights-off.jpg" />
     <Content Include="Content\images\lights-off1.jpg" />
     <Content Include="Content\images\loading.gif" />
@@ -543,6 +551,7 @@
     <Content Include="Content\mdb.min.css" />
     <Content Include="Content\selectstyle.css" />
     <Content Include="Content\style1.css" />
+    <Content Include="Content\TubewellDashboard.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -6011,6 +6020,7 @@
       <LastGenOutput>wasaEMS.cs</LastGenOutput>
     </Content>
     <Content Include="saveData.asmx" />
+    <Content Include="saveData2.asmx" />
     <Content Include="Scripts\animationDisposal.js" />
     <Content Include="Scripts\animationTubeWell.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -6386,7 +6396,6 @@
     <Content Include="Metronic\assets\img\img\img.zip" />
     <Content Include="Metronic\assets\img\img_29.zip" />
     <Content Include="Metronic\assets\img\WhatsApp Video 2019-05-14 at 11.57.51 PM.mp4" />
-    <Content Include="Content\videos\tubvel-animation-loop.mp4" />
     <Content Include="Content\videos\tubvel-animation.mp4" />
     <EntityDeploy Include="Models\Models_RMS\wasaRMS.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -6410,6 +6419,7 @@
     <Content Include="Content\videos\top-view\back-to-main.mp4" />
     <Content Include="Content\videos\top-view\back-to-top.mp4" />
     <Content Include="Content\videos\top-view\seamless.mp4" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chosen.jquery.min.js" />
     <Content Include="Scripts\DT_js\buttons.bootstrap.min.js" />
@@ -6437,6 +6447,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\selectstyle.js" />
+    <Content Include="Scripts\TubewellDashboard.js" />
     <Content Include="Template.aspx" />
     <Content Include="WASARMS_Contents\CSS\bootstrap-switch.min.css" />
     <Content Include="WASARMS_Contents\CSS\bootstrap.min.css" />
@@ -6595,12 +6606,18 @@
     <Content Include="Views\Tubewells\_ParameterReportView.cshtml" />
     <Content Include="Views\Tubewells\ParameterWiseReport - Copy.cshtml" />
     <Content Include="Views\Tubewells\_VibrationAnalysisReportView_Before_mm_s_X_Y_Z.cshtml" />
+    <Content Include="Views\Tubewells\Tubewell.cshtml" />
+    <Content Include="Views\RecyclingPlant\StatusReport.cshtml" />
+    <Content Include="Views\RecyclingPlant\_StatusReportView.cshtml" />
+    <Content Include="Views\Switch\InaugurationActivity.cshtml" />
+    <Content Include="Views\RecyclingPlant\PumpReport.cshtml" />
+    <Content Include="Views\RecyclingPlant\_PumpReportView.cshtml" />
+    <Content Include="Views\Shared\_Layout_14Nov20.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Metronic\assets\apps\img\" />
     <Folder Include="Metronic\assets\global\plugins\angularjs\plugins\angular-file-upload\uploads\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

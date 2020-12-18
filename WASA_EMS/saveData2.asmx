@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +9,8 @@ using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using WASA_EMS.Models;
+using Newtonsoft.Json;
+using DotImaging.Primitives2D;
 
 namespace WASA_EMS
 {
@@ -28,7 +29,7 @@ namespace WASA_EMS
     [System.ComponentModel.ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     [System.Web.Script.Services.ScriptService]
-    public class saveData : System.Web.Services.WebService
+    public class saveData2 : System.Web.Services.WebService
     {
         public int c_id;
         [WebMethod]
@@ -65,17 +66,10 @@ namespace WASA_EMS
             return Message;
         }
         [WebMethod]
-        public string getRemoteStatus(string sender)
+        public string getScheduleTime()
         {
             BAL bal = new BAL();
-            string Mode = bal.getRemoteMode(sender);
-            return Mode;
-        }
-        [WebMethod]
-        public string getScheduleTime(string sender)
-        {
-            BAL bal = new BAL();
-            string ScheduleTime = bal.getScheduleTime(sender);
+            string ScheduleTime = bal.getScheduleTime();
             return ScheduleTime;
         }
 
@@ -85,1395 +79,6 @@ namespace WASA_EMS
             BAL bal = new BAL();
             string result = bal.execQuery(query);
             return result;
-        }
-
-        [WebMethod]
-        public double workingHoursToday(string sender)
-        {
-
-            DataTable dtRes = new DataTable();
-            DataTable Dashdt = new DataTable();
-            var tubewellDataList = new List<TubewellDataClass>();
-            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string getResFromTemp = "select DISTINCT r.ResourceID, r.ResourceLocation from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells'";
-                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
-                    dtRes.Clear();
-                    sdaRes.Fill(dtRes);
-                    string getResId = "select ResourceID from tblResource where MobileNumber = '" + sender + "'";
-                    var cmdResId = new SqlCommand(getResId, conn);
-                    int resourceID = Convert.ToInt32(cmdResId.ExecuteScalar());
-                    string resourceLocation = "";
-                    int ite = 0;
-                    //iterate through the list of resources within the desired set of resources chosen
-                    //getting resourceID 
-                    //getting resourceLocation 
-                    //query will get the list of data available against given resourceID (latest first)
-                    string Dashdtquery = ";WITH cte AS ( ";
-                    Dashdtquery += "SELECT* FROM ";
-                    Dashdtquery += "( ";
-                    Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
-                    Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
-                    Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
-                    Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
-                    Dashdtquery += "FROM tblEnergy s ";
-                    Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
-                    Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
-                    Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
-                    Dashdtquery += "where ";
-                    Dashdtquery += "r.ResourceID = " + resourceID + " and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
-                    Dashdtquery += ") ";
-                    Dashdtquery += "AS SourceTable ";
-                    Dashdtquery += "PIVOT ";
-                    Dashdtquery += "( ";
-                    Dashdtquery += "SUM(pVal) FOR pID ";
-                    Dashdtquery += "IN ";
-                    Dashdtquery += "( ";
-                    Dashdtquery += "[PumpStatus],[WaterFlow(Cusec).] ";
-                    Dashdtquery += ") ";
-                    Dashdtquery += ")  ";
-                    Dashdtquery += "AS PivotTable ";
-                    Dashdtquery += ")  ";
-                    Dashdtquery += "SELECT* FROM cte ";
-                    Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
-                    Dashdtquery += "tim DESC";
-                    SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
-                    SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
-                    Dashdt.Clear();
-                    sda.Fill(Dashdt);
-                    if (Dashdt.Rows.Count > 0)
-                    {
-                        TubewellDataClass sd = getWorkingHours(Dashdt);
-                        tubewellDataList.Add(sd);
-                    }
-                    else
-                    {
-                        TubewellDataClass sd = new TubewellDataClass();
-                        sd.locationName = "";
-                        sd.pumpStatus = new List<double>();
-                        tubewellDataList.Add(sd);
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                }
-                conn.Close();
-                double hhours = 0;
-                if (tubewellDataList.Count > 0)
-                {
-                    hhours = Convert.ToDouble(tubewellDataList.FirstOrDefault().WorkingInHours);
-                }
-                else
-                {
-
-                }
-                return hhours;
-            }
-        }
-
-
-        public TubewellDataClass getWorkingHours(DataTable dt)
-        {
-            var tableData = new TubewellDataClass();
-            var spelldata = new TubewellSpellData();
-            //int resourceID = Convert.ToInt32(dt.Rows[0]["resourceID"]);
-            string location = dt.Rows[0]["Location"].ToString();
-            double currentMotorStatus = Math.Round((Convert.ToDouble(dt.Rows[0]["PumpStatus"])), 2);
-            string currentTime = dt.Rows[0]["tim"].ToString();
-            double DeltaMinutes = Convert.ToDouble(dt.Rows[0]["DeltaMinutes"]);
-            bool S = false;
-            bool E = false;
-            bool T = true;
-            bool F = false;
-            int spell = 0;
-            List<TubewellSpellData> spellDataList = new List<TubewellSpellData>();
-            string curtm = "";
-            foreach (DataRow dr in dt.Rows)
-            {
-                double currValue = Math.Round((Convert.ToDouble(dr["PumpStatus"])), 2);
-                //double currValueRemote = Math.Round((Convert.ToDouble(dr["Remote."])), 2);
-                //double currValueManual = Math.Round((Convert.ToDouble(dr["Manual"])), 2);
-                //double currValueScheduling = Math.Round((Convert.ToDouble(dr["TimeSchedule."])), 2);
-                double FlowRate = Math.Round((Convert.ToDouble(dr["WaterFlow(Cusec)."])), 2);
-                string currTime = dr["tim"].ToString();
-                string clearaceTime = "";
-                //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
-                {
-
-                }
-                // end  scenario 3 (inactive)
-                else
-                {
-                    //start scenario 1 (No Ponding since many time/cleared/ zero received (find out what is the last ponding time if any))
-                    if (currentMotorStatus < 1)
-                    {
-                        if (E == F && S == F)
-                        {
-                            if (currValue < 1)
-                            {
-                                if (spelldata.SpellDataArray.Count > 0)
-                                {
-                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
-                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
-                                    E = T;
-                                    S = T;
-                                    spelldata.SpellDataArray.Add(lastvalue);
-                                    spelldata.SpellTimeArray.Add(lastTime);
-                                    spelldata.SpellEndTime = currTime;
-                                    clearaceTime = currTime;
-                                }
-
-                            }
-                            else
-                            {
-                                E = T;
-                                spell = spell + 1;
-                                spelldata.SpellNumber = spell;
-                                spelldata.SpellDataArray.Add(FlowRate);
-                                spelldata.SpellTimeArray.Add(currTime);
-                                spelldata.SpellEndTime = currTime;
-                                clearaceTime = currTime;
-
-                            }
-                        }
-                        else if (E == T && S == F)
-                        {
-                            if (currValue < 1)
-                            {
-                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
-                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
-                                {
-                                    spelldata.SpellStartTime = lastTime;
-                                    S = T;
-                                }
-                                else
-                                {
-
-                                    spelldata.SpellStartTime = currTime;
-                                    S = T;
-                                }
-                            }
-                            else
-                            {
-                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
-                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
-                                {
-                                    spelldata.SpellStartTime = currTime;
-                                    S = T;
-                                }
-                                else
-                                {
-                                    spelldata.SpellDataArray.Add(FlowRate);
-                                    spelldata.SpellTimeArray.Add(currTime);
-                                }
-                            }
-                        }
-                        if (E == T && S == T)
-                        {
-                            E = F;
-                            S = F;
-                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
-                            {
-                                //int indexMax = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value > b.Value) ? a : b).Index;
-                                //int indexMin = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value < b.Value) ? a : b).Index;
-                                //spelldata.spellMaxTime = spelldata.SpellTimeArray.ElementAt(indexMax);
-                                //spelldata.spellMinTime = spelldata.SpellTimeArray.ElementAt(indexMin);
-                                //spelldata.SpellMax = spelldata.SpellDataArray.DefaultIfEmpty().Max();
-                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
-                                if (spelldata.spellPeriod == 0)
-                                {
-                                    spelldata.spellPeriod = 1;
-                                }
-                                //spelldata.spellFlowDown = Math.Round(spelldata.SpellMax / spelldata.spellPeriod, 2);
-                                //spelldata.spellFlowUp = Math.Round(spelldata.SpellMax / Math.Abs((Convert.ToDateTime(spelldata.spellMaxTime) - Convert.ToDateTime(spelldata.SpellStartTime)).TotalMinutes), 2);
-                                spellDataList.Add(spelldata);
-                                spelldata = new TubewellSpellData();
-                            }
-                        }
-                    }
-                    // end  scenario 1 (No Ponding since many time/cleared/ zero received)
-                    //////////////////////////////////////////////////////////////////////
-                    //start scenario 2 (uncleared/ ponding continues (find out when the ponding is started))
-                    else
-                    {
-                        if (E == F && S == F)
-                        {
-                            if (currValue < 1)
-                            {
-                                if (spelldata.SpellDataArray.Count > 0)
-                                {
-                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
-                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
-                                    E = T;
-                                    S = T;
-                                    spelldata.SpellDataArray.Add(lastvalue);
-                                    spelldata.SpellTimeArray.Add(lastTime);
-                                    spelldata.SpellEndTime = currTime;
-                                    clearaceTime = currTime;
-                                }
-
-                            }
-                            else
-                            {
-                                E = T;
-                                spell = spell + 1;
-                                spelldata.SpellNumber = spell;
-                                spelldata.SpellDataArray.Add(FlowRate);
-                                spelldata.SpellTimeArray.Add(currTime);
-                                spelldata.SpellEndTime = currTime;
-                                clearaceTime = currTime;
-
-                            }
-                        }
-                        else if (E == T && S == F)
-                        {
-                            if (currValue < 1)
-                            {
-                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
-                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
-                                {
-                                    spelldata.SpellStartTime = lastTime;
-                                    S = T;
-                                }
-                                else
-                                {
-
-                                    spelldata.SpellStartTime = currTime;
-                                    S = T;
-                                }
-                            }
-                            else
-                            {
-                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
-                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
-                                {
-                                    spelldata.SpellStartTime = currTime;
-                                    S = T;
-                                }
-                                else
-                                {
-                                    spelldata.SpellDataArray.Add(FlowRate);
-                                    spelldata.SpellTimeArray.Add(currTime);
-                                }
-                            }
-                        }
-                        if (E == T && S == T)
-                        {
-                            E = F;
-                            S = F;
-                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
-                            {
-                                //int indexMax = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value > b.Value) ? a : b).Index;
-                                //int indexMin = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value < b.Value) ? a : b).Index;
-                                //spelldata.spellMaxTime = spelldata.SpellTimeArray.ElementAt(indexMax);
-                                //spelldata.spellMinTime = spelldata.SpellTimeArray.ElementAt(indexMin);
-                                //spelldata.SpellMax = spelldata.SpellDataArray.DefaultIfEmpty().Max();
-                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
-                                if (spelldata.spellPeriod == 0)
-                                {
-                                    spelldata.spellPeriod = 1;
-                                }
-                                //spelldata.spellFlowDown = Math.Round(spelldata.SpellMax / spelldata.spellPeriod, 2);
-                                //spelldata.spellFlowUp = Math.Round(spelldata.SpellMax / Math.Abs((Convert.ToDateTime(spelldata.spellMaxTime) - Convert.ToDateTime(spelldata.SpellStartTime)).TotalMinutes), 2);
-                                spellDataList.Add(spelldata);
-                                spelldata = new TubewellSpellData();
-                            }
-                        }
-                    }
-                    // end  scenario 2 (uncleared/ ponding continues)
-                }
-                curtm = currTime;
-            }
-            if (spellDataList.Count < 1)
-            {
-                if (spelldata.SpellDataArray.Count > 0)
-                {
-                    spelldata.SpellStartTime = curtm;
-                    spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
-                    if (spelldata.spellPeriod == 0)
-                    {
-                        spelldata.spellPeriod = 1;
-                    }
-                    spellDataList.Add(spelldata);
-                }
-            }
-            if (spelldata.SpellDataArray.Count == 0)
-            {
-                spelldata.SpellDataArray.Add(currentMotorStatus);
-                spelldata.SpellTimeArray.Add(currentTime);
-                spelldata.SpellStartTime = currentTime;
-                spelldata.SpellEndTime = currentTime;
-            }
-            if (/*DeltaMinutes > 1440 ||*/ spelldata.SpellDataArray.Count == 0 || spellDataList.Count == 0)
-            {
-                
-                var pp = TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)));
-                int phour = (int)pp.TotalHours;
-                int pmin = (int)pp.Minutes;
-                int psec = (int)pp.Seconds;
-                string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
-                tableData.workingHoursToday = pstr;
-                tableData.WorkingInHours = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
-                //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
-                if (spellDataList.Count == 0)
-                {
-                    tableData.accWaterDischargePerDay = "0";
-                }
-                else
-                {
-                    double avgWaterFlow = spellDataList.DefaultIfEmpty().Average(x => x.SpellDataArray.DefaultIfEmpty().Average());
-                    if (avgWaterFlow == 0)
-                    {
-                        avgWaterFlow = 1;
-                    }
-                    tableData.accWaterDischargePerDay = (((Convert.ToDouble(spellDataList.DefaultIfEmpty().Sum(i => i.spellPeriod)) / 60) * 102) * avgWaterFlow).ToString();
-                    //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
-                    //tableData.accWaterDischargePerDay = ((tableData.waterFlow.Sum(x => Convert.ToDouble(x)) / Convert.ToDouble(tableData.workingHoursToday)) * 60).ToString();
-                }
-            }
-            else
-            {
-                var pp = TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)));
-                int phour = (int)pp.TotalHours;
-                int pmin = (int)pp.Minutes;
-                int psec = (int)pp.Seconds;
-                string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
-                tableData.workingHoursToday = pstr;
-                tableData.WorkingInHours = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
-                //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
-                double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
-                tableData.accWaterDischargePerDay = (((Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)) / 60) * 102) * avgWaterFlow).ToString();
-            }
-            return tableData;
-        }
-
-        [WebMethod]
-        public string GetData()
-        {
-            int c_id = 4;
-            List<object> lists = new List<object>();
-            //int c_id = Convert.ToInt32(Session["CompanyID"]);
-            string tempName = "";
-            string query = "select TemplateID, TemplateName from tblTemplate where CompanyID = " + c_id + "";
-            query += " and TemplateID in (select TemplateID from tblResource) ";
-            List<SelectListItem> items = new List<SelectListItem>();
-            using (SqlConnection con1 = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                using (SqlCommand cmd2 = new SqlCommand(query))
-                {
-                    cmd2.Connection = con1;
-                    con1.Open();
-                    using (SqlDataReader sdr = cmd2.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            items.Add(new SelectListItem
-                            {
-                                Text = sdr["TemplateName"].ToString(),
-                                Value = sdr["TemplateID"].ToString()
-                            });
-                        }
-                    }
-                    con1.Close();
-                }
-            }
-            string parameterValuesString = "";
-            string datetimed = "";
-            string markers = "[";
-            WASA_EMS_Entities db = new WASA_EMS_Entities();
-            string q = "select r.ResourceLocation, r.ResourceID, r.CooridatesGoogle, t.TemplateName from tblResource r left join tblTemplate t on r.TemplateID = t.TemplateID  where  t.TemplateID = 64 and t.CompanyID = " + c_id + "";
-            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(q, conn);
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            DataTable dt = new DataTable();
-                            string q1 = "select distinct r.ResourceLocation,  t.TemplateName, p.ParameterName, p.paramOrder, e.ParameterValue, e.InsertionDateTime, rms.CurrentMotorOnOffStatus from tblEnergy e ";
-                            q1 += "left join tblParameter p on e.ParameterID = p.ParameterID ";
-                            q1 += "left join tblResource r on e.ResourceID = r.ResourceID ";
-                            q1 += "left join tblRemoteSensor rms on r.ResourceID = rms.ResourceID ";
-                            q1 += "left join tblTemplate t on r.TemplateID = t.TemplateID ";
-                            q1 += "where e.InsertionDateTime = (select max(InsertionDateTime) from tblEnergy where ResourceID = " + sdr["ResourceID"] + ")";
-                            q1 += "and r.ResourceID = " + sdr["ResourceID"] + "";
-                            q1 += " and t.TemplateID = 64 order by p.paramOrder";
-                            SqlCommand cmd1 = new SqlCommand(q1, conn);
-                            SqlDataAdapter sda = new SqlDataAdapter(cmd1);
-                            dt.Clear();
-                            sda.Fill(dt);
-                            int optionStatus = 0;
-                            int manual = 0;
-                            int remote = 0;
-                            int scheduling = 0;
-                            int pumpStatus = 0;
-                            using (SqlDataReader sdr1 = cmd1.ExecuteReader())
-                            {
-                                while (sdr1.Read())
-                                {
-                                    string valuee = "";
-                                    parameterValuesString += "";
-                                    if (sdr1["ParameterName"].ToString() == "V1N.")
-                                    {
-                                        parameterValuesString += "V1N : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "V2N.")
-                                    {
-                                        parameterValuesString += "V2N : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "V3N.")
-                                    {
-                                        parameterValuesString += "V3N : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "I1.")
-                                    {
-                                        parameterValuesString += "I1 : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "I2.")
-                                    {
-                                        parameterValuesString += "I2 : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "I3.")
-                                    {
-                                        parameterValuesString += "I3 : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Frequency.")
-                                    {
-                                        parameterValuesString += "Frequency : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PKVA.")
-                                    {
-                                        parameterValuesString += "PKVA : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PF.")
-                                    {
-                                        parameterValuesString += "Power Factor : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Remote.")
-                                    {
-                                        parameterValuesString += "Remote Mode : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus")
-                                    {
-                                        parameterValuesString += "Pump Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "CurrentTrip.")
-                                    {
-                                        parameterValuesString += "Current Trip : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "VoltageTrip.")
-                                    {
-                                        parameterValuesString += "Voltage Trip : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "TimeSchedule.")
-                                    {
-                                        parameterValuesString += "Scheduling Mode : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "ChlorineLevel.")
-                                    {
-                                        parameterValuesString += "Chlorine Level : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "WaterFlow(Cusec).")
-                                    {
-                                        parameterValuesString += "Water Flow (cfs) : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PKVAR.")
-                                    {
-                                        parameterValuesString += "PKVAR : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PKW.")
-                                    {
-                                        parameterValuesString += "PKW : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "V12")
-                                    {
-                                        parameterValuesString += "V12 : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "V13")
-                                    {
-                                        parameterValuesString += "V13 : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "V23")
-                                    {
-                                        parameterValuesString += "V23 : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PrimingLevel")
-                                    {
-                                        parameterValuesString += "Priming Level : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Pressure(Bar)")
-                                    {
-                                        parameterValuesString += "Pressure(Bar) : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Manual")
-                                    {
-                                        parameterValuesString += "Manual Mode : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "IndoorLight")
-                                    {
-                                        parameterValuesString += "Indoor Lights : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "OutdoorLight")
-                                    {
-                                        parameterValuesString += "Outdoor Lights : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Exhaust Fan")
-                                    {
-                                        parameterValuesString += "Exhaust Fan : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus1.")
-                                    {
-                                        parameterValuesString += "Pump 1 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus2.")
-                                    {
-                                        parameterValuesString += "Pump 2 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus3.")
-                                    {
-                                        parameterValuesString += "Pump 3 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus4.")
-                                    {
-                                        parameterValuesString += "Pump 4 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus5.")
-                                    {
-                                        parameterValuesString += "Pump 5 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Well1Level(ft)")
-                                    {
-                                        parameterValuesString += "Well 1 Level (ft) : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus6.")
-                                    {
-                                        parameterValuesString += "Pump 6 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus7.")
-                                    {
-                                        parameterValuesString += "Pump 7 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus8.")
-                                    {
-                                        parameterValuesString += "Pump 8 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus9.")
-                                    {
-                                        parameterValuesString += "Pump 9 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatuss10.")
-                                    {
-                                        parameterValuesString += "Pump 10 Status : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Well2Level(ft)")
-                                    {
-                                        parameterValuesString += "Well 2 Level (ft) : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "vib_M")
-                                    {
-                                        parameterValuesString += "Vibration (m) : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "vib_Ms")
-                                    {
-                                        parameterValuesString += "Vibration (m/s) : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "vib_Ms2")
-                                    {
-                                        parameterValuesString += "Vibration (m/s2) : ";
-                                    }
-                                    else
-                                    {
-                                        parameterValuesString += sdr1["ParameterName"].ToString() + ": ";
-                                    }
-                                    //parameterValuesString += ssdr1["ParameterName"].ToString() + ": ";
-                                    if (sdr1["ParameterName"].ToString() == "AutoModeOn")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus1.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus2.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus3.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus4.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus5.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus6.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus7.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus8.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatus9.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PumpStatuss10.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "CurrentTrip.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "No Error";
-                                        }
-                                        else
-                                        {
-                                            valuee = "Error";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "VoltageTrip.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "No Error";
-                                        }
-                                        else
-                                        {
-                                            valuee = "Error";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Manual")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                        }
-                                        manual = Convert.ToInt32(sdr1["ParameterValue"]);
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Remote.")
-                                    {
-                                        if (manual == 0 && sdr1["ParameterValue"].ToString() == "1")
-                                        {
-                                            valuee = "ON";
-                                        }
-                                        else
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        remote = Convert.ToInt32(sdr1["ParameterValue"]);
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "TimeSchedule.")
-                                    {
-                                        if (manual == 0 && remote == 0 && sdr1["ParameterValue"].ToString() == "1")
-                                        {
-                                            valuee = "ON";
-                                        }
-                                        else
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "ChlorineLevel.")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "LOW";
-                                        }
-                                        else
-                                        {
-                                            valuee = "FULL";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "PrimingLevel")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "LOW";
-                                        }
-                                        else
-                                        {
-                                            valuee = "FULL";
-                                        }
-                                    }
-                                    
-                                    else if (sdr1["ParameterName"].ToString() == "IndoorLight")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "OutdoorLight")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "Exhaust Fan")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "WaterFlow(Cusec).")
-                                    {
-                                        valuee = Math.Round((Convert.ToDouble(sdr1["ParameterValue"])/101), 2).ToString();
-                                    }
-                                    else
-                                    {
-                                        valuee = Math.Round(Convert.ToDouble(sdr1["ParameterValue"]), 2).ToString();
-                                    }
-                                    parameterValuesString += valuee;
-                                    parameterValuesString += "<br />";
-                                    datetimed = sdr1["InsertionDateTime"].ToString();
-                                    //optionStatus = sdr1["CurrentMotorOnOffStatus"].ToString();
-                                }
-                            }
-                            string theStatus = "False";
-                            if (optionStatus > 0)
-                            {
-                                theStatus = "True";
-                            }
-                            tempName = sdr["TemplateName"].ToString().Substring(0, 1);
-                            string templName = sdr["TemplateName"].ToString();
-                            if (templName == "Tubewells")
-                            {
-                                templName = "Tubewell";
-                            }
-                            string newstring = "<b>" + templName + "</b>";
-                            newstring += "<br />";
-                            newstring += "<b>" + sdr["ResourceLocation"].ToString() + "</b>";
-                            newstring += "<br />";
-                            newstring += datetimed;
-                            newstring += "<br />";
-                            newstring += parameterValuesString;
-                            TimeSpan duration = (Convert.ToDateTime(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToString()) - Convert.ToDateTime(datetimed.ToString()));
-                            double minu = duration.TotalMinutes;
-                            parameterValuesString = "";
-                            markers += "{";
-                            markers += string.Format("'Status': '{0}',", theStatus);
-                            markers += string.Format("'Template': '{0}',", tempName);
-                            markers += string.Format("'title': '{0}',", sdr["ResourceLocation"]);
-                            //markers += string.Format("'time': '{0}',", sdr1["InsertionDateTime"]);
-                            markers += string.Format("'lat':'{0}',", sdr["CooridatesGoogle"].ToString().Split(',')[0]);
-                            markers += string.Format("'lnt':'{0}',", sdr["CooridatesGoogle"].ToString().Split(',')[1]);
-                            //markers += string.Format("'parameter':'{0}',", sdr1["ParameterName"]);
-                            //markers += string.Format("'value':'{0}'", sdr1["ParameterValue"]);
-                            markers += string.Format("'DelTime': '{0}',", minu);
-                            markers += string.Format("'description': '{0}'", newstring);
-                            markers += "},";
-                        }
-                    }
-                    conn.Close();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                //return new SelectList(theResourceTypes, "Value", "Text", "id");
-            }
-
-            string p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ptime, plevel1, plevel2 = "";
-            int pp1 = 0;
-            int pp2 = 0;
-            int pp3 = 0;
-            int pp4 = 0;
-            int pp5 = 0;
-            int pp6 = 0;
-            int pp7 = 0;
-            int pp8 = 0;
-            int pp9 = 0;
-            int pp10 = 0;
-            double tlevel1 = 0;
-            double tlevel2 = 0;
-            p1 = "select top(1) ParameterValue from tblEnergy where ParameterID = 144 order by ID DESC";
-            p2 = "select top(1) ParameterValue from tblEnergy where ParameterID = 145 order by ID DESC";
-            p3 = "select top(1) ParameterValue from tblEnergy where ParameterID = 146 order by ID DESC";
-            p4 = "select top(1) ParameterValue from tblEnergy where ParameterID = 147 order by ID DESC";
-            p5 = "select top(1) ParameterValue from tblEnergy where ParameterID = 148 order by ID DESC";
-            p6 = "select top(1) ParameterValue from tblEnergy where ParameterID = 149 order by ID DESC";
-            p7 = "select top(1) ParameterValue from tblEnergy where ParameterID = 150 order by ID DESC";
-            p8 = "select top(1) ParameterValue from tblEnergy where ParameterID = 151 order by ID DESC";
-            p9 = "select top(1) ParameterValue from tblEnergy where ParameterID = 152 order by ID DESC";
-            p10 = "select top(1) ParameterValue from tblEnergy where ParameterID = 153 order by ID DESC";
-            ptime = "select top(1) InsertionDateTime from tblEnergy where ParameterID = 153 order by ID DESC";
-            plevel1 = "select top(1) ParameterValue from tblEnergy where ParameterID = 175 order by ID DESC";
-            plevel2 = "select top(1) ParameterValue from tblEnergy where ParameterID = 176 order by ID DESC";
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    SqlCommand cmd1 = new SqlCommand(p1, conn);
-                    SqlCommand cmd2 = new SqlCommand(p2, conn);
-                    SqlCommand cmd3 = new SqlCommand(p3, conn);
-                    SqlCommand cmd4 = new SqlCommand(p4, conn);
-                    SqlCommand cmd5 = new SqlCommand(p5, conn);
-                    SqlCommand cmd6 = new SqlCommand(p6, conn);
-                    SqlCommand cmd7 = new SqlCommand(p7, conn);
-                    SqlCommand cmd8 = new SqlCommand(p8, conn);
-                    SqlCommand cmd9 = new SqlCommand(p9, conn);
-                    SqlCommand cmd10 = new SqlCommand(p10, conn);
-                    SqlCommand cmdtime = new SqlCommand(ptime, conn);
-                    SqlCommand cmdlevel1 = new SqlCommand(plevel1, conn);
-                    SqlCommand cmdlevel2 = new SqlCommand(plevel2, conn);
-                    pp1 = Convert.ToInt32(cmd1.ExecuteScalar());
-                    pp2 = Convert.ToInt32(cmd2.ExecuteScalar());
-                    pp3 = Convert.ToInt32(cmd3.ExecuteScalar());
-                    pp4 = Convert.ToInt32(cmd4.ExecuteScalar());
-                    pp5 = Convert.ToInt32(cmd5.ExecuteScalar());
-                    pp6 = Convert.ToInt32(cmd6.ExecuteScalar());
-                    pp7 = Convert.ToInt32(cmd7.ExecuteScalar());
-                    pp8 = Convert.ToInt32(cmd8.ExecuteScalar());
-                    pp9 = Convert.ToInt32(cmd9.ExecuteScalar());
-                    pp10 = Convert.ToInt32(cmd10.ExecuteScalar());
-                    ptime = cmdtime.ExecuteScalar().ToString();
-                    tlevel1 = Convert.ToDouble(cmdlevel1.ExecuteScalar());
-                    tlevel2 = Convert.ToDouble(cmdlevel2.ExecuteScalar());
-                    conn.Close();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                if (tlevel1 == 0)
-                {
-                    plevel1 = "Empty";
-                }
-                else
-                {
-                    plevel1 = Math.Round(tlevel1, 1).ToString() + " ft";
-                }
-                if (tlevel2 == 0)
-                {
-                    plevel2 = "Empty";
-                }
-                else
-                {
-                    plevel2 = Math.Round(tlevel2, 1).ToString() + " ft";
-                }
-                if (pp1 == 0)
-                {
-                    p1 = "OFF";
-                }
-                else
-                {
-                    p1 = "ON";
-                }
-                if (pp2 == 0)
-                {
-                    p2 = "OFF";
-                }
-                else
-                {
-                    p2 = "ON";
-                }
-                if (pp3 == 0)
-                {
-                    p3 = "OFF";
-                }
-                else
-                {
-                    p3 = "ON";
-                }
-                if (pp4 == 0)
-                {
-                    p4 = "OFF";
-                }
-                else
-                {
-                    p4 = "ON";
-                }
-                if (pp5 == 0)
-                {
-                    p5 = "OFF";
-                }
-                else
-                {
-                    p5 = "ON";
-                }
-                if (pp6 == 0)
-                {
-                    p6 = "OFF";
-                }
-                else
-                {
-                    p6 = "ON";
-                }
-                if (pp7 == 0)
-                {
-                    p7 = "OFF";
-                }
-                else
-                {
-                    p7 = "ON";
-                }
-                if (pp8 == 0)
-                {
-                    p8 = "OFF";
-                }
-                else
-                {
-                    p8 = "ON";
-                }
-                if (pp9 == 0)
-                {
-                    p9 = "OFF";
-                }
-                else
-                {
-                    p9 = "ON";
-                }
-                if (pp10 == 0)
-                {
-                    p10 = "OFF";
-                }
-                else
-                {
-                    p10 = "ON";
-                }
-                //return new SelectList(theResourceTypes, "Value", "Text", "id");
-            }
-            string theStatusp = "False";
-            if (pp1 + pp2 + pp3 + pp4 + pp5 + pp6 + pp7 + pp8 + pp9 + pp10 > 0)
-            {
-                theStatusp = "True";
-            }
-
-            parameterValuesString = "Pump 1 : " + p1;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 2 : " + p2;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 3 : " + p3;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 4 : " + p4;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 5 : " + p5;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 6 : " + p6;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 7 : " + p7;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 8 : " + p8;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 9 : " + p9;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Pump 10 : " + p10;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Well 1 Level : " + plevel1;
-            parameterValuesString += "<br />";
-            parameterValuesString += "Well 2 Level : " + plevel2;
-            parameterValuesString += "<br />";
-
-            datetimed = ptime;
-
-            tempName = "D";
-            string newstringp = "<b>Disposal Station</b>";
-            newstringp += "<br />";
-            newstringp += "<b>Shaukat Khanum Disposal Station</b>";
-            newstringp += "<br />";
-            newstringp += datetimed;
-            newstringp += "<br />";
-            newstringp += parameterValuesString;
-            TimeSpan durationp = (Convert.ToDateTime(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToString()) - Convert.ToDateTime(datetimed.ToString()));
-            double minup = durationp.TotalMinutes;
-            parameterValuesString = "";
-            markers += "{";
-            markers += string.Format("'Status': '{0}',", theStatusp);
-            markers += string.Format("'Template': '{0}',", tempName);
-            markers += string.Format("'title': '{0}',", "Shaukat Khanum Disposal Station");
-            //markers += string.Format("'time': '{0}',", sdr1["InsertionDateTime"]);
-            markers += string.Format("'lat':'{0}',", "31.430021");
-            markers += string.Format("'lnt':'{0}',", "74.252829");
-            markers += string.Format("'DelTime': '{0}',", minup);
-            markers += string.Format("'description': '{0}'", newstringp);
-            markers += "},";
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            ///
-
-            string qres = "select r.ResourceLocation, r.ResourceID, r.CooridatesGoogle, t.TemplateName from tblResource r left join tblTemplate t on r.TemplateID = t.TemplateID  where  t.TemplateID = 67 and t.CompanyID = " + c_id + "";
-            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(qres, conn);
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            DataTable dt = new DataTable();
-                            string q1 = "select distinct r.ResourceLocation,  t.TemplateName, p.ParameterName, p.paramOrder, e.ParameterValue, e.InsertionDateTime,rms.CurrentMotorOnOffStatus from tblEnergy e ";
-                            q1 += "left join tblParameter p on e.ParameterID = p.ParameterID ";
-                            q1 += "left join tblResource r on e.ResourceID = r.ResourceID ";
-                            q1 += "left join tblRemoteSensor rms on r.ResourceID = rms.ResourceID ";
-                            q1 += "left join tblTemplate t on r.TemplateID = t.TemplateID ";
-                            q1 += "where e.InsertionDateTime = (select max(InsertionDateTime) from tblEnergy where ResourceID = " + sdr["ResourceID"] + ")";
-                            q1 += "and r.ResourceID = " + sdr["ResourceID"] + "";
-                            q1 += " and t.TemplateID = 67 order by p.paramOrder";
-                            SqlCommand cmd1 = new SqlCommand(q1, conn);
-                            SqlDataAdapter sda = new SqlDataAdapter(cmd1);
-                            dt.Clear();
-                            sda.Fill(dt);
-                            int optionStatus = 0;
-                            int manual = 0;
-                            int remote = 0;
-                            int scheduling = 0;
-                            int pumpStatus = 0;
-                            using (SqlDataReader sdr1 = cmd1.ExecuteReader())
-                            {
-                                while (sdr1.Read())
-                                {
-                                    string valuee = "";
-                                    parameterValuesString += "";
-                                    if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus1")
-                                    {
-                                        parameterValuesString += "Submersible Pump : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus2")
-                                    {
-                                        parameterValuesString += "Filtered Water Pump : ";
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus3")
-                                    {
-                                        parameterValuesString += "Fresh Water Pump : ";
-                                    }
-                                    else
-                                    {
-                                        parameterValuesString += sdr1["ParameterName"].ToString() + ": ";
-                                    }
-                                    //parameterValuesString += ssdr1["ParameterName"].ToString() + ": ";
-                                    if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus1")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus2")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus3")
-                                    {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        valuee = Math.Round(Convert.ToDouble(sdr1["ParameterValue"]), 2).ToString();
-                                    }
-                                    parameterValuesString += valuee;
-                                    parameterValuesString += "<br />";
-                                    datetimed = sdr1["InsertionDateTime"].ToString();
-                                    //optionStatus = sdr1["CurrentMotorOnOffStatus"].ToString();
-                                }
-                            }
-                            string theStatus = "False";
-                            if (optionStatus > 0)
-                            {
-                                theStatus = "True";
-                            }
-                            tempName = sdr["TemplateName"].ToString().Substring(0, 1);
-                            string templName = sdr["TemplateName"].ToString();
-                            if (templName == "Recycling Plants")
-                            {
-                                templName = "Recycling Plant";
-                            }
-                            string newstring = "<b>" + templName + "</b>";
-                            newstring += "<br />";
-                            newstring += "<b>" + sdr["ResourceLocation"].ToString() + "</b>";
-                            newstring += "<br />";
-                            newstring += datetimed;
-                            newstring += "<br />";
-                            newstring += parameterValuesString;
-                            TimeSpan duration = (Convert.ToDateTime(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToString()) - Convert.ToDateTime(datetimed.ToString()));
-                            double minu = duration.TotalMinutes;
-                            parameterValuesString = "";
-                            markers += "{";
-                            markers += string.Format("'Status': '{0}',", theStatus);
-                            markers += string.Format("'Template': '{0}',", tempName);
-                            markers += string.Format("'title': '{0}',", sdr["ResourceLocation"]);
-                            //markers += string.Format("'time': '{0}',", sdr1["InsertionDateTime"]);
-                            markers += string.Format("'lat':'{0}',", sdr["CooridatesGoogle"].ToString().Split(',')[0]);
-                            markers += string.Format("'lnt':'{0}',", sdr["CooridatesGoogle"].ToString().Split(',')[1]);
-                            //markers += string.Format("'parameter':'{0}',", sdr1["ParameterName"]);
-                            //markers += string.Format("'value':'{0}'", sdr1["ParameterValue"]);
-                            markers += string.Format("'DelTime': '{0}',", minu);
-                            markers += string.Format("'description': '{0}'", newstring);
-                            markers += "},";
-                        }
-                    }
-                    conn.Close();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                //return new SelectList(theResourceTypes, "Value", "Text", "id");
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            markers += "]";
-            return markers;
-        }
-
-        [WebMethod]
-        public int getTimeScheduleMode(string sender)
-        {
-            int mode = -1;
-            string getTimeScheduleMode = "select Mode from tblSetMode where ResourceID = (select ResourceID from tblResource where MobileNumber = '" + sender + "')";
-            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    var cmdResId = new SqlCommand(getTimeScheduleMode, conn);
-                    mode = Convert.ToInt32(cmdResId.ExecuteScalar());
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-            return mode;
-        }
-
-        [WebMethod]
-        public double getVibM(string sender)
-        {
-            double val = -1;
-            using (SqlConnection conn1 = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    string query_m = "select top(1) e.ParameterValue from tblEnergy e ";
-                    query_m += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-                    query_m += "inner join tblParameter p on e.ParameterID = p.ParameterID ";
-                    query_m += "where p.ParameterName = 'vib_M' ";
-                    query_m += "and e.ParameterValue IS NOT NULL ";
-                    query_m += "and r.ResourceID = (select ResourceID from tblResource where MobileNumber = '" + sender + "') ";
-                    query_m += "order by ID DESC ";
-                    SqlCommand cmd_m = new SqlCommand(query_m, conn1);
-                    val = Convert.ToDouble(cmd_m.ExecuteScalar());
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-            return val;
-        }
-
-        [WebMethod]
-        public double getVibMS(string sender)
-        {
-            double val = -1;
-            using (SqlConnection conn1 = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    string query_m = "select top(1) e.ParameterValue from tblEnergy e ";
-                    query_m += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-                    query_m += "inner join tblParameter p on e.ParameterID = p.ParameterID ";
-                    query_m += "where p.ParameterName = 'vib_Ms' ";
-                    query_m += "and e.ParameterValue IS NOT NULL ";
-                    query_m += "and r.ResourceID = (select ResourceID from tblResource where MobileNumber = '" + sender + "') ";
-                    query_m += "order by ID DESC ";
-                    SqlCommand cmd_m = new SqlCommand(query_m, conn1);
-                    val = Convert.ToDouble(cmd_m.ExecuteScalar());
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-            return val;
-        }
-
-        [WebMethod]
-        public double getVibMS2(string sender)
-        {
-            double val = -1;
-            using (SqlConnection conn1 = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    string query_m = "select top(1) e.ParameterValue from tblEnergy e ";
-                    query_m += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-                    query_m += "inner join tblParameter p on e.ParameterID = p.ParameterID ";
-                    query_m += "where p.ParameterName = 'vib_Ms2' ";
-                    query_m += "and e.ParameterValue IS NOT NULL ";
-                    query_m += "and r.ResourceID = (select ResourceID from tblResource where MobileNumber = '" + sender + "') ";
-                    query_m += "order by ID DESC ";
-                    SqlCommand cmd_m = new SqlCommand(query_m, conn1);
-                    val = Convert.ToDouble(cmd_m.ExecuteScalar());
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-            return val;
         }
 
         [WebMethod]
@@ -2007,7 +612,7 @@ namespace WASA_EMS
                                     {
                                         if (sdr1["ParameterValue"].ToString() == "0")
                                         {
-                                            P1 = "OFF";
+                                             P1 = "OFF";
                                         }
                                         else
                                         {
@@ -2207,7 +812,7 @@ namespace WASA_EMS
                                     {
                                         valuee = Math.Round(Convert.ToDouble(sdr1["ParameterValue"]), 2).ToString();
                                     }
-
+                                   
 
                                     PF += PFvaluee;
                                     PL += PLvaluee;
@@ -2245,7 +850,7 @@ namespace WASA_EMS
 
                             markers += "{";
 
-
+                            
                             markers += string.Format("'P': '{0}',", PGvaluee);
                             markers += string.Format("'P1': '{0}',", P1);
                             markers += string.Format("'P2': '{0}',", P2);
@@ -2290,11 +895,11 @@ namespace WASA_EMS
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
             DateTime FinalTimeFrom = DateTime.Now.AddHours(0).AddDays(-30).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
-            //  DateTime FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-            //  DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
-            string scriptString = "";
-            string datap = "";
+        DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+        //  DateTime FinalTimeFrom = DateTime.Now.AddHours(0).Date;
+        //  DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+        string scriptString = "";
+        string datap = "";
 
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
@@ -2303,19 +908,19 @@ namespace WASA_EMS
                 {
 
                     string getResFromTemp = "select ParameterID from tblParameter where parameterName = 'Well2Level(ft)' ";
-                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
-                    DataTable dtRes1 = new DataTable();
-                    sdaRes.Fill(dtRes1);
+    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+    DataTable dtRes1 = new DataTable();
+    sdaRes.Fill(dtRes1);
                     int ite = 0;
                     foreach (DataRow drRes in dtRes1.Rows)
                     {
                         //string resName = drRes["resourceLocationName"].ToString();
                         ite += 1;
                         string getParamsFromRes = "";
-                        getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'Well2Level(ft)'   and rtp.TemplateID = 64 order by cast(r.ResourceID as int) asc";
+    getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'Well2Level(ft)'   and rtp.TemplateID = 64 order by cast(r.ResourceID as int) asc";
                         SqlDataAdapter sdaPar = new SqlDataAdapter(getParamsFromRes, conn);
-                        DataTable dtPar = new DataTable();
-                        sdaPar.Fill(dtPar);
+    DataTable dtPar = new DataTable();
+    sdaPar.Fill(dtPar);
                         //  scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
                         scriptString += "theme: \"light2\",";
                         scriptString += "animationEnabled: true,";
@@ -2336,11 +941,11 @@ namespace WASA_EMS
                         {
                             DataRow drPar = dtPar.Rows[1];
 
-                            // scriptString += drPar["ResourceID"];
-                            // scriptString += drPar["ResourceID"];
+    // scriptString += drPar["ResourceID"];
+    // scriptString += drPar["ResourceID"];
 
-                            string aquery = ";WITH CTE AS ( ";
-                            aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
+    string aquery = ";WITH CTE AS ( ";
+    aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
                             aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
                             aquery += "ORDER BY e.InsertionDateTime DESC) ";
                             aquery += "FROM tblEnergy e ";
@@ -2351,14 +956,14 @@ namespace WASA_EMS
                             aquery += ") ";
                             aquery += "SELECT top 1400 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 14401 Order by InsertionDateTime DESC";
                             string theQuery = aquery;
-                            SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
-                            DataTable dtVal = new DataTable();
-                            sdaVal.Fill(dtVal);
+    SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
+    DataTable dtVal = new DataTable();
+    sdaVal.Fill(dtVal);
                             // Loc += drPar["ResourceName"].ToString();
                             scriptString += "{ type: \"area\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} Cusec</strong> at {x}\", ";
 
                             List<DataPoint> dataPoints = new List<DataPoint>();
-                            DateTime dt = DateTime.Now;
+    DateTime dt = DateTime.Now;
                             foreach (DataRow drVal in dtVal.Rows)
                             {
 
@@ -2367,29 +972,29 @@ namespace WASA_EMS
                                 //}
                                 //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
                             }
-                            scriptString += "dataPoints: " + JsonConvert.SerializeObject(dataPoints) + "";
+scriptString += "dataPoints: " + JsonConvert.SerializeObject(dataPoints) + "";
 
-                            datap = JsonConvert.SerializeObject(dataPoints) + "";
+datap = JsonConvert.SerializeObject(dataPoints) + "";
 
 
-                            // datap += dataPoints;
-                            scriptString += "},";
+// datap += dataPoints;
+scriptString += "},";
                         }
                         scriptString = scriptString.Remove(scriptString.Length - 1);
-                        scriptString = scriptString + "]";
-                        scriptString = scriptString + "}";
-                        scriptString += ");";
+scriptString = scriptString + "]";
+scriptString = scriptString + "}";
+scriptString += ");";
 
                     }
                 }
 
                 catch (Exception ex)
-                {
+{
 
-                }
+}
             }
             string NewscripString = datap;
-            return NewscripString;
+return NewscripString;
 
 
 
@@ -2397,10 +1002,10 @@ namespace WASA_EMS
 
 
         }
-
+       
         [WebMethod]
-        public string GetData1()
-        {
+           public string GetData1()
+           {
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
             DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
@@ -2435,21 +1040,21 @@ namespace WASA_EMS
                         DataTable dtPar = new DataTable();
                         sdaPar.Fill(dtPar);
                         //  scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
-                        scriptString += "theme: \"light2\",";
-                        scriptString += "animationEnabled: true,";
-                        scriptString += "zoomEnabled: true, ";
-                        scriptString += "title: {text: \"WaterFlow (Cusec)\" },";
-                        scriptString += "subtitles: [{text: \" All Tubewells Recent Water Flow  \" }],";
-                        scriptString += "axisY: {suffix: \" Cusec\" },";
-                        //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
-                        scriptString += "toolTip: { shared: false },";
-                        scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 15},";
+                          scriptString += "theme: \"light2\",";
+                          scriptString += "animationEnabled: true,";
+                          scriptString += "zoomEnabled: true, ";
+                          scriptString += "title: {text: \"WaterFlow (Cusec)\" },";
+                          scriptString += "subtitles: [{text: \" All Tubewells Recent Water Flow  \" }],";
+                          scriptString += "axisY: {suffix: \" Cusec\" },";
+                          //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
+                          scriptString += "toolTip: { shared: false },";
+                          scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 15},";
                         scriptString += " data: [";
-                        //   scriptString +=  dtPar.Rows[1]["ResourceID"];
+                     //   scriptString +=  dtPar.Rows[1]["ResourceID"];
 
                         foreach (DataRow drPar in dtPar.Rows)
                         {
-                            scriptString += drPar["ResourceID"];
+                             scriptString += drPar["ResourceID"];
                             // scriptString += drPar["ResourceID"];
 
                             string aquery = ";WITH CTE AS ( ";
@@ -2459,7 +1064,7 @@ namespace WASA_EMS
                             aquery += "FROM tblEnergy e ";
                             aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
                             //aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime  > DATE_SUB(NOW(),​INTERVAL 1";
-                            aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                           aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
                             // aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + 130 + " or e.ParameterID = " + 118 + "and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
                             aquery += ") ";
                             aquery += "SELECT top 30 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 31 Order by InsertionDateTime DESC";
@@ -2467,9 +1072,9 @@ namespace WASA_EMS
                             SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
                             DataTable dtVal = new DataTable();
                             sdaVal.Fill(dtVal);
-                            // Loc += drPar["ResourceName"].ToString();
+                           // Loc += drPar["ResourceName"].ToString();
                             scriptString += "{ type: \"area\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} Cusec</strong> at {x}\", ";
-
+                            
                             List<DataPoint> dataPoints = new List<DataPoint>();
                             DateTime dt = DateTime.Now;
                             foreach (DataRow drVal in dtVal.Rows)
@@ -2496,29 +1101,29 @@ namespace WASA_EMS
                         scriptString = scriptString.Remove(scriptString.Length - 1);
                         scriptString = scriptString + "]";
                         scriptString = scriptString + "}";
-                        scriptString += ");";
+                      scriptString += ");";
+                        
+                      //  markers += "{";
 
-                        //  markers += "{";
+                        
+                     //   markers += string.Format("'Data12': '{0}',", scriptString);
 
+                   //  markers += string.Format("'Datau': '{0}'", datap);
 
-                        //   markers += string.Format("'Data12': '{0}',", scriptString);
-
-                        //  markers += string.Format("'Datau': '{0}'", datap);
-
-                        //  markers += "},";
+                      //  markers += "},";
                     }
                 }
+                
+catch (Exception ex)
+{
 
-                catch (Exception ex)
-                {
-
-                }
-            }
-            //  string NewscripString = datap;
-            string NewscripString = scriptString;
-            //   markers += "]";
-            // return markers;
-            return NewscripString;
+}
+}
+          //  string NewscripString = datap;
+           string NewscripString = scriptString;
+          //   markers += "]";
+             // return markers;
+             return NewscripString;
             //  ViewData["chartData"] = NewscripString;
 
 
@@ -2527,7 +1132,7 @@ namespace WASA_EMS
 
 
         }
-        // C2
+       // C2
         [WebMethod]
         public string GetData2()
         {
@@ -2537,10 +1142,10 @@ namespace WASA_EMS
             DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
-
+            
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
-
+              
                 try
                 {
 
@@ -2601,18 +1206,18 @@ namespace WASA_EMS
 
                             List<DataPoint> dataPoints = new List<DataPoint>();
                             DateTime dt = DateTime.Now;
-                            foreach (DataRow drVal in dtVal.Rows)
-                            {
-
-                                dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-                                dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
-                                //}
-                                //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-                            }
+                             foreach (DataRow drVal in dtVal.Rows)
+                              {
+                                  
+                                  dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+                                  dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+                                  //}
+                                  //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+                              }
                             scriptString += "dataPoints: " + JsonConvert.SerializeObject(dataPoints) + "";
 
-                            datap = JsonConvert.SerializeObject(dataPoints) + "";
-
+                           datap = JsonConvert.SerializeObject(dataPoints) + "";
+                            
 
                             // datap += dataPoints;
                             scriptString += "},";
@@ -2630,9 +1235,9 @@ namespace WASA_EMS
 
                 }
             }
-            string NewscripString = datap;
-            return NewscripString;
-
+           string NewscripString = datap;
+           return NewscripString;
+            
 
 
 
@@ -3279,8 +1884,8 @@ namespace WASA_EMS
                             scriptString += "dataPoints: " + JsonConvert.SerializeObject(dataPoints) + "";
 
                             datap = JsonConvert.SerializeObject(dataPoints) + "";
-                            //  dataPoints.Max(point1 => point.y);
-
+                       //  dataPoints.Max(point1 => point.y);
+                           
 
                             // datap += dataPoints;
                             scriptString += "},";
@@ -7325,8 +5930,8 @@ namespace WASA_EMS
             // DateTime FinalTimeTo = DateTime.Now;
             //  DateTime FinalTimeFrom = DateTime.Now.AddHours(0).Date;
             // DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-7).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+           DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-7).Date;
+           DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
 
@@ -8928,10 +7533,10 @@ namespace WASA_EMS
         {
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
-            // DateTime FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-            // DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+             DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
+             DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+           // DateTime FinalTimeFrom = DateTime.Now.AddHours(0).Date;
+           // DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
             string scriptString = "";
 
             string datap = "";
@@ -9043,10 +7648,10 @@ namespace WASA_EMS
         {
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
-            // DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
-            //  DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-7).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+             // DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
+           //  DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
+          DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-7).Date;
+           DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
 
@@ -9157,10 +7762,10 @@ namespace WASA_EMS
         {
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-30).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
-            //  DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
-            //  DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
+           DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-30).Date;
+           DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+          //  DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
+          //  DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
 
@@ -9272,10 +7877,10 @@ namespace WASA_EMS
         {
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
-            //  DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
-            // DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+             DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
+             DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+          //  DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
+           // DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
             string scriptString = "";
 
             string datap = "";
@@ -9389,7 +7994,7 @@ namespace WASA_EMS
             // DateTime FinalTimeTo = DateTime.Now;
             //  DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
             // DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-7).Date;
+           DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-7).Date;
             DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
@@ -9502,9 +8107,9 @@ namespace WASA_EMS
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
             DateTime FinalTimeFrom = DateTime.Now.AddHours(10).AddDays(-30).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+           DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
             //  DateTime FinalTimeFrom = DateTime.Now.AddHours(10).Date;
-            // DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
+             // DateTime FinalTimeTo = DateTime.Now.AddHours(10).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
 
@@ -9722,7 +8327,7 @@ namespace WASA_EMS
 
 
         }
-        // mAX V A3
+       // mAX V A3
         [WebMethod]
         public string GetVmax()
         {
@@ -10291,9 +8896,9 @@ namespace WASA_EMS
 
         }
 
-
+        
         ///  max v and i E
-
+        
         [WebMethod]
         public string GetDataIE()
         {
@@ -14412,10 +13017,10 @@ namespace WASA_EMS
         {
             // DateTime FinalTimeFrom = DateTime.Now;
             // DateTime FinalTimeTo = DateTime.Now;
-            //   DateTime FinalTimeFrom = DateTime.Now.AddHours(0).AddDays(-30).Date;
-            //  DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
-            DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
-            DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
+         //   DateTime FinalTimeFrom = DateTime.Now.AddHours(0).AddDays(-30).Date;
+          //  DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+              DateTime FinalTimeFrom = DateTime.Now.AddHours(5).Date;
+              DateTime FinalTimeTo = DateTime.Now.AddHours(5).AddDays(1).Date;
             string scriptString = "";
             string datap = "";
             string tim = "";
@@ -14491,19 +13096,19 @@ namespace WASA_EMS
 
                                 dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
                                 dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
-
+                                
                                 if (drVal["ParameterValue"].ToString() == "1")
                                 {
-                                    // tim += dt.ToString();
+                                   // tim += dt.ToString();
                                     tim += dt.Hour.ToString();
                                     int distinctCount = tim.Distinct().Count();
                                     t = distinctCount.ToString();
                                     //DateTime dt1 = DateTime.Parse(tim);
                                     //dt1.ToString("HH:mm");
                                 }
-
-                                //  t += tim;
-
+                                
+                              //  t += tim;
+                                
                                 //datap = JsonConvert.SerializeObject(dataPoints) + "";
                                 /* for (int i = 0; i < datap.Length; i++)
                                  {
@@ -14519,19 +13124,19 @@ namespace WASA_EMS
                                 //}
                                 // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]). - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
                             }
-
+                            
                             scriptString += "dataPoints: " + JsonConvert.SerializeObject(dataPoints) + "";
 
                             datap = JsonConvert.SerializeObject(dataPoints) + "";
+                            
+                                      //var array = t.Split(' ');
+                                     //firstElem = array[1];
 
-                            //var array = t.Split(' ');
-                            //firstElem = array[1];
-
-                            //Console.WriteLine(datap.Length);
+                                    //Console.WriteLine(datap.Length);
 
 
-                            // datap += dataPoints;
-                            scriptString += "},";
+                                    // datap += dataPoints;
+                                    scriptString += "},";
                         }
                         scriptString = scriptString.Remove(scriptString.Length - 1);
                         scriptString = scriptString + "]";
@@ -14645,7 +13250,7 @@ namespace WASA_EMS
                                 {
                                     // tim += dt.ToString();
                                     tim += dt.Hour.ToString();
-                                    int distinctCount = tim.Distinct().Count() * 7;
+                                    int distinctCount = tim.Distinct().Count()*7;
                                     t = distinctCount.ToString();
                                     //DateTime dt1 = DateTime.Parse(tim);
                                     //dt1.ToString("HH:mm");
@@ -17628,7 +16233,7 @@ namespace WASA_EMS
                                 dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
                                 dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
                                 datap = JsonConvert.SerializeObject(dataPoints) + "";
-
+                                
                                 //}
                                 // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]). - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
                             }

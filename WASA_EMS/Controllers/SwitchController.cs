@@ -68,18 +68,19 @@ namespace WASA_EMS.Controllers
             var cId = Convert.ToInt32(Session["CompanyID"]);
             //var query = "select s.ID ID, r.ResourceLocation Resource, case when s.ModeManualAuto = 0 then 'Manual' ELSE 'AUTO' END as Mode, case when s.CurrentMotorOnOffStatus = 0 then   'OFF' ELSE 'ON' END as Status, case when s.CurrentMotorOnOffStatus = 0 then   'TURN ON' ELSE 'TURN OFF' END as Action from tblRemoteSensor s left join tblResource r on s.ResourceID = r.ResourceID where r.CompanyID = " + cId + "";
             var query = "";
-            query += ";with cteRowNumber as ( ";
-            query += "select r.ResourceID, r.ResourceLocation,p.ParameterID,p.ParameterName, e.CompanyID, e.ParameterValue,   ";
-            query += "row_number() over(partition by p.ParameterID, r.ResourceID, r.ResourceLocation order by e.ID desc) as RowNum ";
-            query += "from tblEnergy e ";
-            query += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-            query += "inner join tblParameter p on e.ParameterID = p.ParameterID ";
+            //query += "select r.ResourceID, r.ResourceLocation,p.ParameterID,p.ParameterName, cte.CompanyID, cte.ParameterValue, cte.InsertionDateTime, 1 as RowNum from ( select DISTINCT top(14) * from tblEnergy where ResourceID in (1068, 1069, 1070, 1071, 1072, 1073, 1074) and ParameterID in (124, 125) order by ID DESC) as cte inner join tblResource r on cte.ResourceID = r.ResourceID inner join tblParameter p on cte.ParameterID = p.ParameterID order by cte.ResourceID, cte.ParameterID select r.ResourceID, r.ResourceLocation,p.ParameterID,p.ParameterName, cte.CompanyID, cte.ParameterValue, cte.InsertionDateTime, 1 as RowNum from ( select DISTINCT top(14) * from tblEnergy where ResourceID in (1068, 1069, 1070, 1071, 1072, 1073, 1074) and ParameterID in (124, 125) order by ID DESC) as cte inner join tblResource r on cte.ResourceID = r.ResourceID inner join tblParameter p on cte.ParameterID = p.ParameterID order by cte.ResourceID, cte.ParameterID";
+            query += ";with cterownumber as ( ";
+            query += "select r.resourceid, r.resourcelocation,p.parameterid,p.parametername, e.companyid, e.parametervalue,   ";
+            query += "row_number() over(partition by p.parameterid, r.resourceid, r.resourcelocation order by e.id desc) as rownum ";
+            query += "from tblenergy e ";
+            query += "inner join tblresource r on e.resourceid = r.resourceid ";
+            query += "inner join tblparameter p on e.parameterid = p.parameterid ";
             query += ")   ";
             query += "select* ";
-            query += "from cteRowNumber ";
-            query += "where RowNum = 1  and CompanyID = 4 ";
-            query += "and ParameterID in (124, 125) ";
-            query += "order by ResourceID, ParameterID";
+            query += "from cterownumber ";
+            query += "where rownum = 1  and companyid = 4 ";
+            query += "and parameterid in (124, 125) ";
+            query += "order by resourceid, parameterid";
             using (var conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
                 try
@@ -257,6 +258,11 @@ namespace WASA_EMS.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult InaugurationActivity()
+        {
+            return View();
         }
     }
 }

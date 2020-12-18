@@ -1,4 +1,4 @@
-﻿@using System.Data;
+﻿﻿@using System.Data;
 @using System.Data.SqlClient;
 @using Newtonsoft.Json;
 @model IEnumerable<TubewellDataClass>
@@ -15,30 +15,52 @@
             }
             chart1.render();
         }
+        var groupColumn = 0;
         if (!$.fn.DataTable.isDataTable('#tubeWellTable')) {
-            $('#tubeWellTable').DataTable({
-                "scrollX": true,
-                "paging": false,
-                "ordering": false,
-                "info": false,
-                "columnDefs": [
-                    { "className": "dt-center", "targets": "_all" }
+            var table = $('#tubeWellTable').DataTable({
+	            "scrollX": true,
+	            "paging": false,
+	            "ordering": false,
+	            "info": false,
+	            "columnDefs": [
+		            { "className": "dt-center", "targets": "_all" }
+	            ],
+	            dom: 'Bfrtip',
+	            //buttons: [
+	            //    'copy', 'csv', 'excel', 'pdf', 'print'
+	            //]
+	            buttons: [
+		            {
+			            extend: 'excelHtml5',
+			            title: '@Session["ReportTitle"]'
+		            },
+		            {
+			            extend: 'pdfHtml5',
+			            title: '@Session["ReportTitle"]'
+		            }
                 ],
-                dom: 'Bfrtip',
-                //buttons: [
-                //    'copy', 'csv', 'excel', 'pdf', 'print'
-                //]
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        title: '@Session["ReportTitle"]'
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        title: '@Session["ReportTitle"]'
-                    }
-                ]
+                "columnDefs": [
+                    { "visible": false, "targets": groupColumn }
+                ],
+                "order": [[groupColumn, 'asc']],
+                "displayLength": 25,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+
+                    api.column(groupColumn, { page: 'current' }).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group" style="background-color:#3c5e9c; color:white;"><td colspan="6">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
+            new $.fn.dataTable.FixedHeader(table);
         }
     });
 </script>
@@ -69,67 +91,71 @@
                     <center>
 
 
-                        <table id="tubeWellTable" class="display" style="width:100%">
+                        <table id="tubeWellTable" class="table table-striped table-bordered table-hover" style="width:100%; text-align:center">
                             <thead>
-                                <tr style="background-color: #a8c9cd;">
-                                    <th>Name Of Location</th>
-                                    <th>Pump Status</th>
+                                <tr style="background-color: #a3d4de;">
+                                    <th style="text-align:left;">Date</th>
+                                    <th style="text-align:center">Name Of Location</th>
 
-                                    <th>Manual Mode</th>
-                                    <th>Remote Mode</th>
-                                    <th>Scheduling Mode</th>
-                                    <th>Total Working Hours</th>
+                                    @*<th>Pump Status</th>*@
+
+                                    <th style="text-align:center">Manual Mode</th>
+                                    <th style="text-align:center">Remote Mode</th>
+                                    <th style="text-align:center">Scheduling Mode</th>
+                                    <th style="text-align:center">Total Working Hours</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td>@item.locationName</td>
-                                    @if (item.pumpStatus.Count == 0)
-                                    {
-                                        <td>Inactive</td>
-                                    }
-                                    else
-                                    {
-                                        if (item.pumpStatus.FirstOrDefault() == 0)
-                                        {
-                                            <td>OFF</td>
-                                        }
-                                        else
-                                        {
-                                            <td>ON</td>
-                                        }
-                                    }
-                                    <td>@item.workingHoursTodayManual</td>
-                                    <td>@item.workingHoursTodayRemote</td>
-                                    <td>@item.workingHoursTodayScheduling</td>
-                                    <td>@item.workingHoursToday</td>
-                                    @*@if (item.manualStatus.FirstOrDefault() == 0)
-        {
-            <td>OFF</td>
-        }
-        else
-        {
-            <td>ON</td>
-        }
-        @if (item.remoteControll.FirstOrDefault() == 0)
-        {
-            <td>OFF</td>
-        }
-        else
-        {
-            <td>ON</td>
-        }
-        @if (item.schedulingStatus.FirstOrDefault() == 0)
-        {
-            <td>OFF</td>
-        }
-        else
-        {
-            <td>ON</td>
-        }*@
-                                </tr>
+                                    <tr>
+
+                                        <td>@item.logDate</td>
+                                        <td>@item.locationName</td>
+                                        @*@if (item.pumpStatus.Count == 0)
+                                            {
+                                                <td>Inactive</td>
+                                            }
+                                            else
+                                            {
+                                                if (item.pumpStatus.FirstOrDefault() == 0)
+                                                {
+                                                    <td>OFF</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>ON</td>
+                                                }
+                                            }*@
+                                        <td>@item.workingHoursTodayManual</td>
+                                        <td>@item.workingHoursTodayRemote</td>
+                                        <td>@item.workingHoursTodayScheduling</td>
+                                        <td>@item.workingHoursToday</td>
+                                        @*@if (item.manualStatus.FirstOrDefault() == 0)
+                                            {
+                                                <td>OFF</td>
+                                            }
+                                            else
+                                            {
+                                                <td>ON</td>
+                                            }
+                                            @if (item.remoteControll.FirstOrDefault() == 0)
+                                            {
+                                                <td>OFF</td>
+                                            }
+                                            else
+                                            {
+                                                <td>ON</td>
+                                            }
+                                            @if (item.schedulingStatus.FirstOrDefault() == 0)
+                                            {
+                                                <td>OFF</td>
+                                            }
+                                            else
+                                            {
+                                                <td>ON</td>
+                                            }*@
+                                    </tr>
                                 }
                             </tbody>
                         </table>

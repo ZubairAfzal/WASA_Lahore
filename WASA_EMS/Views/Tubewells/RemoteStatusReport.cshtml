@@ -24,11 +24,18 @@
 <script src="~/Metronic/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js"></script>
 <script>
     $(function () {
+        //var date = new Date();
+        //var maxDate = "-" + date.getDate() + "D";
+        //var minDate = "-1M " + "-" + (date.getDate() - 1) + "D";
         $("#dateFrom").datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: 'dd/mm/yy',
+            //maxDate: maxDate,
+            //minDate: minDate 
         });
         $("#dateTo").datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: 'dd/mm/yy',
+            //maxDate: maxDate,
+            //minDate: minDate
         });
     });
 </script>
@@ -82,290 +89,299 @@
                     <div class="col-md-12">
                         <!-- BEGIN EXAMPLE TABLE PORTLET-->
                         <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption font-dark">
-                                    <i class="icon-docs font-dark"></i>
-                                    <span class="caption-subject bold uppercase">Mode Status Report</span>
-                                </div>
-                                <div class="tools"> </div>
-                            </div>
+                            <div class="tabbable-line boxless tabbable-reversed">
+                                <div class="tab-content from-data ">
+                                    <div class="tab-pane active">
+                                        <div class="portlet box blue">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa icon-settings"></i>
+                                                    <span style="font-family:Open Sans,sans-serif;">Mode Status Report</span>
+                                                </div>
 
-                            <div class="portlet-title">
-                                <div class="font-dark">
-                                    @using (Html.BeginForm("RemoteStatusReport", "Tubewells"))
-                                    {
-                                        <div class="row">
-                                            <div class="widget stacked" style="margin: 0 30px; ">
-                                                <div class="form-group">
-                                                    <center>
-                                                        <div class="col-md-2" style="padding-left:5px !important; padding-right: 0px !important;">
-                                                            @if (ViewBag.SelectedResource != null)
-                                                            {
-                                                                @Html.DropDownList("resource", new SelectList(ViewBag.ResourceList, ViewBag.SelectedResource), new { @class = "form-control", @style = "color:black;" })
-                                                            }
-                                                            else
-                                                            {
-                                                                @Html.DropDownList("resource", new SelectList(ViewBag.ResourceList), new { @class = "form-control", @style = "color:black;" })
-                                                            }
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <label class="form-control" style="border:0px">From</label>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            
-                                                            @if (ViewBag.dateFrom != null)
-                                                            {
-                                                                <input type="text" class="form-control date-picker" name="dateFrom" id="dateFrom" value="@ViewBag.dateFrom" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <input type="text" class="form-control date-picker" name="dateFrom" id="dateFrom" value="@TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToShortDateString()" />
-                                                            }
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            @if (ViewBag.timeFrom != null)
-                                                            {
-                                                                string abc = ViewBag.timeFrom.ToString();
-                                                                <select name="timeFrom" id="timeFrom" class="form-control">
-                                                                    <option value="12:00 AM" @if (abc == "12:00 AM") { <text> selected="selected" </text>     }>12:00 AM</option>
-                                                                    <option value="12:30 AM" @if (abc == "12:30 AM") { <text> selected="selected" </text>     }>12:30 AM</option>
-                                                                    <option value="1:00 AM" @if (abc == "1:00 AM") { <text> selected="selected" </text>     }>1:00 AM</option>
-                                                                    <option value="1:30 AM" @if (abc == "1:30 AM") { <text> selected="selected" </text>     }>1:30 AM</option>
-                                                                    <option value="2:00 AM" @if (abc == "2:00 AM") { <text> selected="selected" </text>     }>2:00 AM</option>
-                                                                    <option value="2:30 AM" @if (abc == "2:30 AM") { <text> selected="selected" </text>     }>2:30 AM</option>
-                                                                    <option value="3:00 AM" @if (abc == "3:00 AM") { <text> selected="selected" </text>     }>3:00 AM</option>
-                                                                    <option value="3:30 AM" @if (abc == "3:30 AM") { <text> selected="selected" </text>     }>3:30 AM</option>
-                                                                    <option value="4:00 AM" @if (abc == "4:00 AM") { <text> selected="selected" </text>     }>4:00 AM</option>
-                                                                    <option value="4:30 AM" @if (abc == "4:30 AM") { <text> selected="selected" </text>     }>4:30 AM</option>
-                                                                    <option value="5:00 AM" @if (abc == "5:00 AM") { <text> selected="selected" </text>     }>5:00 AM</option>
-                                                                    <option value="5:30 AM" @if (abc == "5:30 AM") { <text> selected="selected" </text>     }>5:30 AM</option>
-                                                                    <option value="6:00 AM" @if (abc == "6:00 AM") { <text> selected="selected" </text>     }>6:00 AM</option>
-                                                                    <option value="6:30 AM" @if (abc == "6:30 AM") { <text> selected="selected" </text>     }>6:30 AM</option>
-                                                                    <option value="7:00 AM" @if (abc == "7:00 AM") { <text> selected="selected" </text>     }>7:00 AM</option>
-                                                                    <option value="7:30 AM" @if (abc == "7:30 AM") { <text> selected="selected" </text>     }>7:30 AM</option>
-                                                                    <option value="8:00 AM" @if (abc == "8:00 AM") { <text> selected="selected" </text>     }>8:00 AM</option>
-                                                                    <option value="8:30 AM" @if (abc == "8:30 AM") { <text> selected="selected" </text>     }>8:30 AM</option>
-                                                                    <option value="9:00 AM" @if (abc == "9:00 AM") { <text> selected="selected" </text>     }>9:00 AM</option>
-                                                                    <option value="9:30 AM" @if (abc == "9:30 AM") { <text> selected="selected" </text>     }>9:30 AM</option>
-                                                                    <option value="10:00 AM" @if (abc == "10:00 AM") { <text> selected="selected" </text>     }>10:00 AM</option>
-                                                                    <option value="10:30 AM" @if (abc == "10:30 AM") { <text> selected="selected" </text>     }>10:30 AM</option>
-                                                                    <option value="11:00 AM" @if (abc == "11:00 AM") { <text> selected="selected" </text>     }>11:00 AM</option>
-                                                                    <option value="11:30 AM" @if (abc == "11:30 AM") { <text> selected="selected" </text>     }>11:30 AM</option>
-                                                                    <option value="12:00 PM" @if (abc == "12:00 PM") { <text> selected="selected" </text>     }>12:00 PM</option>
-                                                                    <option value="12:30 PM" @if (abc == "12:30 PM") { <text> selected="selected" </text>     }>12:30 PM</option>
-                                                                    <option value="1:00 PM" @if (abc == "1:00 PM") { <text> selected="selected" </text>     }>1:00 PM</option>
-                                                                    <option value="1:30 PM" @if (abc == "1:30 PM") { <text> selected="selected" </text>     }>1:30 PM</option>
-                                                                    <option value="2:00 PM" @if (abc == "2:00 PM") { <text> selected="selected" </text>     }>2:00 PM</option>
-                                                                    <option value="2:30 PM" @if (abc == "2:30 PM") { <text> selected="selected" </text>     }>2:30 PM</option>
-                                                                    <option value="3:00 PM" @if (abc == "3:00 PM") { <text> selected="selected" </text>     }>3:00 PM</option>
-                                                                    <option value="3:30 PM" @if (abc == "3:30 PM") { <text> selected="selected" </text>     }>3:30 PM</option>
-                                                                    <option value="4:00 PM" @if (abc == "4:00 PM") { <text> selected="selected" </text>     }>4:00 PM</option>
-                                                                    <option value="4:30 PM" @if (abc == "4:30 PM") { <text> selected="selected" </text>     }>4:30 PM</option>
-                                                                    <option value="5:00 PM" @if (abc == "5:00 PM") { <text> selected="selected" </text>     }>5:00 PM</option>
-                                                                    <option value="5:30 PM" @if (abc == "5:30 PM") { <text> selected="selected" </text>     }>5:30 PM</option>
-                                                                    <option value="6:00 PM" @if (abc == "6:00 PM") { <text> selected="selected" </text>     }>6:00 PM</option>
-                                                                    <option value="6:30 PM" @if (abc == "6:30 PM") { <text> selected="selected" </text>     }>6:30 PM</option>
-                                                                    <option value="7:00 PM" @if (abc == "7:00 PM") { <text> selected="selected" </text>     }>7:00 PM</option>
-                                                                    <option value="7:30 PM" @if (abc == "7:30 PM") { <text> selected="selected" </text>     }>7:30 PM</option>
-                                                                    <option value="8:00 PM" @if (abc == "8:00 PM") { <text> selected="selected" </text>     }>8:00 PM</option>
-                                                                    <option value="8:30 PM" @if (abc == "8:30 PM") { <text> selected="selected" </text>     }>8:30 PM</option>
-                                                                    <option value="9:00 PM" @if (abc == "9:00 PM") { <text> selected="selected" </text>     }>9:00 PM</option>
-                                                                    <option value="9:30 PM" @if (abc == "9:30 PM") { <text> selected="selected" </text>     }>9:30 PM</option>
-                                                                    <option value="10:00 PM" @if (abc == "10:00 PM") { <text> selected="selected" </text>     }>10:00 PM</option>
-                                                                    <option value="10:30 PM" @if (abc == "10:30 PM") { <text> selected="selected" </text>     }>10:30 PM</option>
-                                                                    <option value="11:00 PM" @if (abc == "11:00 PM") { <text> selected="selected" </text>     }>11:00 PM</option>
-                                                                    <option value="11:30 PM" @if (abc == "11:30 PM") { <text> selected="selected" </text>     }>11:30 PM</option>
-                                                                </select>
-                                                            }
-                                                            else
-                                                            {
-                                                                <input type="text" name="timeFrom" id="timeFromInput" value="@DateTime.Today.ToShortTimeString()" class="span6" style="width:8%;display:none;" />
-                                                                <select name="timeFrom" id="timeFrom" class="form-control">
-                                                                    <option selected="selected">12:00 AM</option>
-                                                                    <option>12:30 AM</option>
-                                                                    <option>1:00 AM</option>
-                                                                    <option>1:30 AM</option>
-                                                                    <option>2:00 AM</option>
-                                                                    <option>2:30 AM</option>
-                                                                    <option>3:00 AM</option>
-                                                                    <option>3:30 AM</option>
-                                                                    <option>4:00 AM</option>
-                                                                    <option>4:30 AM</option>
-                                                                    <option>5:00 AM</option>
-                                                                    <option>5:30 AM</option>
-                                                                    <option>6:00 AM</option>
-                                                                    <option>6:30 AM</option>
-                                                                    <option>7:00 AM</option>
-                                                                    <option>7:30 AM</option>
-                                                                    <option>8:00 AM</option>
-                                                                    <option>8:30 AM</option>
-                                                                    <option>9:00 AM</option>
-                                                                    <option>9:30 AM</option>
-                                                                    <option>10:00 AM</option>
-                                                                    <option>10:30 AM</option>
-                                                                    <option>11:00 AM</option>
-                                                                    <option>11:30 AM</option>
-                                                                    <option>12:00 PM</option>
-                                                                    <option>12:30 PM</option>
-                                                                    <option>1:00 PM</option>
-                                                                    <option>1:30 PM</option>
-                                                                    <option>2:00 PM</option>
-                                                                    <option>2:30 PM</option>
-                                                                    <option>3:00 PM</option>
-                                                                    <option>3:30 PM</option>
-                                                                    <option>4:00 PM</option>
-                                                                    <option>4:30 PM</option>
-                                                                    <option>5:00 PM</option>
-                                                                    <option>5:30 PM</option>
-                                                                    <option>6:00 PM</option>
-                                                                    <option>6:30 PM</option>
-                                                                    <option>7:00 PM</option>
-                                                                    <option>7:30 PM</option>
-                                                                    <option>8:00 PM</option>
-                                                                    <option>8:30 PM</option>
-                                                                    <option>9:00 PM</option>
-                                                                    <option>9:30 PM</option>
-                                                                    <option>10:00 PM</option>
-                                                                    <option>10:30 PM</option>
-                                                                    <option>11:00 PM</option>
-                                                                    <option>11:30 PM</option>
-                                                                </select>
-                                                            }
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <label class="form-control" style="border:0px">To</label>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            @if (ViewBag.dateTo != null)
-                                                            {
-                                                                <input type="text" name="dateTo" id="dateTo" value="@ViewBag.dateTo" class="form-control" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <input type="text" name="dateTo" id="dateTo" value="@TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToShortDateString()" class="form-control" />
-                                                            }
-                                                        </div>
+                                            </div>
+                                            @using (Html.BeginForm("RemoteStatusReport", "Tubewells"))
+                                            {
+                                            <div class="portlet-body form">
 
-                                                        <div class="col-md-2">
-                                                            @if (ViewBag.timeTo != null)
-                                                            {
-                                                                string abc = ViewBag.timeTo.ToString();
-                                                                <select name="timeTo" id="timeTo" class="form-control">
-                                                                    <option value="12:00 AM" @if (abc == "12:00 AM") { <text> selected="selected" </text>     }>12:00 AM</option>
-                                                                    <option value="12:30 AM" @if (abc == "12:30 AM") { <text> selected="selected" </text>     }>12:30 AM</option>
-                                                                    <option value="1:00 AM" @if (abc == "1:00 AM") { <text> selected="selected" </text>     }>1:00 AM</option>
-                                                                    <option value="1:30 AM" @if (abc == "1:30 AM") { <text> selected="selected" </text>     }>1:30 AM</option>
-                                                                    <option value="2:00 AM" @if (abc == "2:00 AM") { <text> selected="selected" </text>     }>2:00 AM</option>
-                                                                    <option value="2:30 AM" @if (abc == "2:30 AM") { <text> selected="selected" </text>     }>2:30 AM</option>
-                                                                    <option value="3:00 AM" @if (abc == "3:00 AM") { <text> selected="selected" </text>     }>3:00 AM</option>
-                                                                    <option value="3:30 AM" @if (abc == "3:30 AM") { <text> selected="selected" </text>     }>3:30 AM</option>
-                                                                    <option value="4:00 AM" @if (abc == "4:00 AM") { <text> selected="selected" </text>     }>4:00 AM</option>
-                                                                    <option value="4:30 AM" @if (abc == "4:30 AM") { <text> selected="selected" </text>     }>4:30 AM</option>
-                                                                    <option value="5:00 AM" @if (abc == "5:00 AM") { <text> selected="selected" </text>     }>5:00 AM</option>
-                                                                    <option value="5:30 AM" @if (abc == "5:30 AM") { <text> selected="selected" </text>     }>5:30 AM</option>
-                                                                    <option value="6:00 AM" @if (abc == "6:00 AM") { <text> selected="selected" </text>     }>6:00 AM</option>
-                                                                    <option value="6:30 AM" @if (abc == "6:30 AM") { <text> selected="selected" </text>     }>6:30 AM</option>
-                                                                    <option value="7:00 AM" @if (abc == "7:00 AM") { <text> selected="selected" </text>     }>7:00 AM</option>
-                                                                    <option value="7:30 AM" @if (abc == "7:30 AM") { <text> selected="selected" </text>     }>7:30 AM</option>
-                                                                    <option value="8:00 AM" @if (abc == "8:00 AM") { <text> selected="selected" </text>     }>8:00 AM</option>
-                                                                    <option value="8:30 AM" @if (abc == "8:30 AM") { <text> selected="selected" </text>     }>8:30 AM</option>
-                                                                    <option value="9:00 AM" @if (abc == "9:00 AM") { <text> selected="selected" </text>     }>9:00 AM</option>
-                                                                    <option value="9:30 AM" @if (abc == "9:30 AM") { <text> selected="selected" </text>     }>9:30 AM</option>
-                                                                    <option value="10:00 AM" @if (abc == "10:00 AM") { <text> selected="selected" </text>     }>10:00 AM</option>
-                                                                    <option value="10:30 AM" @if (abc == "10:30 AM") { <text> selected="selected" </text>     }>10:30 AM</option>
-                                                                    <option value="11:00 AM" @if (abc == "11:00 AM") { <text> selected="selected" </text>     }>11:00 AM</option>
-                                                                    <option value="11:30 AM" @if (abc == "11:30 AM") { <text> selected="selected" </text>     }>11:30 AM</option>
-                                                                    <option value="12:00 PM" @if (abc == "12:00 PM") { <text> selected="selected" </text>     }>12:00 PM</option>
-                                                                    <option value="12:30 PM" @if (abc == "12:30 PM") { <text> selected="selected" </text>     }>12:30 PM</option>
-                                                                    <option value="1:00 PM" @if (abc == "1:00 PM") { <text> selected="selected" </text>     }>1:00 PM</option>
-                                                                    <option value="1:30 PM" @if (abc == "1:30 PM") { <text> selected="selected" </text>     }>1:30 PM</option>
-                                                                    <option value="2:00 PM" @if (abc == "2:00 PM") { <text> selected="selected" </text>     }>2:00 PM</option>
-                                                                    <option value="2:30 PM" @if (abc == "2:30 PM") { <text> selected="selected" </text>     }>2:30 PM</option>
-                                                                    <option value="3:00 PM" @if (abc == "3:00 PM") { <text> selected="selected" </text>     }>3:00 PM</option>
-                                                                    <option value="3:30 PM" @if (abc == "3:30 PM") { <text> selected="selected" </text>     }>3:30 PM</option>
-                                                                    <option value="4:00 PM" @if (abc == "4:00 PM") { <text> selected="selected" </text>     }>4:00 PM</option>
-                                                                    <option value="4:30 PM" @if (abc == "4:30 PM") { <text> selected="selected" </text>     }>4:30 PM</option>
-                                                                    <option value="5:00 PM" @if (abc == "5:00 PM") { <text> selected="selected" </text>     }>5:00 PM</option>
-                                                                    <option value="5:30 PM" @if (abc == "5:30 PM") { <text> selected="selected" </text>     }>5:30 PM</option>
-                                                                    <option value="6:00 PM" @if (abc == "6:00 PM") { <text> selected="selected" </text>     }>6:00 PM</option>
-                                                                    <option value="6:30 PM" @if (abc == "6:30 PM") { <text> selected="selected" </text>     }>6:30 PM</option>
-                                                                    <option value="7:00 PM" @if (abc == "7:00 PM") { <text> selected="selected" </text>     }>7:00 PM</option>
-                                                                    <option value="7:30 PM" @if (abc == "7:30 PM") { <text> selected="selected" </text>     }>7:30 PM</option>
-                                                                    <option value="8:00 PM" @if (abc == "8:00 PM") { <text> selected="selected" </text>     }>8:00 PM</option>
-                                                                    <option value="8:30 PM" @if (abc == "8:30 PM") { <text> selected="selected" </text>     }>8:30 PM</option>
-                                                                    <option value="9:00 PM" @if (abc == "9:00 PM") { <text> selected="selected" </text>     }>9:00 PM</option>
-                                                                    <option value="9:30 PM" @if (abc == "9:30 PM") { <text> selected="selected" </text>     }>9:30 PM</option>
-                                                                    <option value="10:00 PM" @if (abc == "10:00 PM") { <text> selected="selected" </text>     }>10:00 PM</option>
-                                                                    <option value="10:30 PM" @if (abc == "10:30 PM") { <text> selected="selected" </text>     }>10:30 PM</option>
-                                                                    <option value="11:00 PM" @if (abc == "11:00 PM") { <text> selected="selected" </text>     }>11:00 PM</option>
-                                                                    <option value="11:30 PM" @if (abc == "11:30 PM") { <text> selected="selected" </text>     }>11:30 PM</option>
-                                                                </select>
-                                                            }
-                                                            else
-                                                            {
-                                                                <input type="text" name="timeTo" id="timeToInput" value="@DateTime.Today.ToShortTimeString()" class="span6" style="width:8%;display:none;" />
-                                                                <select name="timeTo" id="timeTo" class="form-control">
-                                                                    <option>12:30 AM</option>
-                                                                    <option>1:00 AM</option>
-                                                                    <option>1:30 AM</option>
-                                                                    <option>2:00 AM</option>
-                                                                    <option>2:30 AM</option>
-                                                                    <option>3:00 AM</option>
-                                                                    <option>3:30 AM</option>
-                                                                    <option>4:00 AM</option>
-                                                                    <option>4:30 AM</option>
-                                                                    <option>5:00 AM</option>
-                                                                    <option>5:30 AM</option>
-                                                                    <option>6:00 AM</option>
-                                                                    <option>6:30 AM</option>
-                                                                    <option>7:00 AM</option>
-                                                                    <option>7:30 AM</option>
-                                                                    <option>8:00 AM</option>
-                                                                    <option>8:30 AM</option>
-                                                                    <option>9:00 AM</option>
-                                                                    <option>9:30 AM</option>
-                                                                    <option>10:00 AM</option>
-                                                                    <option>10:30 AM</option>
-                                                                    <option>11:00 AM</option>
-                                                                    <option>11:30 AM</option>
-                                                                    <option>12:00 PM</option>
-                                                                    <option>12:30 PM</option>
-                                                                    <option>1:00 PM</option>
-                                                                    <option>1:30 PM</option>
-                                                                    <option>2:00 PM</option>
-                                                                    <option>2:30 PM</option>
-                                                                    <option>3:00 PM</option>
-                                                                    <option>3:30 PM</option>
-                                                                    <option>4:00 PM</option>
-                                                                    <option>4:30 PM</option>
-                                                                    <option>5:00 PM</option>
-                                                                    <option>5:30 PM</option>
-                                                                    <option>6:00 PM</option>
-                                                                    <option>6:30 PM</option>
-                                                                    <option>7:00 PM</option>
-                                                                    <option>7:30 PM</option>
-                                                                    <option>8:00 PM</option>
-                                                                    <option>8:30 PM</option>
-                                                                    <option>9:00 PM</option>
-                                                                    <option>9:30 PM</option>
-                                                                    <option>10:00 PM</option>
-                                                                    <option>10:30 PM</option>
-                                                                    <option>11:00 PM</option>
-                                                                    <option>11:30 PM</option>
-                                                                    <option selected="selected">11:59 PM</option>
-                                                                </select>
+                                                <div class="form-body" style="background-color: white;">
+                                                    <div class="row" style="padding:20px">
+                                                        <center>
+                                                            <div class="col-md-2">
+                                                                @if (ViewBag.SelectedResource != null)
+                                                                {
+                                                                    @Html.DropDownList("resource", new SelectList(ViewBag.ResourceList, ViewBag.SelectedResource), new { @class = "form-control", @style = "color:black;" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownList("resource", new SelectList(ViewBag.ResourceList), new { @class = "form-control", @style = "color:black;" })
+                                                                }
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <label class="form-control" style="border:0px">From</label>
+                                                            </div>
+                                                            <div class="col-md-2">
 
-                                                            }
-                                                        </div>
-                                                        <button type="submit" class="btn btn-info pull-right" style="margin: 15px;">
-                                                            Update
-                                                        </button>
-                                                    </center>
+                                                                @if (ViewBag.dateFrom != null)
+                                                                {
+                                                                    <input type="text" class="form-control date-picker" name="dateFrom" id="dateFrom" value="@ViewBag.dateFrom" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="text" class="form-control date-picker" name="dateFrom" id="dateFrom" value="@TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToShortDateString()" />
+                                                                }
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                @if (ViewBag.timeFrom != null)
+                                                                {
+                                                                    string abc = ViewBag.timeFrom.ToString();
+                                                                    <select name="timeFrom" id="timeFrom" class="form-control">
+                                                                        <option value="12:00 AM" @if (abc == "12:00 AM") { <text> selected="selected" </text> }>12:00 AM</option>
+                                                                        <option value="12:30 AM" @if (abc == "12:30 AM") { <text> selected="selected" </text> }>12:30 AM</option>
+                                                                        <option value="1:00 AM" @if (abc == "1:00 AM") { <text> selected="selected" </text> }>1:00 AM</option>
+                                                                        <option value="1:30 AM" @if (abc == "1:30 AM") { <text> selected="selected" </text> }>1:30 AM</option>
+                                                                        <option value="2:00 AM" @if (abc == "2:00 AM") { <text> selected="selected" </text> }>2:00 AM</option>
+                                                                        <option value="2:30 AM" @if (abc == "2:30 AM") { <text> selected="selected" </text> }>2:30 AM</option>
+                                                                        <option value="3:00 AM" @if (abc == "3:00 AM") { <text> selected="selected" </text> }>3:00 AM</option>
+                                                                        <option value="3:30 AM" @if (abc == "3:30 AM") { <text> selected="selected" </text> }>3:30 AM</option>
+                                                                        <option value="4:00 AM" @if (abc == "4:00 AM") { <text> selected="selected" </text> }>4:00 AM</option>
+                                                                        <option value="4:30 AM" @if (abc == "4:30 AM") { <text> selected="selected" </text> }>4:30 AM</option>
+                                                                        <option value="5:00 AM" @if (abc == "5:00 AM") { <text> selected="selected" </text> }>5:00 AM</option>
+                                                                        <option value="5:30 AM" @if (abc == "5:30 AM") { <text> selected="selected" </text> }>5:30 AM</option>
+                                                                        <option value="6:00 AM" @if (abc == "6:00 AM") { <text> selected="selected" </text> }>6:00 AM</option>
+                                                                        <option value="6:30 AM" @if (abc == "6:30 AM") { <text> selected="selected" </text> }>6:30 AM</option>
+                                                                        <option value="7:00 AM" @if (abc == "7:00 AM") { <text> selected="selected" </text> }>7:00 AM</option>
+                                                                        <option value="7:30 AM" @if (abc == "7:30 AM") { <text> selected="selected" </text> }>7:30 AM</option>
+                                                                        <option value="8:00 AM" @if (abc == "8:00 AM") { <text> selected="selected" </text> }>8:00 AM</option>
+                                                                        <option value="8:30 AM" @if (abc == "8:30 AM") { <text> selected="selected" </text> }>8:30 AM</option>
+                                                                        <option value="9:00 AM" @if (abc == "9:00 AM") { <text> selected="selected" </text> }>9:00 AM</option>
+                                                                        <option value="9:30 AM" @if (abc == "9:30 AM") { <text> selected="selected" </text> }>9:30 AM</option>
+                                                                        <option value="10:00 AM" @if (abc == "10:00 AM") { <text> selected="selected" </text> }>10:00 AM</option>
+                                                                        <option value="10:30 AM" @if (abc == "10:30 AM") { <text> selected="selected" </text> }>10:30 AM</option>
+                                                                        <option value="11:00 AM" @if (abc == "11:00 AM") { <text> selected="selected" </text> }>11:00 AM</option>
+                                                                        <option value="11:30 AM" @if (abc == "11:30 AM") { <text> selected="selected" </text> }>11:30 AM</option>
+                                                                        <option value="12:00 PM" @if (abc == "12:00 PM") { <text> selected="selected" </text> }>12:00 PM</option>
+                                                                        <option value="12:30 PM" @if (abc == "12:30 PM") { <text> selected="selected" </text> }>12:30 PM</option>
+                                                                        <option value="1:00 PM" @if (abc == "1:00 PM") { <text> selected="selected" </text> }>1:00 PM</option>
+                                                                        <option value="1:30 PM" @if (abc == "1:30 PM") { <text> selected="selected" </text> }>1:30 PM</option>
+                                                                        <option value="2:00 PM" @if (abc == "2:00 PM") { <text> selected="selected" </text> }>2:00 PM</option>
+                                                                        <option value="2:30 PM" @if (abc == "2:30 PM") { <text> selected="selected" </text> }>2:30 PM</option>
+                                                                        <option value="3:00 PM" @if (abc == "3:00 PM") { <text> selected="selected" </text> }>3:00 PM</option>
+                                                                        <option value="3:30 PM" @if (abc == "3:30 PM") { <text> selected="selected" </text> }>3:30 PM</option>
+                                                                        <option value="4:00 PM" @if (abc == "4:00 PM") { <text> selected="selected" </text> }>4:00 PM</option>
+                                                                        <option value="4:30 PM" @if (abc == "4:30 PM") { <text> selected="selected" </text> }>4:30 PM</option>
+                                                                        <option value="5:00 PM" @if (abc == "5:00 PM") { <text> selected="selected" </text> }>5:00 PM</option>
+                                                                        <option value="5:30 PM" @if (abc == "5:30 PM") { <text> selected="selected" </text> }>5:30 PM</option>
+                                                                        <option value="6:00 PM" @if (abc == "6:00 PM") { <text> selected="selected" </text> }>6:00 PM</option>
+                                                                        <option value="6:30 PM" @if (abc == "6:30 PM") { <text> selected="selected" </text> }>6:30 PM</option>
+                                                                        <option value="7:00 PM" @if (abc == "7:00 PM") { <text> selected="selected" </text> }>7:00 PM</option>
+                                                                        <option value="7:30 PM" @if (abc == "7:30 PM") { <text> selected="selected" </text> }>7:30 PM</option>
+                                                                        <option value="8:00 PM" @if (abc == "8:00 PM") { <text> selected="selected" </text> }>8:00 PM</option>
+                                                                        <option value="8:30 PM" @if (abc == "8:30 PM") { <text> selected="selected" </text> }>8:30 PM</option>
+                                                                        <option value="9:00 PM" @if (abc == "9:00 PM") { <text> selected="selected" </text> }>9:00 PM</option>
+                                                                        <option value="9:30 PM" @if (abc == "9:30 PM") { <text> selected="selected" </text> }>9:30 PM</option>
+                                                                        <option value="10:00 PM" @if (abc == "10:00 PM") { <text> selected="selected" </text> }>10:00 PM</option>
+                                                                        <option value="10:30 PM" @if (abc == "10:30 PM") { <text> selected="selected" </text> }>10:30 PM</option>
+                                                                        <option value="11:00 PM" @if (abc == "11:00 PM") { <text> selected="selected" </text> }>11:00 PM</option>
+                                                                        <option value="11:30 PM" @if (abc == "11:30 PM") { <text> selected="selected" </text> }>11:30 PM</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="text" name="timeFrom" id="timeFromInput" value="@DateTime.Today.ToShortTimeString()" class="span6" style="width:8%;display:none;" />
+                                                                    <select name="timeFrom" id="timeFrom" class="form-control">
+                                                                        <option selected="selected">12:00 AM</option>
+                                                                        <option>12:30 AM</option>
+                                                                        <option>1:00 AM</option>
+                                                                        <option>1:30 AM</option>
+                                                                        <option>2:00 AM</option>
+                                                                        <option>2:30 AM</option>
+                                                                        <option>3:00 AM</option>
+                                                                        <option>3:30 AM</option>
+                                                                        <option>4:00 AM</option>
+                                                                        <option>4:30 AM</option>
+                                                                        <option>5:00 AM</option>
+                                                                        <option>5:30 AM</option>
+                                                                        <option>6:00 AM</option>
+                                                                        <option>6:30 AM</option>
+                                                                        <option>7:00 AM</option>
+                                                                        <option>7:30 AM</option>
+                                                                        <option>8:00 AM</option>
+                                                                        <option>8:30 AM</option>
+                                                                        <option>9:00 AM</option>
+                                                                        <option>9:30 AM</option>
+                                                                        <option>10:00 AM</option>
+                                                                        <option>10:30 AM</option>
+                                                                        <option>11:00 AM</option>
+                                                                        <option>11:30 AM</option>
+                                                                        <option>12:00 PM</option>
+                                                                        <option>12:30 PM</option>
+                                                                        <option>1:00 PM</option>
+                                                                        <option>1:30 PM</option>
+                                                                        <option>2:00 PM</option>
+                                                                        <option>2:30 PM</option>
+                                                                        <option>3:00 PM</option>
+                                                                        <option>3:30 PM</option>
+                                                                        <option>4:00 PM</option>
+                                                                        <option>4:30 PM</option>
+                                                                        <option>5:00 PM</option>
+                                                                        <option>5:30 PM</option>
+                                                                        <option>6:00 PM</option>
+                                                                        <option>6:30 PM</option>
+                                                                        <option>7:00 PM</option>
+                                                                        <option>7:30 PM</option>
+                                                                        <option>8:00 PM</option>
+                                                                        <option>8:30 PM</option>
+                                                                        <option>9:00 PM</option>
+                                                                        <option>9:30 PM</option>
+                                                                        <option>10:00 PM</option>
+                                                                        <option>10:30 PM</option>
+                                                                        <option>11:00 PM</option>
+                                                                        <option>11:30 PM</option>
+                                                                    </select>
+                                                                }
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <label class="form-control" style="border:0px">To</label>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                @if (ViewBag.dateTo != null)
+                                                                {
+                                                                    <input type="text" name="dateTo" id="dateTo" value="@ViewBag.dateTo" class="form-control" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="text" name="dateTo" id="dateTo" value="@TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pakistan Standard Time").ToShortDateString()" class="form-control" />
+                                                                }
+                                                            </div>
 
+                                                            <div class="col-md-2">
+                                                                @if (ViewBag.timeTo != null)
+                                                                {
+                                                                    string abc = ViewBag.timeTo.ToString();
+                                                                    <select name="timeTo" id="timeTo" class="form-control">
+                                                                        <option value="12:00 AM" @if (abc == "12:00 AM") { <text> selected="selected" </text> }>12:00 AM</option>
+                                                                        <option value="12:30 AM" @if (abc == "12:30 AM") { <text> selected="selected" </text> }>12:30 AM</option>
+                                                                        <option value="1:00 AM" @if (abc == "1:00 AM") { <text> selected="selected" </text> }>1:00 AM</option>
+                                                                        <option value="1:30 AM" @if (abc == "1:30 AM") { <text> selected="selected" </text> }>1:30 AM</option>
+                                                                        <option value="2:00 AM" @if (abc == "2:00 AM") { <text> selected="selected" </text> }>2:00 AM</option>
+                                                                        <option value="2:30 AM" @if (abc == "2:30 AM") { <text> selected="selected" </text> }>2:30 AM</option>
+                                                                        <option value="3:00 AM" @if (abc == "3:00 AM") { <text> selected="selected" </text> }>3:00 AM</option>
+                                                                        <option value="3:30 AM" @if (abc == "3:30 AM") { <text> selected="selected" </text> }>3:30 AM</option>
+                                                                        <option value="4:00 AM" @if (abc == "4:00 AM") { <text> selected="selected" </text> }>4:00 AM</option>
+                                                                        <option value="4:30 AM" @if (abc == "4:30 AM") { <text> selected="selected" </text> }>4:30 AM</option>
+                                                                        <option value="5:00 AM" @if (abc == "5:00 AM") { <text> selected="selected" </text> }>5:00 AM</option>
+                                                                        <option value="5:30 AM" @if (abc == "5:30 AM") { <text> selected="selected" </text> }>5:30 AM</option>
+                                                                        <option value="6:00 AM" @if (abc == "6:00 AM") { <text> selected="selected" </text> }>6:00 AM</option>
+                                                                        <option value="6:30 AM" @if (abc == "6:30 AM") { <text> selected="selected" </text> }>6:30 AM</option>
+                                                                        <option value="7:00 AM" @if (abc == "7:00 AM") { <text> selected="selected" </text> }>7:00 AM</option>
+                                                                        <option value="7:30 AM" @if (abc == "7:30 AM") { <text> selected="selected" </text> }>7:30 AM</option>
+                                                                        <option value="8:00 AM" @if (abc == "8:00 AM") { <text> selected="selected" </text> }>8:00 AM</option>
+                                                                        <option value="8:30 AM" @if (abc == "8:30 AM") { <text> selected="selected" </text> }>8:30 AM</option>
+                                                                        <option value="9:00 AM" @if (abc == "9:00 AM") { <text> selected="selected" </text> }>9:00 AM</option>
+                                                                        <option value="9:30 AM" @if (abc == "9:30 AM") { <text> selected="selected" </text> }>9:30 AM</option>
+                                                                        <option value="10:00 AM" @if (abc == "10:00 AM") { <text> selected="selected" </text> }>10:00 AM</option>
+                                                                        <option value="10:30 AM" @if (abc == "10:30 AM") { <text> selected="selected" </text> }>10:30 AM</option>
+                                                                        <option value="11:00 AM" @if (abc == "11:00 AM") { <text> selected="selected" </text> }>11:00 AM</option>
+                                                                        <option value="11:30 AM" @if (abc == "11:30 AM") { <text> selected="selected" </text> }>11:30 AM</option>
+                                                                        <option value="12:00 PM" @if (abc == "12:00 PM") { <text> selected="selected" </text> }>12:00 PM</option>
+                                                                        <option value="12:30 PM" @if (abc == "12:30 PM") { <text> selected="selected" </text> }>12:30 PM</option>
+                                                                        <option value="1:00 PM" @if (abc == "1:00 PM") { <text> selected="selected" </text> }>1:00 PM</option>
+                                                                        <option value="1:30 PM" @if (abc == "1:30 PM") { <text> selected="selected" </text> }>1:30 PM</option>
+                                                                        <option value="2:00 PM" @if (abc == "2:00 PM") { <text> selected="selected" </text> }>2:00 PM</option>
+                                                                        <option value="2:30 PM" @if (abc == "2:30 PM") { <text> selected="selected" </text> }>2:30 PM</option>
+                                                                        <option value="3:00 PM" @if (abc == "3:00 PM") { <text> selected="selected" </text> }>3:00 PM</option>
+                                                                        <option value="3:30 PM" @if (abc == "3:30 PM") { <text> selected="selected" </text> }>3:30 PM</option>
+                                                                        <option value="4:00 PM" @if (abc == "4:00 PM") { <text> selected="selected" </text> }>4:00 PM</option>
+                                                                        <option value="4:30 PM" @if (abc == "4:30 PM") { <text> selected="selected" </text> }>4:30 PM</option>
+                                                                        <option value="5:00 PM" @if (abc == "5:00 PM") { <text> selected="selected" </text> }>5:00 PM</option>
+                                                                        <option value="5:30 PM" @if (abc == "5:30 PM") { <text> selected="selected" </text> }>5:30 PM</option>
+                                                                        <option value="6:00 PM" @if (abc == "6:00 PM") { <text> selected="selected" </text> }>6:00 PM</option>
+                                                                        <option value="6:30 PM" @if (abc == "6:30 PM") { <text> selected="selected" </text> }>6:30 PM</option>
+                                                                        <option value="7:00 PM" @if (abc == "7:00 PM") { <text> selected="selected" </text> }>7:00 PM</option>
+                                                                        <option value="7:30 PM" @if (abc == "7:30 PM") { <text> selected="selected" </text> }>7:30 PM</option>
+                                                                        <option value="8:00 PM" @if (abc == "8:00 PM") { <text> selected="selected" </text> }>8:00 PM</option>
+                                                                        <option value="8:30 PM" @if (abc == "8:30 PM") { <text> selected="selected" </text> }>8:30 PM</option>
+                                                                        <option value="9:00 PM" @if (abc == "9:00 PM") { <text> selected="selected" </text> }>9:00 PM</option>
+                                                                        <option value="9:30 PM" @if (abc == "9:30 PM") { <text> selected="selected" </text> }>9:30 PM</option>
+                                                                        <option value="10:00 PM" @if (abc == "10:00 PM") { <text> selected="selected" </text> }>10:00 PM</option>
+                                                                        <option value="10:30 PM" @if (abc == "10:30 PM") { <text> selected="selected" </text> }>10:30 PM</option>
+                                                                        <option value="11:00 PM" @if (abc == "11:00 PM") { <text> selected="selected" </text> }>11:00 PM</option>
+                                                                        <option value="11:30 PM" @if (abc == "11:30 PM") { <text> selected="selected" </text> }>11:30 PM</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="text" name="timeTo" id="timeToInput" value="@DateTime.Today.ToShortTimeString()" class="span6" style="width:8%;display:none;" />
+                                                                    <select name="timeTo" id="timeTo" class="form-control">
+                                                                        <option>12:30 AM</option>
+                                                                        <option>1:00 AM</option>
+                                                                        <option>1:30 AM</option>
+                                                                        <option>2:00 AM</option>
+                                                                        <option>2:30 AM</option>
+                                                                        <option>3:00 AM</option>
+                                                                        <option>3:30 AM</option>
+                                                                        <option>4:00 AM</option>
+                                                                        <option>4:30 AM</option>
+                                                                        <option>5:00 AM</option>
+                                                                        <option>5:30 AM</option>
+                                                                        <option>6:00 AM</option>
+                                                                        <option>6:30 AM</option>
+                                                                        <option>7:00 AM</option>
+                                                                        <option>7:30 AM</option>
+                                                                        <option>8:00 AM</option>
+                                                                        <option>8:30 AM</option>
+                                                                        <option>9:00 AM</option>
+                                                                        <option>9:30 AM</option>
+                                                                        <option>10:00 AM</option>
+                                                                        <option>10:30 AM</option>
+                                                                        <option>11:00 AM</option>
+                                                                        <option>11:30 AM</option>
+                                                                        <option>12:00 PM</option>
+                                                                        <option>12:30 PM</option>
+                                                                        <option>1:00 PM</option>
+                                                                        <option>1:30 PM</option>
+                                                                        <option>2:00 PM</option>
+                                                                        <option>2:30 PM</option>
+                                                                        <option>3:00 PM</option>
+                                                                        <option>3:30 PM</option>
+                                                                        <option>4:00 PM</option>
+                                                                        <option>4:30 PM</option>
+                                                                        <option>5:00 PM</option>
+                                                                        <option>5:30 PM</option>
+                                                                        <option>6:00 PM</option>
+                                                                        <option>6:30 PM</option>
+                                                                        <option>7:00 PM</option>
+                                                                        <option>7:30 PM</option>
+                                                                        <option>8:00 PM</option>
+                                                                        <option>8:30 PM</option>
+                                                                        <option>9:00 PM</option>
+                                                                        <option>9:30 PM</option>
+                                                                        <option>10:00 PM</option>
+                                                                        <option>10:30 PM</option>
+                                                                        <option>11:00 PM</option>
+                                                                        <option>11:30 PM</option>
+                                                                        <option selected="selected">11:59 PM</option>
+                                                                    </select>
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-md-12 ">
+                                                                <div class="form-actions right">
+                                                                    <button type="submit" id="submit" class="btn btn-danger">
+                                                                        Update
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </center>
+
+                                                    </div>
                                                 </div>
                                             </div>
+                                            }
                                         </div>
-                                    }
+
+                                    </div>
                                 </div>
                             </div>
 

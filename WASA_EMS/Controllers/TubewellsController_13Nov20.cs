@@ -265,14 +265,14 @@ namespace WASA_EMS.Controllers
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 9,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID = " + resourceID + " and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,9,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -995,7 +995,7 @@ namespace WASA_EMS.Controllers
                             dtReport.Columns.Add("Location");
                         }
                         DataTable dtParamVals = new DataTable();
-                        string allParamsQueryForRes = "select p.ParameterName, e.ParameterValue from tblEnergy e left join tblParameter p on e.ParameterID = p.ParameterID left join tblResource r on e.ResourceID = r.ResourceID left join tblRemoteSensor rms on r.ResourceID = rms.ResourceID left join tblTemplate t on r.TemplateID = t.TemplateID where e.InsertionDateTime = ( select max(InsertionDateTime) from tblEnergy where ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " ) and e.InsertionDateTime > dateadd(minute,-20,getdate()) and r.ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " order by p.ParamOrder";
+                        string allParamsQueryForRes = "select p.ParameterName, e.ParameterValue from tblEnergy e left join tblParameter p on e.ParameterID = p.ParameterID left join tblResource r on e.ResourceID = r.ResourceID left join tblRemoteSensor rms on r.ResourceID = rms.ResourceID left join tblTemplate t on r.TemplateID = t.TemplateID where e.InsertionDateTime = ( select max(InsertionDateTime) from tblEnergy where ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " ) and e.InsertionDateTime > dateadd(minute,520,getdate()) and r.ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " order by p.ParamOrder";
                         SqlDataAdapter sdaParamVals = new SqlDataAdapter(allParamsQueryForRes, conn);
                         sdaParamVals.Fill(dtParamVals);
                         if (dtReport.Rows.Count < 1)
@@ -1067,7 +1067,7 @@ namespace WASA_EMS.Controllers
             string NewscripString = scriptString;
             NewscripString = NewscripString.Replace("&quot;", "\"");
             ViewData["chartData"] = NewscripString;
-            Session["ReportTitle"] = "Current Status of All Tubewell Locations at  " + DateTime.Now.AddHours(0).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " ";
+            Session["ReportTitle"] = "Current Status of All Tubewell Locations at  " + DateTime.Now.AddHours(9).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " ";
             return PartialView(dtReport);
         }
         public ActionResult StatusReport()
@@ -1111,14 +1111,14 @@ namespace WASA_EMS.Controllers
                         Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                         Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                         Dashdtquery += "s.InsertionDateTime as tim ,";
-                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 9,GETDATE ())) as DeltaMinutes ";
                         Dashdtquery += "FROM tblEnergy s ";
                         Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                         Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                         Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                         Dashdtquery += "where ";
                         Dashdtquery += "r.ResourceID = " + resourceID + " and ";
-                        Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                        Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,9,GETDATE())), 0) ";
                         Dashdtquery += ") ";
                         Dashdtquery += "AS SourceTable ";
                         Dashdtquery += "PIVOT ";
@@ -1207,7 +1207,7 @@ namespace WASA_EMS.Controllers
                             aquery += "ORDER BY e.InsertionDateTime DESC) ";
                             aquery += "FROM tblEnergy e ";
                             aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-                            aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0)  ";
+                            aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,9,GETDATE())), 0)  ";
                             aquery += ") ";
                             aquery += "SELECT top 14000 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 14401 Order by InsertionDateTime ASC";
                             string theQuery = aquery;
@@ -1243,7 +1243,7 @@ namespace WASA_EMS.Controllers
 
 
 
-            Session["ReportTitle"] = "Current Status of All Tubewell Locations at  " + DateTime.Now.AddHours(0).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " (Reflected for Today)";
+            Session["ReportTitle"] = "Current Status of All Tubewell Locations at  " + DateTime.Now.AddHours(9).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " (Reflected for Today)";
             return PartialView(tubewellDataList);
         }
         public ActionResult WaterDischargeReport()
@@ -1337,8 +1337,8 @@ namespace WASA_EMS.Controllers
             DateTime FinalTimeTo = DateTime.Now;
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeFrom = DateTime.Now.AddHours(9).Date;
+                FinalTimeTo = DateTime.Now.AddHours(9).AddDays(1).Date;
             }
             else
             {
@@ -1520,7 +1520,7 @@ namespace WASA_EMS.Controllers
                         Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                         Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                         Dashdtquery += "s.InsertionDateTime as tim ,";
-                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 9,GETDATE ())) as DeltaMinutes ";
                         Dashdtquery += "FROM tblEnergy s ";
                         Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                         Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -1681,8 +1681,8 @@ namespace WASA_EMS.Controllers
             DateTime FinalTimeTo = DateTime.Now;
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeFrom = DateTime.Now.AddHours(9).Date;
+                FinalTimeTo = DateTime.Now.AddHours(9).AddDays(1).Date;
             }
             else
             {
@@ -1878,7 +1878,7 @@ namespace WASA_EMS.Controllers
                         Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                         Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                         Dashdtquery += "s.InsertionDateTime as tim ,";
-                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 9,GETDATE ())) as DeltaMinutes ";
                         Dashdtquery += "FROM tblEnergy s ";
                         Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                         Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -2141,8 +2141,8 @@ namespace WASA_EMS.Controllers
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
                 CultureInfo culture = new CultureInfo("en-US");
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeFrom = DateTime.Now.AddHours(9).Date;
+                FinalTimeTo = DateTime.Now.AddHours(9).AddDays(1).Date;
             }
             else
             {
@@ -2222,7 +2222,7 @@ namespace WASA_EMS.Controllers
                         Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                         Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                         Dashdtquery += "s.InsertionDateTime as tim ,";
-                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 9,GETDATE ())) as DeltaMinutes ";
                         Dashdtquery += "FROM tblEnergy s ";
                         Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                         Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
@@ -2730,8 +2730,8 @@ namespace WASA_EMS.Controllers
             DateTime FinalTimeTo = DateTime.Now;
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
+                FinalTimeFrom = DateTime.Now.AddHours(9).Date;
+                FinalTimeTo = DateTime.Now.AddHours(9).AddDays(1).Date;
             }
             else
             {
@@ -2901,116 +2901,88 @@ namespace WASA_EMS.Controllers
                     sdaRes.Fill(dtRes);
                     string resourceLocation = "";
                     int ite = 0;
-                    double noOfDays = ((Convert.ToDateTime(FinalTimeTo).Date) - (Convert.ToDateTime(FinalTimeFrom).Date)).TotalDays;
-                    for (int daysCount = 0; daysCount <= noOfDays; daysCount++)
+                    //iterate through the list of resources within the desired set of resources chosen
+                    foreach (DataRow drRes in dtRes.Rows)
                     {
-                        DateTime ftf = DateTime.Now;
-                        DateTime ftt = DateTime.Now;
-                        if (noOfDays == 0)
+                        //getting resourceID 
+                        resourceID = Convert.ToInt32(drRes["ResourceID"]);
+                        //getting resourceLocation 
+                        resourceLocation = drRes["ResourceLocation"].ToString();
+                        //query will get the list of data available against given resourceID (latest first)
+                        string Dashdtquery = ";WITH cte AS ( ";
+                        Dashdtquery += "SELECT* FROM ";
+                        Dashdtquery += "( ";
+                        Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
+                        Dashdtquery += " r.ResourceSpecification AS specifications, r.WaterLevel_m, r.PumpingWaterLevel_hpl, r.RatedDischarge_Q, r.RatedHead_H, r.Discharge_Dia_Dd, ";
+                        Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
+                        Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
+                        Dashdtquery += "s.InsertionDateTime as tim ,";
+                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 9,GETDATE ())) as DeltaMinutes ";
+                        Dashdtquery += "FROM tblEnergy s ";
+                        Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
+                        Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
+                        Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
+                        Dashdtquery += "where ";
+                        Dashdtquery += "r.ResourceID = " + resourceID + " and ";
+                        //Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,10,GETDATE())), 0) ";
+                        Dashdtquery += "InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                        Dashdtquery += ") ";
+                        Dashdtquery += "AS SourceTable ";
+                        Dashdtquery += "PIVOT ";
+                        Dashdtquery += "( ";
+                        Dashdtquery += "SUM(pVal) FOR pID ";
+                        Dashdtquery += "IN ";
+                        Dashdtquery += "( ";
+                        Dashdtquery += "[V1N.],[V2N.],[V3N.],[I1.],[I2.],[I3.],[Frequency.],[PKVA.],[PF.],[Remote.],[PumpStatus],[CurrentTrip.],[VoltageTrip.],[TimeSchedule.],[ChlorineLevel.],[WaterFlow(Cusec).],[PKVAR.],[PKW.],[V12],[V13],[V23],[PrimingLevel],[Pressure(Bar)],[Manual],[vib_z],[vib_y],[vib_x] ";
+                        Dashdtquery += ") ";
+                        Dashdtquery += ")  ";
+                        Dashdtquery += "AS PivotTable ";
+                        Dashdtquery += ")  ";
+                        Dashdtquery += "SELECT* FROM cte ";
+                        Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
+                        Dashdtquery += "tim DESC";
+                        SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
+                        SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
+                        Dashdt.Clear();
+                        sda.Fill(Dashdt);
+                        if (Dashdt.Rows.Count > 0)
                         {
-                            ftf = FinalTimeFrom;
-                            ftt = FinalTimeTo;
+                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes));
+                            tubewellDataList.Add(sd);
                         }
-                        if (daysCount == 0 && noOfDays > 0)
+                        else
                         {
-                            ftf = FinalTimeFrom;
-                            ftt = FinalTimeFrom.Date.AddDays(daysCount + 1).AddSeconds(-1);
-                        }
-                        if (daysCount > 0 && noOfDays > 0 && daysCount != noOfDays)
-                        {
-                            ftf = FinalTimeFrom.Date.AddDays(daysCount);
-                            ftt = FinalTimeFrom.Date.AddDays(daysCount + 1).AddSeconds(-1);
-                        }
-                        if (noOfDays > 0 && daysCount == noOfDays)
-                        {
-                            ftf = FinalTimeFrom.Date.AddDays(daysCount);
-                            ftt = FinalTimeTo;
-                        }
-                        foreach (DataRow drRes in dtRes.Rows)
-                        {
-                            //getting resourceID 
-                            resourceID = Convert.ToInt32(drRes["ResourceID"]);
-                            //getting resourceLocation 
-                            resourceLocation = drRes["ResourceLocation"].ToString();
-                            //query will get the list of data available against given resourceID (latest first)
-                            string Dashdtquery = ";WITH cte AS ( ";
-                            Dashdtquery += "SELECT* FROM ";
-                            Dashdtquery += "( ";
-                            Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
-                            Dashdtquery += " r.ResourceSpecification AS specifications, r.WaterLevel_m, r.PumpingWaterLevel_hpl, r.RatedDischarge_Q, r.RatedHead_H, r.Discharge_Dia_Dd, ";
-                            Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
-                            Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
-                            Dashdtquery += "s.InsertionDateTime as tim ,";
-                            Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
-                            Dashdtquery += "FROM tblEnergy s ";
-                            Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
-                            Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
-                            Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
-                            Dashdtquery += "where ";
-                            Dashdtquery += "r.ResourceID = " + resourceID + " and ";
-                            //Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,10,GETDATE())), 0) ";
-                            Dashdtquery += "InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + ftf + "', 103), 121) and InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + ftt + "', 103), 121)  ";
-                            Dashdtquery += ") ";
-                            Dashdtquery += "AS SourceTable ";
-                            Dashdtquery += "PIVOT ";
-                            Dashdtquery += "( ";
-                            Dashdtquery += "SUM(pVal) FOR pID ";
-                            Dashdtquery += "IN ";
-                            Dashdtquery += "( ";
-                            Dashdtquery += "[V1N.],[V2N.],[V3N.],[I1.],[I2.],[I3.],[Frequency.],[PKVA.],[PF.],[Remote.],[PumpStatus],[CurrentTrip.],[VoltageTrip.],[TimeSchedule.],[ChlorineLevel.],[WaterFlow(Cusec).],[PKVAR.],[PKW.],[V12],[V13],[V23],[PrimingLevel],[Pressure(Bar)],[Manual],[vib_z],[vib_y],[vib_x] ";
-                            Dashdtquery += ") ";
-                            Dashdtquery += ")  ";
-                            Dashdtquery += "AS PivotTable ";
-                            Dashdtquery += ")  ";
-                            Dashdtquery += "SELECT* FROM cte ";
-                            Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
-                            Dashdtquery += "tim DESC";
-                            SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
-                            SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
-                            Dashdt.Clear();
-                            sda.Fill(Dashdt);
-                            if (Dashdt.Rows.Count > 0)
-                            {
-                                TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes),ftf);
-                                tubewellDataList.Add(sd);
-                            }
-                            else
-                            {
-                                TubewellDataClass sd = new TubewellDataClass();
-                                sd.locationName = drRes["ResourceLocation"].ToString();
-                                sd.pumpStatus = new List<double>();
-                                //sd.I1 = null;
-                                //sd.I2 = null;
-                                //sd.I3 = null;
-                                //sd.manualStatus = null;
-                                //sd.pkva = null;
-                                //sd.pkvar = null;
-                                //sd.pkw = null;
-                                //sd.powerFactor = null;
-                                //sd.pressure = null;
-                                //sd.primingTankLevel = null;
-                                //sd.remoteControll = null;
-                                //sd.schedulingStatus = null;
-                                //sd.V12 = null;
-                                //sd.V13 = null;
-                                //sd.V1N = null;
-                                //sd.V23 = null;
-                                //sd.V2N = null;
-                                //sd.V3N = null;
-                                //sd.voltageTrip = null;
-                                //sd.waterDischarge = null;
-                                //sd.waterFlow = null;
-                                //sd.workingHoursToday = null;
-                                sd.workingHoursTodayManual = "-";
-                                sd.workingHoursTodayRemote = "-";
-                                sd.workingHoursTodayScheduling = "-";
-                                sd.logDate = ftf.ToShortDateString();
-                                tubewellDataList.Add(sd);
-                            }
+                            TubewellDataClass sd = new TubewellDataClass();
+                            sd.locationName = drRes["ResourceLocation"].ToString();
+                            sd.pumpStatus = new List<double>();
+                            //sd.I1 = null;
+                            //sd.I2 = null;
+                            //sd.I3 = null;
+                            //sd.manualStatus = null;
+                            //sd.pkva = null;
+                            //sd.pkvar = null;
+                            //sd.pkw = null;
+                            //sd.powerFactor = null;
+                            //sd.pressure = null;
+                            //sd.primingTankLevel = null;
+                            //sd.remoteControll = null;
+                            //sd.schedulingStatus = null;
+                            //sd.V12 = null;
+                            //sd.V13 = null;
+                            //sd.V1N = null;
+                            //sd.V23 = null;
+                            //sd.V2N = null;
+                            //sd.V3N = null;
+                            //sd.voltageTrip = null;
+                            //sd.waterDischarge = null;
+                            //sd.waterFlow = null;
+                            //sd.workingHoursToday = null;
+                            sd.workingHoursTodayManual = "-";
+                            sd.workingHoursTodayRemote = "-";
+                            sd.workingHoursTodayScheduling = "-";
+                            tubewellDataList.Add(sd);
                         }
                     }
-                    //iterate through the list of resources within the desired set of resources chosen
-                    
                 }
                 catch (Exception ex)
                 {
@@ -3950,7 +3922,7 @@ namespace WASA_EMS.Controllers
             return tableData;
         }
 
-        public TubewellDataClass getAllSpellsForRemoteStatus(DataTable dt, int order, DateTime ftf)
+        public TubewellDataClass getAllSpellsForRemoteStatus(DataTable dt, int order)
         {
             var tableData = new TubewellDataClass();
             var spelldata = new TubewellSpellData();
@@ -4610,7 +4582,6 @@ namespace WASA_EMS.Controllers
                     tableData.WorkingInHoursManual = 0;
                     tableData.WorkingInHoursRemote = 0;
                     tableData.WorkingInHoursScheduling = 0;
-                    tableData.logDate = ftf.ToShortDateString();
                 }
                 else
                 {
@@ -4629,7 +4600,6 @@ namespace WASA_EMS.Controllers
                     tableData.workingHoursTodayManual = minutesToTime(spellDataList.Where(r => r.spellMode == 1).Sum(i => i.spellPeriod));
                     tableData.workingHoursTodayRemote = minutesToTime(spellDataList.Where(r => r.spellMode == 2).Sum(i => i.spellPeriod));
                     tableData.workingHoursTodayScheduling = minutesToTime(spellDataList.Where(r => r.spellMode == 3).Sum(i => i.spellPeriod));
-                    tableData.logDate = Convert.ToDateTime(currentTime).Date.ToShortDateString();
                 }
             }
             else
@@ -4916,7 +4886,6 @@ namespace WASA_EMS.Controllers
                     tableData.WorkingInHoursManual = 0;
                     tableData.WorkingInHoursRemote = 0;
                     tableData.WorkingInHoursScheduling = 0;
-                    tableData.logDate = ftf.ToShortDateString();
                 }
                 else
                 {
@@ -4941,7 +4910,6 @@ namespace WASA_EMS.Controllers
                     tableData.workingHoursTodayManual = minutesToTime(tableData.WorkingInHoursManual);
                     tableData.workingHoursTodayRemote = minutesToTime(tableData.WorkingInHoursRemote);
                     tableData.workingHoursTodayScheduling = minutesToTime(tableData.WorkingInHoursScheduling);
-                    tableData.logDate = Convert.ToDateTime(currentTime).Date.ToShortDateString();
                 }
             }
             return tableData;

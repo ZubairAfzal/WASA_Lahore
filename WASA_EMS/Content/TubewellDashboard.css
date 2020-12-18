@@ -1,0 +1,353 @@
+﻿
+.card21 {
+    grid-area: TubewellStatus;
+}
+
+.card22 {
+    grid-area: OverallStatus1;
+}
+
+.card55 {
+    grid-area: OverallStatus2;
+}
+
+.card56 {
+    grid-area: OverallStatus3;
+}
+
+.card23 {
+    grid-area: Map;
+}
+
+.card24 {
+    grid-area: PowerTelemetry;
+}
+
+.card25 {
+    grid-area: SiteFilter;
+}
+
+.card26 {
+    grid-area: l30WH;
+}
+
+.card27 {
+    grid-area: l7WH;
+}
+
+.card28 {
+    grid-area: TWH;
+}
+
+
+.card30 {
+    grid-area: ParameterFilter;
+}
+
+.card31 {
+    grid-area: l30WF;
+}
+
+.card32 {
+    grid-area: l7WF;
+}
+
+.card43 {
+    grid-area: TWF;
+}
+
+
+.card2 {
+    grid-area: modes1;
+}
+
+.card71 {
+    grid-area: modes2;
+}
+
+.card72 {
+    grid-area: modes3;
+}
+
+.card3 {
+    grid-area: vol-trip;
+}
+
+.card4 {
+    grid-area: vol-max;
+}
+
+.card33 {
+    grid-area: cur-trip;
+}
+
+.card44 {
+    grid-area: cur-max;
+}
+
+.card5 {
+    grid-area: l30A;
+}
+
+.card6 {
+    grid-area: l7A;
+}
+
+.card7 {
+    grid-area: lTA;
+}
+
+.card8 {
+    grid-area: l30V;
+}
+
+.card9 {
+    grid-area: l7V;
+}
+
+.card10 {
+    grid-area: lTV;
+}
+
+.card11 {
+    grid-area: PG;
+}
+
+.card12 {
+    grid-area: PF;
+}
+
+.card13 {
+    grid-area: VM;
+}
+
+.card14 {
+    grid-area: PL;
+}
+
+.card15 {
+    grid-area: CL;
+}
+
+.card16 {
+    grid-area: LS;
+}
+
+.hide {
+    max-height: 0 !important;
+}
+
+.dropdown {
+    border: 0.1em solid black;
+    width: 20em;
+    margin-bottom: 1em;
+    position: relative;
+    display: inline-block;
+}
+
+    .dropdown .title {
+        margin: .3em .3em .3em .3em;
+        width: 100%;
+    }
+
+        .dropdown .title .fa-angle-right {
+            float: right;
+            margin-right: .3em;
+            transition: transform .3s;
+        }
+
+    .dropdown .menu {
+        transition: max-height .5s ease-out;
+        max-height: 20em;
+        overflow: hidden;
+    }
+
+        .dropdown .menu .option {
+            margin: .3em .3em .3em .3em;
+            margin-top: 0.3em;
+        }
+
+            .dropdown .menu .option:hover {
+                background: rgba(0,0,0,0.2);
+            }
+
+.pointerCursor:hover {
+    cursor: pointer;
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas: 'TubewellStatus TubewellStatus OverallStatus1 OverallStatus1 OverallStatus2 OverallStatus3' 'TubewellStatus TubewellStatus Map Map PowerTelemetry PowerTelemetry' 'SiteFilter SiteFilter modes modes modes modes' 'SiteFilter SiteFilter modes1 modes1 modes2 modes3' 'vol-trip vol-max l30WH l30WH l7WH TWH' 'cur-trip cur-max l30WF l30WF l7WF TWF' 'l30A l7A lTA l30V l7V lTV' 'PG PF VM PL CL LS';
+    grid-gap: 10px;
+    background-color: #FFFFFF;
+    padding: 10px;
+    align-content: center;
+    grid-template-columns: 150px 150px auto auto auto auto;
+}
+
+    .grid-container > div {
+        background-color: #ccc;
+        text-align: center;
+        padding: 5px 0;
+        font-size: 20px;
+        border: 1px solid #A9A9A9;
+        border-radius: .25rem;
+    }
+
+.card-header {
+    text-align: Center;
+    font-size: 16px;
+    border: 1px solid #A9A9A9;
+    border-radius: .25rem;
+}
+
+.card-header1 {
+    background-color: #ccc;
+    text-align: Center;
+    font-size: 16px;
+    border: 1px solid #A9A9A9;
+    border-radius: .25rem;
+}
+
+.card-header2 {
+    background-color: #ccc;
+    text-align: Center;
+    font-size: 16px;
+    border: 1px solid #A9A9A9;
+    border-radius: .25rem;
+}
+
+.card-header3 {
+    background-color: #ccc;
+    text-align: Center;
+    font-size: 16px;
+    border: 1px solid #A9A9A9;
+    border-radius: .25rem;
+}
+
+.card-text {
+    text-align: center;
+    font-size: 12px;
+}
+
+#chartTWF {
+    height: 100%;
+    width: 100%;
+}
+
+#dvchart {
+    height: 210px;
+}
+
+#chartContainer1 {
+    background-color: #FFFFFF;
+}
+
+#siteF {
+    font-size: 12px;
+}
+
+#VT {
+    width: 150px;
+}
+
+#MV {
+    width: 150px;
+    margin-right: 3em;
+}
+
+#IT {
+    width: 150px;
+}
+
+#IV {
+    width: 150px;
+}
+
+#status {
+}
+
+#option {
+    font-size: 9px;
+    text-align: center;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#chartVM text {
+    font-size: 2;
+}
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 50%;
+    /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.card31 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card32 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card43 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card26 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card27 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card28 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+p {
+    margin: .3em;
+    padding: 0.5px;
+    font-size: 12px;
+    line-height: 17px
+}

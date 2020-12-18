@@ -5,8 +5,8 @@
                 <!-- BEGIN PAGE CONTENT INNER -->
                 <div class="page-content-inner">
                     <div class="row widget-row">
-                        <div class="col-md-12 col-lg-12 col-xs-12">
-                            <div class="col-md-5ths col-xs-12">
+                        <div class="col-md-12 col-lg-12 col-xs-12" style="font-size:12px">
+                            <div class="col-md-2 col-xs-12">
                                 <!-- BEGIN WIDGET THUMB -->
                                 <div style="text-align:center">
                                     @*<img src="~/Assets/img/sewage.png" style="height:64px; text-align:center; padding-bottom:10px;" />*@
@@ -43,7 +43,7 @@
                                 </div>
                                 <!-- END WIDGET THUMB -->
                             </div>
-                            <div class="col-md-5ths col-xs-12">
+                            <div class="col-md-2 col-xs-12">
                                 <!-- BEGIN WIDGET THUMB -->
                                 <div style="text-align:center">
                                     @*<img src="~/Assets/img/sewage.png" style="height:64px; text-align:center; padding-bottom:10px;" />*@
@@ -80,7 +80,7 @@
                                 </div>
                                 <!-- END WIDGET THUMB -->
                             </div>
-                            <div class="col-md-5ths col-xs-12">
+                            <div class="col-md-2 col-xs-12">
                                 <div style="text-align:center">
                                     @*<img src="~/Assets/img/Greenpump.png" style="height:64px; text-align:center; padding-bottom:10px;" />*@
                                 </div>
@@ -92,7 +92,7 @@
                                             Total Plants
                                         </div>
                                         <div class="widget-thumb-body" style="text-align:center;">
-                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="7" style="color:steelblue;text-align:center">7</span>
+                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="6" style="color:steelblue;text-align:center">6</span>
                                         </div>
                                         <div class="widget-thumb-body" style="text-align:center;">
                                             &nbsp;
@@ -101,7 +101,7 @@
                                             Running Plants
                                         </div>
                                         <div class="widget-thumb-body" style="text-align:center;">
-                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="7" style="color:#5b965b;text-align:center">7</span>
+                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="6" style="color:#5b965b;text-align:center">6</span>
                                         </div>
                                         <div class="widget-thumb-body" style="text-align:center;">
                                             &nbsp;
@@ -116,7 +116,7 @@
                                     <!-- END WIDGET THUMB -->
                                 </div>
                             </div>
-                            <div class="col-md-5ths col-xs-12">
+                            <div class="col-md-2 col-xs-12">
                                 <!-- BEGIN WIDGET THUMB -->
                                 <div style="text-align:center">
                                     @*<img src="~/Assets/img/Ponding.png" style="height:64px; text-align:center; padding-bottom:10px;" />*@
@@ -126,7 +126,7 @@
                                     <hr style="border-top:1px solid #545454" />
                                     <div class="widget-thumb-wrap">
                                         <div class="widget-thumb-body" style="text-align:center;white-space: nowrap;">
-                                            Total Ponding Points
+                                            Total Points
                                         </div>
                                         <div class="widget-thumb-body" style="text-align:center;">
                                             <span class="widget-thumb-body-stat" data-counter="counterup" data-value="22" style="color:steelblue;text-align:center">22</span>
@@ -153,7 +153,7 @@
                                 </div>
                                 <!-- END WIDGET THUMB -->
                             </div>
-                            <div class="col-md-5ths col-xs-12">
+                            <div class="col-md-2 col-xs-12">
                                 <!-- BEGIN WIDGET THUMB -->
                                 <div style="text-align:center">
                                     @*<img src="~/Assets/img/Rain.png" style="height:64px; text-align:center; padding-bottom:10px;" />*@
@@ -190,6 +190,45 @@
                                 </div>
                                 <!-- END WIDGET THUMB -->
                             </div>
+
+                            <div class="col-md-2 col-xs-12">
+                                <!-- BEGIN WIDGET THUMB -->
+                                <div style="text-align:center">
+                                    @*<img src="~/Assets/img/Rain.png" style="height:64px; text-align:center; padding-bottom:10px;" />*@
+                                </div>
+                                <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 " style="background:linear-gradient(to bottom, #99ccff 0%, #ffcccc 100%); border-radius:10px !important; padding:12px; height:300px;">
+                                    <h4 class="widget-thumb-heading" style="color:#545454; text-align:center; margin:0 0 5px;white-space: nowrap;">Recycling Plants</h4>
+                                    <hr style="border-top:1px solid #545454" />
+                                    <div class="widget-thumb-wrap">
+                                        <div class="widget-thumb-body" style="text-align:center;white-space: nowrap;">
+                                            Total Plants
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;">
+                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="2" style="color:steelblue;text-align:center">2</span>
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;">
+                                            &nbsp;
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;white-space: nowrap;">
+                                            Running Plants
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;">
+                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="2" style="color:#5b965b;text-align:center">@ViewBag.totalRecycle</span>
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;">
+                                            &nbsp;
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;white-space: nowrap;">
+                                            Inactive Plants
+                                        </div>
+                                        <div class="widget-thumb-body" style="text-align:center;">
+                                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="0" style="color:#ff7f7f;text-align:center">@ViewBag.InactiveRecycle</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END WIDGET THUMB -->
+                            </div>
+
                         </div>
                     </div>
                     <!-- END PAGE CONTENT INNER -->

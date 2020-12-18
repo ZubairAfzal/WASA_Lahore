@@ -1122,30 +1122,39 @@ namespace WASA_EMS.Controllers
             return View();
         }
         [HttpGet]
-        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 100)]
         public PartialViewResult _Welcome()
         {
             int totalRunningTubewells = 0;
             int totalRunningDisposals = 0;
             int InactiveTubewells = 0;
             int InactiveDisposals = 0;
-            string queryT1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1068 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryT2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1069 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryT3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1070 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryT4 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1071 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryT5 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1072 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryT6 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1073 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryT7 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1074 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD1p1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 144 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD1p2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 145 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD1p3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 146 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD1p4 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 147 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD1p5 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 148 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD2p1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 149 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD2p2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 150 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD2p3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 151 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD2p4 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 152 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
-            string queryD2p5 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 153 and InsertionDateTime > Dateadd(minute,520,getdate()) order by InsertionDateTime DESC";
+            int totalRunningRecycle = 0;
+            int InactiveRecycle = 0;
+            //1078,1079,,,,187,188,189
+            string queryT1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1068 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryT2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1069 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryT3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1070 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryT4 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1071 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryT5 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1072 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryT6 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1073 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryT7 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1074 and ParameterID = 125 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD1p1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 144 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD1p2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 145 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD1p3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 146 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD1p4 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 147 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD1p5 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1059 and ParameterID = 148 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD2p1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 149 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD2p2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 150 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD2p3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 151 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD2p4 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 152 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryD2p5 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1060 and ParameterID = 153 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryR1p1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1078 and ParameterID = 187 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryR1p2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1078 and ParameterID = 188 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryR1p3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1078 and ParameterID = 189 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryR2p1 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1079 and ParameterID = 187 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryR2p2 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1079 and ParameterID = 188 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
+            string queryR2p3 = "select TOP(1) ParameterValue as pVal from tblEnergy where ResourceID = 1079 and ParameterID = 189 and InsertionDateTime > Dateadd(minute,-20,getdate()) order by InsertionDateTime DESC";
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
                 conn.Open();
@@ -1166,6 +1175,14 @@ namespace WASA_EMS.Controllers
                 var cmdD2p3 = new SqlCommand(queryD2p3, conn);
                 var cmdD2p4 = new SqlCommand(queryD2p4, conn);
                 var cmdD2p5 = new SqlCommand(queryD2p5, conn);
+
+                var cmdR1p1 = new SqlCommand(queryR1p1, conn);
+                var cmdR1p2 = new SqlCommand(queryR1p2, conn);
+                var cmdR1p3 = new SqlCommand(queryR1p3, conn);
+
+                var cmdR2p1 = new SqlCommand(queryR2p1, conn);
+                var cmdR2p2 = new SqlCommand(queryR2p2, conn);
+                var cmdR2p3 = new SqlCommand(queryR2p3, conn);
 
                 var t1Val = cmdT1.ExecuteScalar();
                 if (t1Val == null)
@@ -1339,6 +1356,80 @@ namespace WASA_EMS.Controllers
                 {
                     totalRunningDisposals += Convert.ToInt32(cD2p5);
                 }
+
+                var cR1p1 = cmdR1p1.ExecuteScalar();
+                if (cR1p1 == null)
+                {
+
+                }
+                else
+                {
+                    totalRunningRecycle += Convert.ToInt32(cR1p1);
+                }
+
+                var cR1p2 = cmdR1p2.ExecuteScalar();
+                if (cR1p2 == null)
+                {
+
+                }
+                else
+                {
+                    totalRunningRecycle += Convert.ToInt32(cR1p2);
+                }
+
+                var cR1p3 = cmdR1p3.ExecuteScalar();
+                if (cR1p3 == null)
+                {
+
+                }
+                else
+                {
+                    totalRunningRecycle += Convert.ToInt32(cR1p3);
+                }
+
+
+                if (totalRunningRecycle > 1)
+                {
+                    totalRunningRecycle = 1;
+                }
+
+
+                var cR2p1 = cmdR2p1.ExecuteScalar();
+                if (cR2p1 == null)
+                {
+
+                }
+                else
+                {
+                    totalRunningRecycle += Convert.ToInt32(cR2p1);
+                }
+
+                var cR2p2 = cmdR2p2.ExecuteScalar();
+                if (cR2p2 == null)
+                {
+
+                }
+                else
+                {
+                    totalRunningRecycle += Convert.ToInt32(cR2p2);
+                }
+
+                var cR2p3 = cmdR2p3.ExecuteScalar();
+                if (cR2p3 == null)
+                {
+
+                }
+                else
+                {
+                    totalRunningRecycle += Convert.ToInt32(cR2p3);
+                }
+
+                if (totalRunningRecycle > 2)
+                {
+                    totalRunningRecycle = 2;
+                }
+
+
                 conn.Close();
             }
             if (totalRunningDisposals > 1)
@@ -1347,10 +1438,13 @@ namespace WASA_EMS.Controllers
             }
             InactiveTubewells = 7 - totalRunningTubewells;
             InactiveDisposals = 1 - totalRunningDisposals;
+            InactiveRecycle = 2 - totalRunningRecycle;
             ViewBag.TotalRunningTubewells = totalRunningTubewells.ToString();
             ViewBag.TotalRunningDisposals = totalRunningDisposals.ToString();
             ViewBag.InactiveTubewells = InactiveTubewells.ToString();
             ViewBag.InactiveDisposals = InactiveDisposals.ToString();
+            ViewBag.totalRecycle = totalRunningRecycle.ToString();
+            ViewBag.InactiveRecycle = InactiveRecycle.ToString();
             return PartialView();
         }
         public ActionResult Dashboard()

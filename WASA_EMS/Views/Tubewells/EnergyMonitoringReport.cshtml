@@ -33,7 +33,9 @@
 <script>
     $(function () {
         $(".date-picker").datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: 'dd/mm/yy',
+            maxDate: new Date,
+            minDate: new Date(2007, 6, 12)
         });
     });
 </script>
