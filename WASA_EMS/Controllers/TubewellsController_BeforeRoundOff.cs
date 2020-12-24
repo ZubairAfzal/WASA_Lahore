@@ -12,8 +12,7 @@ using WASA_EMS.Models;
 
 namespace WASA_EMS.Controllers
 {
-
-    public class TubewellsController : Controller
+    public class TubewellsController_BeforeRoundOff : Controller
     {
         // GET: Tubewells
         public ActionResult Home()
@@ -346,7 +345,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (0 > 1)
+                if (DeltaMinutes > 28800)
                 {
 
                 }
@@ -540,7 +539,7 @@ namespace WASA_EMS.Controllers
                 if (spelldata.SpellDataArray.Count > 0)
                 {
                     spelldata.SpellStartTime = curtm;
-                    spelldata.spellPeriod = Convert.ToDouble(Convert.ToInt32( Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes)));
+                    spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
                     if (spelldata.spellPeriod == 0)
                     {
                         spelldata.spellPeriod = 1;
@@ -1141,7 +1140,7 @@ namespace WASA_EMS.Controllers
                         sda.Fill(Dashdt);
                         if (Dashdt.Rows.Count > 0)
                         {
-                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes), DateTime.Now.Date);
+                            TubewellDataClass sd = getAllSpells(Dashdt, dtRes.Rows.IndexOf(drRes));
                             tubewellDataList.Add(sd);
                         }
                         else
@@ -1384,103 +1383,104 @@ namespace WASA_EMS.Controllers
             ////////////////////////////////////////////////////////////////////////
 
             string scriptString = "";
-            //using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            //{
-            //    try
-            //    {
-            //        string getResFromTemp = "select ParameterID from tblParameter where parameterName = 'WaterFlow(Cusec).'";
-            //        SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
-            //        DataTable dtRes1 = new DataTable();
-            //        sdaRes.Fill(dtRes1);
-            //        int ite = 0;
-            //        foreach (DataRow drRes in dtRes1.Rows)
-            //        {
-            //            //string resName = drRes["resourceLocationName"].ToString();
-            //            ite += 1;
-            //            string getParamsFromRes = "";
-            //            if (resources.ToLower() == "all")
-            //            {
-            //                getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'WaterFlow(Cusec).'  and rtp.TemplateID = 64 order by cast(r.ResourceID as int) asc";
-            //            }
-            //            else
-            //            {
-            //                getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'WaterFlow(Cusec).'  and rtp.TemplateID = 64 and r.ResourceName = '" + resources + "' order by cast(r.ResourceID as int) asc";
-            //            }
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    string getResFromTemp = "select ParameterID from tblParameter where parameterName = 'WaterFlow(Cusec).'";
+                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+                    DataTable dtRes1 = new DataTable();
+                    sdaRes.Fill(dtRes1);
+                    int ite = 0;
+                    foreach (DataRow drRes in dtRes1.Rows)
+                    {
+                        //string resName = drRes["resourceLocationName"].ToString();
+                        ite += 1;
+                        string getParamsFromRes = "";
+                        if (resources.ToLower() == "all")
+                        {
+                            getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'WaterFlow(Cusec).'  and rtp.TemplateID = 64 order by cast(r.ResourceID as int) asc";
+                        }
+                        else
+                        {
+                            getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'WaterFlow(Cusec).'  and rtp.TemplateID = 64 and r.ResourceName = '" + resources + "' order by cast(r.ResourceID as int) asc";
+                        }
 
-            //            SqlDataAdapter sdaPar = new SqlDataAdapter(getParamsFromRes, conn);
-            //            DataTable dtPar = new DataTable();
-            //            sdaPar.Fill(dtPar);
-            //            scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
-            //            scriptString += "theme: \"light2\",";
-            //            scriptString += "animationEnabled: true,";
-            //            scriptString += "zoomEnabled: true, ";
-            //            scriptString += "title: {text: \"Water Flow (m3/h)\" },";
-            //            string TheSelectedResource = "All Tubewells";
-            //            if (resources == "All")
-            //            {
-            //                TheSelectedResource = "All Tubewells ";
-            //            }
-            //            else
-            //            {
-            //                TheSelectedResource = "" + resources + " Tubewell";
-            //            }
-            //            //Session["ReportTitle"] = "Data Fetched for " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-            //            scriptString += "subtitles: [{text: \" Data Fetched from " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }],";
-            //            scriptString += "axisY: {suffix: \" m3/h\" },";
-            //            //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
-            //            scriptString += "toolTip: { shared: false },";
-            //            scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 12},";
-            //            scriptString += " data: [";
-            //            foreach (DataRow drPar in dtPar.Rows)
-            //            {
-            //                //string parName = drPar["parameterName"].ToString();
-            //                string aquery = ";WITH CTE AS ( ";
-            //                aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
-            //                aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
-            //                aquery += "ORDER BY e.InsertionDateTime DESC) ";
-            //                aquery += "FROM tblEnergy e ";
-            //                aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-            //                aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
-            //                aquery += ") ";
-            //                aquery += "SELECT top 14000 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 14401 Order by InsertionDateTime ASC";
-            //                string theQuery = aquery;
-            //                SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
-            //                DataTable dtVal = new DataTable();
-            //                sdaVal.Fill(dtVal);
-            //                scriptString += "{ type: \"area\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"hh:mm TT DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} m3/h</strong> at {x}\", ";
-            //                List<DataPoint> dataPoints = new List<DataPoint>();
-            //                DateTime dt = DateTime.Now;
-            //                foreach (DataRow drVal in dtVal.Rows)
-            //                {
-            //                    // if (dtVal.Rows.IndexOf(drVal) != 0)
-            //                    // {
-            //                    //  dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(dt).AddHours(-5).AddMinutes(1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
-            //                    // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5).AddMinutes(-1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
-            //                    // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-            //                    // dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
-            //                    // }
-            //                    //else
-            //                    //{
-            //                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-            //                    dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
-            //                    //}
-            //                    //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-            //                }
-            //                scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
-            //                scriptString += "},";
-            //            }
-            //            scriptString = scriptString.Remove(scriptString.Length - 1);
-            //            scriptString = scriptString + "]";
-            //            scriptString = scriptString + "}";
-            //            scriptString += ");";
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
+                        SqlDataAdapter sdaPar = new SqlDataAdapter(getParamsFromRes, conn);
+                        DataTable dtPar = new DataTable();
+                        sdaPar.Fill(dtPar);
+                        scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
+                        scriptString += "theme: \"light2\",";
+                        scriptString += "animationEnabled: true,";
+                        scriptString += "zoomEnabled: true, ";
+                        scriptString += "title: {text: \"Water Flow (m3/h)\" },";
+                        string TheSelectedResource = "All Tubewells";
+                        if (resources == "All")
+                        {
+                            TheSelectedResource = "All Tubewells ";
+                        }
+                        else
+                        {
+                            TheSelectedResource = "" + resources + " Tubewell";
+                        }
+                        //Session["ReportTitle"] = "Data Fetched for " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
+                        scriptString += "subtitles: [{text: \" Data Fetched from " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }],";
+                        scriptString += "axisY: {suffix: \" m3/h\" },";
+                        //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
+                        scriptString += "toolTip: { shared: false },";
+                        scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 12},";
+                        scriptString += " data: [";
+                        foreach (DataRow drPar in dtPar.Rows)
+                        {
+                            //string parName = drPar["parameterName"].ToString();
+                            string aquery = ";WITH CTE AS ( ";
+                            aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
+                            aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
+                            aquery += "ORDER BY e.InsertionDateTime DESC) ";
+                            aquery += "FROM tblEnergy e ";
+                            aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
+                            aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                            aquery += ") ";
+                            aquery += "SELECT top 14000 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 14401 Order by InsertionDateTime ASC";
+                            string theQuery = aquery;
+                            SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
+                            DataTable dtVal = new DataTable();
+                            sdaVal.Fill(dtVal);
+                            scriptString += "{ type: \"area\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"hh:mm TT DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} m3/h</strong> at {x}\", ";
+                            List<DataPoint> dataPoints = new List<DataPoint>();
+                            DateTime dt = DateTime.Now;
+                            foreach (DataRow drVal in dtVal.Rows)
+                            {
+                                // if (dtVal.Rows.IndexOf(drVal) != 0)
+                                // {
+                                //  dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(dt).AddHours(-5).AddMinutes(1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
+                                // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5).AddMinutes(-1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
+                                // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+                                // dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+                                // }
+                                //else
+                                //{
+                                dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+                                dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+                                //}
+                                //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+                            }
+                            scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
+                            scriptString += "},";
+                        }
+                        scriptString = scriptString.Remove(scriptString.Length - 1);
+                        scriptString = scriptString + "]";
+                        scriptString = scriptString + "}";
+                        scriptString += ");";
+                    }
+                }
+                catch (Exception ex)
+                {
 
-            //    }
-            //}
-            
+                }
+            }
+            string NewscripString = scriptString;
+            ViewData["chartData"] = NewscripString;
 
             ////////////////////////////////////////////////////////////////////////
 
@@ -1505,29 +1505,6 @@ namespace WASA_EMS.Controllers
                     string resourceLocation = "";
                     int ite = 0;
                     //iterate through the list of resources within the desired set of resources chosen
-
-                    scriptString += "var chart1 = new CanvasJS.Chart(\"chartContainer1\", {";
-                    scriptString += "theme: \"light2\",";
-                    scriptString += "animationEnabled: true,";
-                    scriptString += "zoomEnabled: true, ";
-                    scriptString += "title: {text: \"Water Flow (m3/h)\" },";
-                    string TheSelectedResource = "All Tubewells";
-                    if (resources == "All")
-                    {
-                        TheSelectedResource = "All Tubewells ";
-                    }
-                    else
-                    {
-                        TheSelectedResource = "" + resources + " Tubewell";
-                    }
-                    //Session["ReportTitle"] = "Data Fetched for " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-                    scriptString += "subtitles: [{text: \" Data Fetched from " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }],";
-                    scriptString += "axisY: {suffix: \" m3/h\" },";
-                    //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
-                    scriptString += "toolTip: { shared: false },";
-                    scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 12},";
-                    scriptString += " data: [";
-
                     foreach (DataRow drRes in dtRes.Rows)
                     {
                         //getting resourceID 
@@ -1571,11 +1548,9 @@ namespace WASA_EMS.Controllers
                         SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
                         Dashdt.Clear();
                         sda.Fill(Dashdt);
-                        scriptString += "{ type: \"area\", name: \"" + resourceLocation + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"hh:mm TT DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} m3/h</strong> at {x}\", ";
-                        List<DataPoint> dataPoints = new List<DataPoint>();
                         if (Dashdt.Rows.Count > 0)
                         {
-                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes), FinalTimeFrom);
+                            TubewellDataClass sd = getAllSpells(Dashdt, dtRes.Rows.IndexOf(drRes));
                             tubewellDataList.Add(sd);
                         }
                         else
@@ -1590,31 +1565,7 @@ namespace WASA_EMS.Controllers
                             sd.pumpStatus = new List<double>();
                             tubewellDataList.Add(sd);
                         }
-                        foreach (DataRow drVal in Dashdt.Rows)
-                        {
-                            if (Convert.ToDouble(drVal["PumpStatus"]) == 0)
-                            {
-                                dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), 0));
-                            }
-                            else
-                            {
-                                if (Convert.ToDouble(drVal["WaterFlow(Cusec)."]) > 425)
-                                {
-                                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), 425));
-                                }
-                                else
-                                { 
-                                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["WaterFlow(Cusec)."])));
-                                }
-                            }
-                        }
-                        scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
-                        scriptString += "},";
                     }
-                    scriptString = scriptString.Remove(scriptString.Length - 1);
-                    scriptString = scriptString + "]";
-                    scriptString = scriptString + "}";
-                    scriptString += ");";
                 }
                 catch (Exception ex)
                 {
@@ -1637,8 +1588,6 @@ namespace WASA_EMS.Controllers
                 selectedResource = "" + resources + " Tubewell";
             }
             Session["ReportTitle"] = "Water Discharge Report of " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-            string NewscripString = scriptString;
-            ViewData["chartData"] = NewscripString;
             return PartialView(tubewellDataList);
         }
         public ActionResult VibrationAnalysisReport()
@@ -1959,7 +1908,7 @@ namespace WASA_EMS.Controllers
                         sda.Fill(Dashdt);
                         if (Dashdt.Rows.Count > 0)
                         {
-                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes), FinalTimeFrom);
+                            TubewellDataClass sd = getAllSpells(Dashdt, dtRes.Rows.IndexOf(drRes));
                             tubewellDataList.Add(sd);
                         }
                         else
@@ -2303,7 +2252,7 @@ namespace WASA_EMS.Controllers
                         sda.Fill(Dashdt);
                         if (Dashdt.Rows.Count > 0)
                         {
-                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes),FinalTimeFrom);
+                            TubewellDataClass sd = getAllSpells(Dashdt, dtRes.Rows.IndexOf(drRes));
                             tubewellDataList.Add(sd);
                         }
                         else
@@ -3158,7 +3107,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (0 > 1)
+                if (DeltaMinutes > 28800)
                 {
 
                 }
@@ -4007,12 +3956,6 @@ namespace WASA_EMS.Controllers
             var spelldata = new TubewellSpellData();
             //int resourceID = Convert.ToInt32(dt.Rows[0]["resourceID"]);
             string location = dt.Rows[0]["Location"].ToString();
-            string specs = dt.Rows[0]["specifications"].ToString();
-            string WaterLevel_m = dt.Rows[0]["WaterLevel_m"].ToString();
-            string PumpingWaterLevel_hpl = dt.Rows[0]["PumpingWaterLevel_hpl"].ToString();
-            string RatedDischarge_Q = dt.Rows[0]["RatedDischarge_Q"].ToString();
-            string RatedHead_H = dt.Rows[0]["RatedHead_H"].ToString();
-            string Discharge_Dia_Dd = dt.Rows[0]["Discharge_Dia_Dd"].ToString();
             //double currentMotorStatus = Math.Round((Convert.ToDouble(dt.Rows[0]["PumpStatus"])), 2);
             //string currentTime = dt.Rows[0]["tim"].ToString();
             //double DeltaMinutes = Convert.ToDouble(dt.Rows[0]["DeltaMinutes"]);
@@ -4091,7 +4034,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (0 > 1)
+                if (DeltaMinutes > 28800)
                 {
 
                 }
@@ -4405,11 +4348,6 @@ namespace WASA_EMS.Controllers
                 tableData.manualStatus = new List<double>();
                 tableData.primingTankLevel = new List<double>();
                 tableData.pressure = new List<double>();
-
-                tableData.Vibration_m = new List<double>();
-                tableData.Vibration_m_s = new List<double>();
-                tableData.Vibration_m_s_2 = new List<double>();
-
                 tableData.workingHoursTodayManual = "";
                 tableData.workingHoursTodayRemote = "";
                 tableData.workingHoursTodayScheduling = "";
@@ -4417,12 +4355,7 @@ namespace WASA_EMS.Controllers
                 foreach (DataRow dr in dt.Rows)
                 {
                     tableData.locationName = location;
-                    tableData.Specification = specs;
-                    tableData.WaterLevel_m = WaterLevel_m;
-                    tableData.PumpingWaterLevel_hpl = PumpingWaterLevel_hpl;
-                    tableData.RatedDischarge_Q = RatedDischarge_Q;
-                    tableData.RatedHead_H = RatedHead_H;
-                    tableData.Discharge_Dia_Dd = Discharge_Dia_Dd;
+
 
 
                     var ps = dr["PumpStatus"];
@@ -4665,19 +4598,6 @@ namespace WASA_EMS.Controllers
                         tableData.pressure.Add(Convert.ToDouble(dr["Pressure(Bar)"]));
                     }
 
-                    object value = dr["vib_x"];
-                    if (value == DBNull.Value)
-                    {
-                        tableData.Vibration_m_s_2.Add(0);
-                        tableData.Vibration_m_s.Add(0);
-                        tableData.Vibration_m.Add(0);
-                    }
-                    else
-                    {
-                        tableData.Vibration_m_s_2.Add(Convert.ToDouble(dr["vib_x"]));
-                        tableData.Vibration_m_s.Add(Convert.ToDouble(dr["vib_y"]));
-                        tableData.Vibration_m.Add(Convert.ToDouble(dr["vib_z"]));
-                    }
 
                 }
                 if (spellDataList.Count == 0)
@@ -4739,19 +4659,10 @@ namespace WASA_EMS.Controllers
                 tableData.manualStatus = new List<double>();
                 tableData.primingTankLevel = new List<double>();
                 tableData.pressure = new List<double>();
-                tableData.Vibration_m = new List<double>();
-                tableData.Vibration_m_s = new List<double>();
-                tableData.Vibration_m_s_2 = new List<double>();
-
                 foreach (DataRow dr in dt.Rows)
                 {
                     tableData.locationName = location;
-                    tableData.Specification = specs;
-                    tableData.WaterLevel_m = WaterLevel_m;
-                    tableData.PumpingWaterLevel_hpl = PumpingWaterLevel_hpl;
-                    tableData.RatedDischarge_Q = RatedDischarge_Q;
-                    tableData.RatedHead_H = RatedHead_H;
-                    tableData.Discharge_Dia_Dd = Discharge_Dia_Dd;
+
 
 
                     var ps = dr["PumpStatus"];
@@ -4994,20 +4905,6 @@ namespace WASA_EMS.Controllers
                         tableData.pressure.Add(Convert.ToDouble(dr["Pressure(Bar)"]));
                     }
 
-                    object value = dr["vib_x"];
-                    if (value == DBNull.Value)
-                    {
-                        tableData.Vibration_m_s_2.Add(0);
-                        tableData.Vibration_m_s.Add(0);
-                        tableData.Vibration_m.Add(0);
-                    }
-                    else
-                    {
-                        tableData.Vibration_m_s_2.Add(Convert.ToDouble(dr["vib_x"]));
-                        tableData.Vibration_m_s.Add(Convert.ToDouble(dr["vib_y"]));
-                        tableData.Vibration_m.Add(Convert.ToDouble(dr["vib_z"]));
-                    }
-
                 }
                 if (spellDataList.Count == 0)
                 {
@@ -5047,12 +4944,8 @@ namespace WASA_EMS.Controllers
                     tableData.logDate = Convert.ToDateTime(currentTime).Date.ToShortDateString();
                 }
             }
-            tableData.WorkingInHours = (Convert.ToDouble(tableData.WorkingInHoursManual) +
-                Convert.ToDouble(tableData.WorkingInHoursRemote) +
-                Convert.ToDouble(tableData.WorkingInHoursScheduling))/60;
             return tableData;
         }
-
         public string minutesToTime(double minutes)
         {
             var pTime = TimeSpan.FromMinutes(minutes);

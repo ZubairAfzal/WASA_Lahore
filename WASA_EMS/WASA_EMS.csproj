@@ -272,6 +272,7 @@
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Controllers\SwitchController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Controllers\TubewellsController_BeforeRoundOff.cs" />
     <Compile Include="Controllers\TubewellsController_Before_vib_mm_s_X_Y_Z.cs" />
     <Compile Include="Controllers\TubewellsController - Copy.cs" />
     <Compile Include="Controllers\TubewellsController.cs" />
@@ -6613,6 +6614,7 @@
     <Content Include="Views\RecyclingPlant\PumpReport.cshtml" />
     <Content Include="Views\RecyclingPlant\_PumpReportView.cshtml" />
     <Content Include="Views\Shared\_Layout_14Nov20.cshtml" />
+    <Content Include="Views\Switch\_SwitchRecords2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

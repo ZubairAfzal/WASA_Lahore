@@ -171,6 +171,7 @@
 </div>
 
 <hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
+<div style="position:absolute;margin-top: 35px;margin-left: 2%;font-size: medium;font-family: math;" class="row">* All the Values from "Power Factor" to "PKW" are Averaged</div>
 
 <div class="row" style="opacity:0.9">
     <div class="portlet-body">
@@ -185,9 +186,9 @@
                                     <th>Motor Rating (hp)</th>
                                     <th>Total Working Hours</th>
                                     <th>Power Factor</th>
-                                    <th>Average Voltage V (ln)</th>
-                                    <th>Average Voltage V (ll)</th>
-                                    <th>Average Current</th>
+                                    <th> Voltage V (ln)</th>
+                                    <th> Voltage V (ll)</th>
+                                    <th> Current</th>
                                     <th>Frequency (Hz)</th>
                                     <th>PKVA</th>
                                     <th>PKVAR</th>
@@ -199,92 +200,92 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td>@item.locationName</td>
-                                    <td>@item.Specification</td>
-                                    @if (item.pumpStatus.Count == 0)
-                                    {
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        @*<td>-</td>*@
-                                        <td>-</td>
-                                    }
-                                    else
-                                    {
-                                        double pff = 0;
-                                        double i1s = 0;
-                                        double i2s = 0;
-                                        double i3s = 0;
-                                        double pkvas = 0;
-                                        double pkvars = 0;
-                                        double pkws = 0;
-                                        double vlns = 0;
-                                        double vlls = 0;
-                                        double freqs = 0;
-                                        int counter = 0;
-                                        for (int i = 0; i < item.pumpStatus.Count; i++)
+                                    <tr>
+                                        <td>@item.locationName</td>
+                                        <td>@item.Specification</td>
+                                        @if (item.pumpStatus.Count == 0)
                                         {
-                                            if (item.pumpStatus[i] == 1)
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            @*<td>-</td>*@
+                                            <td>-</td>
+                                        }
+                                        else
+                                        {
+                                            double pff = 0;
+                                            double i1s = 0;
+                                            double i2s = 0;
+                                            double i3s = 0;
+                                            double pkvas = 0;
+                                            double pkvars = 0;
+                                            double pkws = 0;
+                                            double vlns = 0;
+                                            double vlls = 0;
+                                            double freqs = 0;
+                                            int counter = 0;
+                                            for (int i = 0; i < item.pumpStatus.Count; i++)
                                             {
-                                                pff += item.powerFactor[i];
-                                                i1s += item.I1[i];
-                                                i2s += item.I2[i];
-                                                i3s += item.I3[i];
-                                                pkvas += item.pkva[i];
-                                                pkvars += item.pkvar[i];
-                                                pkws += item.pkw[i];
-                                                vlns += item.V1N[i] + item.V2N[i] + item.V3N[i];
-                                                vlls += item.V12[i] + item.V13[i] + item.V23[i];
-                                                freqs += item.frequency[i];
-                                                counter++;
-                                            }
-                                            else
-                                            {
+                                                if (item.pumpStatus[i] == 1)
+                                                {
+                                                    pff += item.powerFactor[i];
+                                                    i1s += item.I1[i];
+                                                    i2s += item.I2[i];
+                                                    i3s += item.I3[i];
+                                                    pkvas += item.pkva[i];
+                                                    pkvars += item.pkvar[i];
+                                                    pkws += item.pkw[i];
+                                                    vlns += item.V1N[i] + item.V2N[i] + item.V3N[i];
+                                                    vlls += item.V12[i] + item.V13[i] + item.V23[i];
+                                                    freqs += item.frequency[i];
+                                                    counter++;
+                                                }
+                                                else
+                                                {
 
+                                                }
                                             }
+                                            if (counter == 0)
+                                            {
+                                                counter = 1;
+                                            }
+                                            pff = Math.Round((pff / counter), 2);
+                                            i1s = Math.Round((i1s / counter), 2);
+                                            i2s = Math.Round((i2s / counter), 2);
+                                            i3s = Math.Round((i3s / counter), 2);
+                                            pkvas = Math.Round((pkvas / counter), 2);
+                                            pkvars = Math.Round((pkvars / counter), 2);
+                                            pkws = Math.Round((pkws / counter), 2);
+                                            vlns = Math.Round((vlns / (counter * 3)), 2);
+                                            vlls = Math.Round((vlls / (counter * 3)), 2);
+                                            freqs = Math.Round((freqs / counter), 2);
+                                            double averageis = Math.Round(((i1s + i2s + i3s) / 3), 2);
+                                            var pp = TimeSpan.FromMinutes((item.WorkingInHours) * 60);
+                                            int phour = (int)pp.TotalHours;
+                                            int pmin = (int)pp.Minutes;
+                                            int psec = (int)pp.Seconds;
+                                            string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                                            @*<td>@pstr</td>*@
+                                            <td>@item.workingHoursToday</td>
+                                            <td>@pff</td>
+                                            <td>@vlns</td>
+                                            <td>@vlls</td>
+                                            <td>@averageis</td>
+                                            <td>@freqs</td>
+                                            <td>@pkvas</td>
+                                            <td>@pkvars</td>
+                                            <td>@pkws</td>
+                                            @*<td>@Math.Round((pkws * 100 / (Convert.ToDouble(item.Specification) * 0.746)), 2)</td>*@
+                                            <td>@(String.Format("{0:n0}", Math.Round((pkws * item.WorkingInHours), 2))) </td>
+                                            @*<td>@Math.Round((pkws * item.WorkingInHours), 2)</td>*@
                                         }
-                                        if (counter == 0)
-                                        {
-                                            counter = 1;
-                                        }
-                                        pff = Math.Round((pff / counter), 2);
-                                        i1s = Math.Round((i1s / counter), 2);
-                                        i2s = Math.Round((i2s / counter), 2);
-                                        i3s = Math.Round((i3s / counter), 2);
-                                        pkvas = Math.Round((pkvas / counter), 2);
-                                        pkvars = Math.Round((pkvars / counter), 2);
-                                        pkws = Math.Round((pkws / counter), 2);
-                                        vlns = Math.Round((vlns / (counter*3)), 2);
-                                        vlls = Math.Round((vlls / (counter*3)), 2);
-                                        freqs = Math.Round((freqs / counter), 2);
-                                        double averageis = Math.Round(((i1s + i2s + i3s) / 3), 2);
-                                        var pp = TimeSpan.FromMinutes((item.WorkingInHours) * 60);
-                                        int phour = (int)pp.TotalHours;
-                                        int pmin = (int)pp.Minutes;
-                                        int psec = (int)pp.Seconds;
-                                        string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
-                                        @*<td>@pstr</td>*@
-                                        <td>@item.workingHoursToday</td>
-                                        <td>@pff</td>
-                                        <td>@vlns</td>
-                                        <td>@vlls</td>
-                                        <td>@averageis</td>
-                                        <td>@freqs</td>
-                                        <td>@pkvas</td>
-                                        <td>@pkvars</td>
-                                        <td>@pkws</td>
-                                        @*<td>@Math.Round((pkws * 100 / (Convert.ToDouble(item.Specification) * 0.746)), 2)</td>*@
-                                        <td>@(String.Format("{0:n0}", Math.Round((pkws * item.WorkingInHours), 2))) </td>
-                                        @*<td>@Math.Round((pkws * item.WorkingInHours), 2)</td>*@
-                                     }
-</tr>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

@@ -119,14 +119,14 @@ namespace WASA_EMS
                     Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
                     Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
                     Dashdtquery += "s.InsertionDateTime as tim ,";
-                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 13,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
                     Dashdtquery += "FROM tblEnergy s ";
                     Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
                     Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
                     Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
                     Dashdtquery += "where ";
                     Dashdtquery += "r.ResourceID = " + resourceID + " and ";
-                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,13,GETDATE())), 0) ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
                     Dashdtquery += ") ";
                     Dashdtquery += "AS SourceTable ";
                     Dashdtquery += "PIVOT ";
@@ -1276,7 +1276,7 @@ namespace WASA_EMS
                                     }
                                     else if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus3")
                                     {
-                                        parameterValuesString += "Fresh Water Pump : ";
+                                        //parameterValuesString += "Fresh Water Pump : ";
                                     }
                                     else
                                     {
@@ -1308,15 +1308,15 @@ namespace WASA_EMS
                                     }
                                     else if (sdr1["ParameterName"].ToString() == "RecyclePumpStatus3")
                                     {
-                                        if (sdr1["ParameterValue"].ToString() == "0")
-                                        {
-                                            valuee = "OFF";
-                                        }
-                                        else
-                                        {
-                                            valuee = "ON";
-                                            optionStatus += 1;
-                                        }
+                                        //if (sdr1["ParameterValue"].ToString() == "0")
+                                        //{
+                                        //    valuee = "OFF";
+                                        //}
+                                        //else
+                                        //{
+                                        //    valuee = "ON";
+                                        //    optionStatus += 1;
+                                        //}
                                     }
                                     else
                                     {

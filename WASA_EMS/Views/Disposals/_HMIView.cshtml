@@ -53,10 +53,21 @@
             else {
                 console.log(totalPumps);
                 video = $('#seamless-stop-flow');
+                video2 = $('#top-view-seamless');
                 video.get(0).currentTime = 0;
-                video.addClass('show');
                 $('#top-view-seamless').removeClass('show');
+                video.addClass('show');
                 video.get(0).play();
+            }
+            if (parseInt(pumpStatus1) === 1) {
+                $('.motor-1').removeClass('off-state');
+                $('.motor-1').addClass('on-state');
+                $('.motor-1').text('Pump No. 1: ON');
+            }
+            else {
+                $('.motor-1').addClass('off-state');
+                $('.motor-1').removeClass('on-state');
+                $('.motor-1').text('Pump No. 1: OFF');
             }
             
         });
@@ -224,14 +235,15 @@
                     {
                         <span class="off-state motor motor-2">Pump No. 2: OFF</span>
                     }
-                    @if (Convert.ToInt32(ViewBag.PumpStatus1) == 1)
+                    @*@if (Convert.ToInt32(ViewBag.PumpStatus1) == 1)
                     {
                         <span class="on-state motor motor-1">Pump No. 1: ON</span>
                     }
                     else
                     {
                         <span class="off-state motor motor-1">Pump No. 1: OFF</span>
-                    }
+                    }*@
+                    <span class="off-state motor motor-1"></span>
                     <span class="generator">Gen Set</span>
                     <span class="transformer">Transformer</span>
 
