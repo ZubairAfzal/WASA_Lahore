@@ -1,37 +1,41 @@
-﻿
-<div class="portlet light ">
-    <div class="portlet-body">
+﻿<div class="row">
+    <div class="col-lg-12 col-xs-12 col-md-12" style="z-index:-1">
+        <div class="portlet light ">
+            <div class="portlet-body">
 
 
-        <!-- DataTable Row -->
+                <!-- DataTable Row -->
 
-        <div class="row">
-            <div class="col-md-12">
-                <!-- BEGIN EXAMPLE TABLE PORTLET-->
-                <div class="portlet light bordered">
-                    <div class="portlet-title statusTitle">
-                        <div class="caption font-dark">
-                            <i class="icon-docs font-dark"></i>
-                            <span class="caption-subject bold uppercase">Recycling Plants Status Report</span>
-                        </div>
-                        <div class="tools"> </div>
-                    </div>
-                    <div class="portlet-body">
-                        <div id="StatusReportDiv">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                        <div class="portlet light bordered">
+                            <div class="portlet-title statusTitle">
+                                <div class="caption font-dark">
+                                    <i class="icon-docs font-dark"></i>
+                                    <span class="caption-subject bold uppercase">Recycling Plants Status Report</span>
+                                </div>
+                                <div class="tools"> </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div id="StatusReportDiv">
 
-                            <div style="float: right;">
-                                <img src="~/Content/images/loading.gif" style="height: 48px;" />
+                                    <div style="float: right;">
+                                        <img src="~/Content/images/loading.gif" style="height: 48px;" />
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
-
-
+                        <!-- END EXAMPLE TABLE PORTLET-->
                     </div>
                 </div>
-                <!-- END EXAMPLE TABLE PORTLET-->
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Left and right controls -->
 @*<a class="left carousel-control" href="#myCarousel" data-slide="prev">
@@ -42,13 +46,15 @@
         <span class="glyphicon glyphicon-chevron-right"></span>
         <span class="sr-only">Next</span>
     </a>*@
-
-        </div>
-    </div>
-<script src="~/Scripts/jquery.min.js"></script>
+@*<script src="~/Scripts/jquery.min.js"></script>
 <script src="~/Scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="~/Metronic/assets/global/scripts/datatable.js"></script>
 <script type="text/javascript" src="~/Metronic/assets/global/plugins/datatables/datatables.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>*@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var table = $('#example').DataTable({

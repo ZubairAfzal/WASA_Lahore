@@ -454,7 +454,7 @@ namespace WASA_EMS
             return tableData;
         }
 
-        [WebMethod]
+        [WebMethod(CacheDuration = 120)]
         public string GetData()
         {
             int c_id = 4;
@@ -691,6 +691,19 @@ namespace WASA_EMS
                                     {
                                         parameterValuesString += "Vibration (m/s2) : ";
                                     }
+                                    else if (sdr1["ParameterName"].ToString() == "vib_x")
+                                    {
+                                        parameterValuesString += "Vibration Velocity in (mm/s) : ";
+                                    }
+                                    else if (sdr1["ParameterName"].ToString() == "vib_y")
+                                    {
+                                        parameterValuesString += "Vibration Acceleration in (m/s2) : ";
+                                    }
+                                    else if (sdr1["ParameterName"].ToString() == "vib_z")
+                                    {
+                                        parameterValuesString += "Vibration Displacement in (um) : ";
+                                    }
+
                                     else
                                     {
                                         parameterValuesString += sdr1["ParameterName"].ToString() + ": ";
@@ -900,7 +913,7 @@ namespace WASA_EMS
                                     {
                                         if (sdr1["ParameterValue"].ToString() == "0")
                                         {
-                                            valuee = "LOW";
+                                            valuee = "HALF";
                                         }
                                         else
                                         {
@@ -956,6 +969,18 @@ namespace WASA_EMS
                                     {
                                         valuee = Math.Round((Convert.ToDouble(sdr1["ParameterValue"])/101), 2).ToString();
                                     }
+                                    else if (sdr1["ParameterName"].ToString() == "vib_x")
+                                    {
+                                        valuee = Math.Round((Convert.ToDouble(sdr1["ParameterValue"]) ), 2).ToString();
+                                    }
+                                    else if (sdr1["ParameterName"].ToString() == "vib_y")
+                                    {
+                                        valuee = Math.Round((Convert.ToDouble(sdr1["ParameterValue"]) *0.3), 2).ToString();
+                                    }
+                                    else if (sdr1["ParameterName"].ToString() == "vib_z")
+                                    {
+                                        valuee = Math.Round((Convert.ToDouble(sdr1["ParameterValue"]) / 0.3), 2).ToString();
+                                    }
                                     else
                                     {
                                         valuee = Math.Round(Convert.ToDouble(sdr1["ParameterValue"]), 2).ToString();
@@ -1010,7 +1035,7 @@ namespace WASA_EMS
                 //return new SelectList(theResourceTypes, "Value", "Text", "id");
             }
 
-            string p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ptime, plevel1, plevel2 = "";
+            string p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ptime, ptime2, plevel1, plevel2 = "";
             int pp1 = 0;
             int pp2 = 0;
             int pp3 = 0;
@@ -1034,6 +1059,7 @@ namespace WASA_EMS
             p9 = "select top(1) ParameterValue from tblEnergy where ParameterID = 152 order by ID DESC";
             p10 = "select top(1) ParameterValue from tblEnergy where ParameterID = 153 order by ID DESC";
             ptime = "select top(1) InsertionDateTime from tblEnergy where ParameterID = 153 order by ID DESC";
+            ptime2 = "select top(1) InsertionDateTime from tblEnergy where ParameterID = 144 order by ID DESC";
             plevel1 = "select top(1) ParameterValue from tblEnergy where ParameterID = 175 order by ID DESC";
             plevel2 = "select top(1) ParameterValue from tblEnergy where ParameterID = 176 order by ID DESC";
 
@@ -1054,6 +1080,7 @@ namespace WASA_EMS
                     SqlCommand cmd9 = new SqlCommand(p9, conn);
                     SqlCommand cmd10 = new SqlCommand(p10, conn);
                     SqlCommand cmdtime = new SqlCommand(ptime, conn);
+                    SqlCommand cmdtime2 = new SqlCommand(ptime2, conn);
                     SqlCommand cmdlevel1 = new SqlCommand(plevel1, conn);
                     SqlCommand cmdlevel2 = new SqlCommand(plevel2, conn);
                     pp1 = Convert.ToInt32(cmd1.ExecuteScalar());
@@ -1067,6 +1094,7 @@ namespace WASA_EMS
                     pp9 = Convert.ToInt32(cmd9.ExecuteScalar());
                     pp10 = Convert.ToInt32(cmd10.ExecuteScalar());
                     ptime = cmdtime.ExecuteScalar().ToString();
+                    ptime2 = cmdtime2.ExecuteScalar().ToString();
                     tlevel1 = Convert.ToDouble(cmdlevel1.ExecuteScalar());
                     tlevel2 = Convert.ToDouble(cmdlevel2.ExecuteScalar());
                     conn.Close();
@@ -1204,7 +1232,14 @@ namespace WASA_EMS
             parameterValuesString += "Well 2 Level : " + plevel2;
             parameterValuesString += "<br />";
 
-            datetimed = ptime;
+            if (Convert.ToDateTime(ptime2) > Convert.ToDateTime(ptime))
+            {
+                datetimed = ptime2;
+            }
+            else
+            {
+                datetimed = ptime;
+            }
 
             tempName = "D";
             string newstringp = "<b>Disposal Station</b>";
@@ -1397,6 +1432,9 @@ namespace WASA_EMS
             }
             return mode;
         }
+
+
+
 
         [WebMethod]
         public double getVibM(string sender)

@@ -39,6 +39,10 @@ namespace WASA_EMS
         public double WorkingHoursPump8 { get; set; }
         public double WorkingHoursPump9 { get; set; }
         public double WorkingHoursPump10 { get; set; }
+
+        public double TotalWorkingHours { get; set; }
+        public string TotalWorkingInHours { get; set; }
+
         public List<double> Well1Level { get; set; }
         public string Well1Level_Average { get; set; }
         public List<double> Well2Level { get; set; }

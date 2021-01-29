@@ -272,9 +272,10 @@
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Controllers\SwitchController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Controllers\TubewellsController_7Jan21.cs" />
     <Compile Include="Controllers\TubewellsController_BeforeRoundOff.cs" />
     <Compile Include="Controllers\TubewellsController_Before_vib_mm_s_X_Y_Z.cs" />
-    <Compile Include="Controllers\TubewellsController - Copy.cs" />
+    <Compile Include="Controllers\TubewellsController_old.cs" />
     <Compile Include="Controllers\TubewellsController.cs" />
     <Compile Include="DataPoint.cs" />
     <Compile Include="DisposalDataClass - Copy.cs" />
@@ -412,6 +413,10 @@
     <Compile Include="RangeAndResourceSelector.cs" />
     <Compile Include="RecyclingPlantController_With_13Hours_Increment.cs" />
     <Compile Include="ResourceSellector.cs" />
+    <Compile Include="webServe.asmx.cs">
+      <DependentUpon>webServe.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="saveData.asmx.cs">
       <DependentUpon>saveData.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -521,6 +526,7 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\js\bootstrap.js" />
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\chosen-sprite%402x.png" />
     <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\chosen.css" />
@@ -5105,8 +5111,15 @@
     <Content Include="Metronic\assets\global\plugins\wysihtml\wysihtml.toolbar.js" />
     <Content Include="Metronic\assets\global\scripts\app.js" />
     <Content Include="Metronic\assets\global\scripts\app.min.js" />
+    <Content Include="Metronic\assets\global\scripts\buttons.flash.min.js" />
+    <Content Include="Metronic\assets\global\scripts\buttons.html5.min.js" />
+    <Content Include="Metronic\assets\global\scripts\buttons.print.min.js" />
     <Content Include="Metronic\assets\global\scripts\datatable.js" />
     <Content Include="Metronic\assets\global\scripts\datatable.min.js" />
+    <Content Include="Metronic\assets\global\scripts\dataTables.buttons.min.js" />
+    <Content Include="Metronic\assets\global\scripts\jszip.min.js" />
+    <Content Include="Metronic\assets\global\scripts\pdfmake.min.js" />
+    <Content Include="Metronic\assets\global\scripts\vfs_fonts.js" />
     <Content Include="Metronic\assets\img\2177462-128.png" />
     <Content Include="Metronic\assets\img\2959838-128.png" />
     <Content Include="Metronic\assets\img\disposal.png" />
@@ -6020,6 +6033,7 @@
       <DependentUpon>wasaEMS.edmx</DependentUpon>
       <LastGenOutput>wasaEMS.cs</LastGenOutput>
     </Content>
+    <Content Include="webServe.asmx" />
     <Content Include="saveData.asmx" />
     <Content Include="saveData2.asmx" />
     <Content Include="Scripts\animationDisposal.js" />
@@ -6422,6 +6436,7 @@
     <Content Include="Content\videos\top-view\seamless.mp4" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\canvasjs.min.js" />
     <Content Include="Scripts\chosen.jquery.min.js" />
     <Content Include="Scripts\DT_js\buttons.bootstrap.min.js" />
     <Content Include="Scripts\DT_js\buttons.colVis.min.js" />
@@ -6615,6 +6630,8 @@
     <Content Include="Views\RecyclingPlant\_PumpReportView.cshtml" />
     <Content Include="Views\Shared\_Layout_14Nov20.cshtml" />
     <Content Include="Views\Switch\_SwitchRecords2.cshtml" />
+    <Content Include="Views\Tubewells\ParameterizedData.cshtml" />
+    <Content Include="Views\Tubewells\_ParameterizedDataView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

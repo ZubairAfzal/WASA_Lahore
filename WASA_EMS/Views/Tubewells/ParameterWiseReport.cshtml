@@ -6,11 +6,22 @@
 
 <!DOCTYPE html>
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link href="~/Content/custom.css" rel="stylesheet" />
 <link href="~/Content/datatables.min.css" rel="stylesheet" />
+<link href="~/Metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.min.js"></script>
+
+<script src="~/Scripts/jquery-ui.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
 <div class="row">
-    <div class="col-lg-12 col-xs-12 col-sm-12">
+    <div class="col-lg-12 col-xs-12 col-sm-12" style="z-index:-1">
         <div class="portlet light ">
             <div class="portlet-body">
 
@@ -57,31 +68,32 @@
 
     </div>
 </div>
-<script src="~/Scripts/jquery.min.js"></script>
+
+@*<script src="~/Scripts/jquery.min.js"></script>
 <script src="~/Scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="~/Metronic/assets/global/scripts/datatable.js"></script>
-<script type="text/javascript" src="~/Metronic/assets/global/plugins/datatables/datatables.min.js"></script>
+<script type="text/javascript" src="~/Metronic/assets/global/plugins/datatables/datatables.min.js"></script>*@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var table = $('#example').DataTable({
         });
-        $.ajax({
-            type: 'GET',
-            dataType: 'html',
-            url: '_ParameterReportView',
-            cache: false,
-            success: function (result) {
-                $('#StatusReportDiv').html(result);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                $('#StatusReportDiv').html("");
-            },
-            async: true
-        });
     });
 </script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    getStatusResults();
+    window.onload = function () {
+        //alert('on load');
+        var refreshId = setInterval(function () {
+            var properID = getStatusResults();
+            if (properID > 0) {
+                clearInterval(refreshId);
+            }
+        }, 20000);
+    }
+
+    function getStatusResults() {
         $.ajax({
             type: 'GET',
             dataType: 'html',
@@ -95,13 +107,8 @@
             },
             async: true
         });
-    });
-    //setInterval("$('#DashboardDiagram').load('_DashboardView') ", 2000);
-    var refreshId = setInterval(function () {
-        var properID = $('#StatusReportDiv').load('_ParameterReportView');
-        if (properID > 0) {
-            clearInterval(refreshId);
-        }
-    }, 10000);
-    //},  200000);
+    }
 </script>
+
+
+

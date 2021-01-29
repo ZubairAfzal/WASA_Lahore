@@ -305,7 +305,7 @@ namespace WASA_EMS.Controllers
             scriptString += "theme: \"light2\",";
             scriptString += "animationEnabled: true,";
             scriptString += "zoomEnabled: true, ";
-            scriptString += "title: {text: \"Shaukat Khanum Disposal Station\" },";
+            scriptString += "title: {text: \"Shaukat Khanum Disposal Station\" },exportEnabled: true,";
             scriptString += "subtitles: [{text: \" Wet Wells Level  \" }],";
             scriptString += "axisY: {suffix: \" \" },";
             scriptString += "toolTip: { shared: false },";
@@ -1033,6 +1033,22 @@ namespace WASA_EMS.Controllers
                         df.WorkingInHoursPump10 = "0";
                         df.WorkingHoursPump10 = 0;
                     }
+                    df.TotalWorkingHours = df.WorkingHoursPump1 +
+                        df.WorkingHoursPump2 +
+                        df.WorkingHoursPump3 +
+                        df.WorkingHoursPump4 +
+                        df.WorkingHoursPump5 +
+                        df.WorkingHoursPump6 +
+                        df.WorkingHoursPump7 +
+                        df.WorkingHoursPump8 +
+                        df.WorkingHoursPump9 +
+                        df.WorkingHoursPump10;
+                    var pp = TimeSpan.FromMinutes(df.TotalWorkingHours*60);
+                    int phour = (int)pp.TotalHours;
+                    int pmin = (int)pp.Minutes;
+                    int psec = (int)pp.Seconds;
+                    string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                    df.TotalWorkingInHours = pstr;
                     disposalFinalDataList.Add(df);
                 }
                 catch (Exception ex)
@@ -1058,7 +1074,7 @@ namespace WASA_EMS.Controllers
             scriptString += "theme: \"light2\",";
             scriptString += "animationEnabled: true,";
             scriptString += "zoomEnabled: true, ";
-            scriptString += "title: {text: \"Shaukat Khanum Disposal Station\" },";
+            scriptString += "title: {text: \"Shaukat Khanum Disposal Station\" },exportEnabled: true,";
             scriptString += "subtitles: [{text: \" Pumps Status  \" }],";
             //scriptString += "axisY: {suffix: \" \" },";
             scriptString += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
@@ -1764,7 +1780,7 @@ namespace WASA_EMS.Controllers
             scriptString += "theme: \"light2\",";
             scriptString += "animationEnabled: true,";
             scriptString += "zoomEnabled: true, ";
-            scriptString += "title: {text: \"Shaukat Khanum Disposal Station\" },";
+            scriptString += "title: {text: \"Shaukat Khanum Disposal Station\" },exportEnabled: true,";
             scriptString += "subtitles: [{text: \" Pumps Working and Wells Level in ft  \" }],";
             scriptString += "axisY: {suffix: \" \" },";
             scriptString += "toolTip: { shared: false },";
@@ -1919,7 +1935,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -1960,7 +1976,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2043,7 +2059,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2231,7 +2247,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -2272,7 +2288,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2355,7 +2371,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2539,7 +2555,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -2580,7 +2596,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2663,7 +2679,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2848,7 +2864,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -2889,7 +2905,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -2972,7 +2988,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -3156,7 +3172,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -3197,7 +3213,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -3280,7 +3296,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -3465,7 +3481,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -3506,7 +3522,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -3589,7 +3605,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -3780,7 +3796,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -3821,7 +3837,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -3904,7 +3920,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -4089,7 +4105,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -4130,7 +4146,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -4213,7 +4229,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -4398,7 +4414,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -4439,7 +4455,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -4522,7 +4538,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -4707,7 +4723,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -4748,7 +4764,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -4831,7 +4847,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)

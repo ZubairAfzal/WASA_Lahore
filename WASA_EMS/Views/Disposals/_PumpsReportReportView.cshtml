@@ -3,6 +3,26 @@
 @using Newtonsoft.Json;
 @model IEnumerable<DisposalDataClassFinal>
 
+<style>
+    div#chartContainer1 {
+        position: relative;
+    }
+
+        div#chartContainer1:after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #fff;
+            width: 57px;
+            height: 14px;
+        }
+
+    a.canvasjs-chart-credit {
+        display: none;
+    }
+</style>
 
 <script type="text/javascript">
 
@@ -46,6 +66,7 @@
                 //    'copy', 'csv', 'excel', 'pdf', 'print'
                 //]
                 buttons: [
+					'print', 'csv',
                     {
                         extend: 'excelHtml5',
                         title: '@Session["ReportTitle"]'
@@ -162,7 +183,7 @@
                         <table id="tubeWellTable" class="display" style="width:100%">
                             <thead>
                                 <tr style="background-color: #a8c9cd;">
-                                    <th>Name Of Location</th>
+                                    <th>Name of Location</th>
                                     <th>Pump No. 1</th>
                                     <th>Pump No. 2</th>
                                     <th>Pump No. 3</th>
@@ -173,6 +194,7 @@
                                     <th>Pump No. 8</th>
                                     <th>Pump No. 9</th>
                                     <th>Pump No. 10</th>
+									<th>Total Working Hours</th>
                                     @*<th>Well 1 Level</th>
                                     <th>Well 2 Level</th>*@
                                 </tr>
@@ -181,7 +203,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>Shaukat Khanum Disposal Station</td>
+                                        <td style="text-align:left !important">Shaukat Khanum Disposal Station</td>
                                         <td>@item.WorkingInHoursPump1</td>
                                         <td>@item.WorkingInHoursPump2</td>
                                         <td>@item.WorkingInHoursPump3</td>
@@ -192,6 +214,7 @@
                                         <td>@item.WorkingInHoursPump8</td>
                                         <td>@item.WorkingInHoursPump9</td>
                                         <td>@item.WorkingInHoursPump10</td>
+                                        <td>@item.TotalWorkingInHours</td>
                                         @*<td>@(Math.Round(Convert.ToDouble(item.Well1Level_Average), 2)) ft</td>
                                         <td>@(Math.Round(Convert.ToDouble(item.Well2Level_Average), 2)) ft</td>*@
                                     </tr>

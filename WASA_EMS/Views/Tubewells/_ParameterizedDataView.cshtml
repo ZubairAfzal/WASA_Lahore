@@ -1,0 +1,35 @@
+﻿@using System.Data;
+@using System.Data.SqlClient;
+@using Newtonsoft.Json;
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @Html.Raw(ViewData["chartData"])
+        chart1.render();
+        function toogleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            chart1.render();
+        }
+    });
+</script>
+<div class="portlet-title">
+    <div class="row" style="opacity:0.9">
+        <div class="portlet-body">
+            <div class="widget stacked">
+                <div class="widget-content">
+                    <div>
+                        <center>
+                            <div id="chartContainer1" style="width: 95%; height: 500px"></div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

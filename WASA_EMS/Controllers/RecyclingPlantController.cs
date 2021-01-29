@@ -236,7 +236,7 @@ namespace WASA_EMS.Controllers
             scriptString += "theme: \"light2\",";
             scriptString += "animationEnabled: true,";
             scriptString += "zoomEnabled: true, ";
-            scriptString += "title: {text: \" \" },";
+            scriptString += "title: {text: \" \" },exportEnabled: true,";
             scriptString += "subtitles: [{text: \" Submersible Pump  \" }],";
             scriptString += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
             scriptString += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
@@ -270,7 +270,7 @@ namespace WASA_EMS.Controllers
             scriptString2 += "theme: \"light2\",";
             scriptString2 += "animationEnabled: true,";
             scriptString2 += "zoomEnabled: true, ";
-            scriptString2 += "title: {text: \" \" },";
+            scriptString2 += "title: {text: \" \" },exportEnabled: true,";
             scriptString2 += "subtitles: [{text: \" Filtered Water Pump  \" }],";
             scriptString2 += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
             scriptString2 += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
@@ -303,7 +303,7 @@ namespace WASA_EMS.Controllers
             scriptString3 += "theme: \"light2\",";
             scriptString3 += "animationEnabled: true,";
             scriptString3 += "zoomEnabled: true, ";
-            scriptString3 += "title: {text: \" \" },";
+            scriptString3 += "title: {text: \" \" },exportEnabled: true,";
             scriptString3 += "subtitles: [{text: \" Fresh Water Pump  \" }],";
             scriptString3 += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
             scriptString3 += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
@@ -353,7 +353,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -393,7 +393,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -474,7 +474,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -609,7 +609,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -649,7 +649,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -730,7 +730,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -865,7 +865,7 @@ namespace WASA_EMS.Controllers
                 string currTime = dr["tim"].ToString();
                 string clearaceTime = "";
                 //start scenario 3 (inactive)
-                if (DeltaMinutes > 28800)
+                if (0 > 1)
                 {
 
                 }
@@ -905,7 +905,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -986,7 +986,7 @@ namespace WASA_EMS.Controllers
                         }
                         else if (E == T && S == F)
                         {
-                            if (currValue < 1)
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
                             {
                                 string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
                                 if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
@@ -1433,7 +1433,7 @@ namespace WASA_EMS.Controllers
                 }
                 conn.Close();
             }
-            Session["ReportTitle"] = "Current Status of Shaukat Khanum Disposal Station at  " + DateTime.Now.AddHours(0).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " (Reflected for Today)";
+            Session["ReportTitle"] = "Pumps Working Status of Shaukat Khanum Disposal Station at  " + DateTime.Now.AddHours(0).ToString("dd'/'MM'/'yyyy HH:mm:ss") + " (Reflected for Today)";
 
             /////////////////////////////////////////////////////////////////////////////
             string scriptString = "";
@@ -1441,7 +1441,7 @@ namespace WASA_EMS.Controllers
             scriptString += "theme: \"light2\",";
             scriptString += "animationEnabled: true,";
             scriptString += "zoomEnabled: true, ";
-            scriptString += "title: {text: \" \" },";
+            scriptString += "title: {text: \" \" },exportEnabled: true,";
             scriptString += "subtitles: [{text: \" Submersible Pump  \" }],";
             scriptString += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
             scriptString += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
@@ -1475,7 +1475,7 @@ namespace WASA_EMS.Controllers
             scriptString2 += "theme: \"light2\",";
             scriptString2 += "animationEnabled: true,";
             scriptString2 += "zoomEnabled: true, ";
-            scriptString2 += "title: {text: \" \" },";
+            scriptString2 += "title: {text: \" \" },exportEnabled: true,";
             scriptString2 += "subtitles: [{text: \" Filtered Water Pump  \" }],";
             scriptString2 += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
             scriptString2 += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
@@ -1508,7 +1508,7 @@ namespace WASA_EMS.Controllers
             scriptString3 += "theme: \"light2\",";
             scriptString3 += "animationEnabled: true,";
             scriptString3 += "zoomEnabled: true, ";
-            scriptString3 += "title: {text: \" \" },";
+            scriptString3 += "title: {text: \" \" },exportEnabled: true,";
             scriptString3 += "subtitles: [{text: \" Fresh Water Pump  \" }],";
             scriptString3 += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
             scriptString3 += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";

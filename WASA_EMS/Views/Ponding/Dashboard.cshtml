@@ -7,9 +7,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @*<link href="../assets/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />*@
-<link rel="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css" />
+  <link rel="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css" />
 @*<link rel="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css" />*@
 <link href="~/Assets/site.css" rel="stylesheet" />
+
 <div class="page-wrapper-row full-height">
     <div class="page-wrapper-middle" style="background: transparent !important">
         <!-- BEGIN CONTAINER -->
@@ -18,7 +19,7 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <!-- BEGIN PAGE HEAD-->
-                <div class="page-head" style="background: transparent !important">
+                <div class="page-head"  style="background: transparent !important">
                     <div class="container">
                         <!-- BEGIN PAGE TITLE -->
                         <div class="row">
@@ -207,6 +208,7 @@
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlT_-WIkJ_8eKmEGZZFOGzugRIHjviICI"
         type="text/javascript"></script>
+
 <script>
     $(document).ready(function () {
         $('#collapseTwo').collapse('show');
@@ -350,164 +352,3 @@
             }, 5000);
         });
     </script>*@
-<script>
-    $(document).ready(function () {
-        alert("Hello");
-        var Dashboard = function () {
-
-            return {
-
-                initAmChart1: function () {
-                    if ("undefined" != typeof AmCharts && 0 !== $("#dashboard_amchart_1").size()) {
-
-
-                        var disposalChartData;
-                        var eArray = [];
-                        var pondingArr = [];
-                        $.getJSON('/Ponding/LoadPondingChartData/', function (data) {
-                            console.log(data);
-                            var parsedObj = $.parseJSON(data);
-                            console.log(data);
-                            $.each(parsedObj, function (key, obj) {
-                                var colr = "";
-                                var thePonding = 0;
-                                if (obj.DeltaMinutes > -520) {
-                                    colr = "#08a3cc";
-                                    thePonding = 0;
-                                }
-                                else {
-                                    var maxThreshold = data.maxThrs;
-                                    if (maxThreshold == "") {
-                                        maxThreshold = 10;
-                                    }
-                                    thePonding = Math.round((obj.ponding / 2.54), 1);
-                                    if (thePonding < maxThreshold) {
-                                        colr = "#00ff00";
-                                    }
-                                    else {
-                                        colr = "#ff0000";
-                                    }
-                                }
-                                var eObj = {
-                                    category: obj.category,
-                                    ponding: thePonding,
-                                    townName: obj.townName,
-                                    townName2: obj.townName2,
-                                    collr: colr
-                                };
-                                eArray.push(eObj);
-                                pondingArr.push(obj.ponding);
-                            });
-                            var e = eArray;
-                            AmCharts.makeChart("dashboard_amchart_1", {
-                                type: "serial",
-                                fontSize: 12,
-                                fontFamily: "Open Sans",
-                                dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                dataProvider: e,
-                                addClassNames: !0,
-                                startDuration: 1,
-                                color: "#6c7b88",
-                                marginLeft: 0,
-                                categoryField: "category",
-                                categoryAxis: {
-                                    equalSpacing: false,
-                                    labelRotation: 60,
-                                    autoGridCount: !1,
-                                    gridCount: 50,
-                                    gridAlpha: .1,
-                                    gridColor: "#FFFFFF",
-                                    axisColor: "#555555",
-                                },
-                                valueAxes: [{
-                                    id: "a1",
-                                    title: "Water Level at Each Ponding Location",
-                                    gridAlpha: 0,
-                                    axisAlpha: 0
-                                },],
-                                graphs: [{
-                                    id: "g1",
-                                    valueField: "ponding",
-                                    title: "Water Level",
-                                    type: "column",
-                                    "topRadius": 1,
-                                    fillAlphas: .7,
-                                    valueAxis: "a1",
-                                    balloonText: "[[value]] inch",
-                                    //legendValueText: "[[value]] inch",
-                                    legendValueText: "[[category]] : [[value]] inch Ponding",
-                                    //legendPeriodValueText: "Average: [[value.average]] inch",
-                                    lineColor: "collr",
-                                    alphaField: "alpha",
-                                    colorField: "collr",
-                                    fillColors: "collr"
-                                },
-                                    //{
-                                    //    id: "g2",
-                                    //    valueField: "ponding",
-                                    //    classNameField: "bulletClass",
-                                    //    title: "Water Level",
-                                    //    type: "line",
-                                    //    valueAxis: "a2",
-                                    //    lineColor: "[[colr]]",
-                                    //    lineThickness: 1,
-                                    //    legendValueText: "[[description]] : [[value]] inch Ponding",
-                                    //    descriptionField: "townName2",
-                                    //    bullet: "round",
-                                    //    bulletSizeField: "townSize",
-                                    //    bulletBorderColor: "#02617a",
-                                    //    bulletBorderAlpha: 1,
-                                    //    bulletBorderThickness: 2,
-                                    //    bulletColor: "#89c4f4",
-                                    //    //labelText: "[[townName2]]",
-                                    //    labelPosition: "right",
-                                    //    balloonText: "Ponding:[[value]]",
-                                    //    showBalloon: !0,
-                                    //    animationPlayed: !0
-                                    //    }
-                                ],
-                                "depth3D": 40,
-                                "angle": 30,
-                                "chartCursor": {
-                                    "categoryBalloonEnabled": false,
-                                    "cursorAlpha": 0,
-                                    "zoomable": false
-                                },
-                                chartCursor: {
-                                    zoomable: !1,
-                                    categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                    cursorAlpha: 0,
-                                    categoryBalloonColor: "#e26a6a",
-                                    categoryBalloonAlpha: .8,
-                                    valueBalloonsEnabled: !1
-                                },
-                                legend: {
-                                    bulletType: "round",
-                                    equalWidths: !1,
-                                    valueWidth: 120,
-                                    useGraphSettings: !0,
-                                    color: "#6c7b88"
-                                }
-                            })
-                        });
-
-                    }
-                },
-                
-
-                init: function () {
-
-                    this.initAmChart1();
-                }
-            };
-
-        }();
-
-        if (App.isAngularJsApp() === false) {
-            jQuery(document).ready(function () {
-                Dashboard.init(); // init metronic core componets
-            });
-        }
-    });
-
-</script>

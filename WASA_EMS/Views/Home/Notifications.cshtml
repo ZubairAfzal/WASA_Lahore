@@ -1,4 +1,4 @@
-﻿@using System.Data;
+@using System.Data;
 @using System.Data.SqlClient;
 @using Newtonsoft.Json;
 
@@ -16,10 +16,10 @@
 <script>
         $(document).ready(function () {
             var table = $('#example').DataTable({
-                columnDefs: [{ type: 'date', 'targets': [1] }],
-                order: [[1, 'desc']],
-                "bSort": false
-            });
+				columnDefs: [ { type: 'date', 'targets': [1] } ],
+				order: [[ 1, 'desc' ]],
+				"bSort" : false
+			} );
         });
 </script>
 
@@ -28,7 +28,7 @@
 
 
 <div class="row">
-    <div class="col-lg-12 col-xs-12 col-md-12">
+    <div class="col-lg-12 col-xs-12 col-md-12" style="z-index:-1">
         <div class="portlet light ">
             <div class="portlet-body">
 
@@ -109,7 +109,3 @@
 
     </div>
 </div>
-
-
-
-

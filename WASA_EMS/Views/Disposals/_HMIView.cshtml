@@ -1,4 +1,4 @@
-﻿
+
 <style>
     .chartCont, 
     .statusTitle {
@@ -6,27 +6,28 @@
     }
 </style>
 
-<script src="~/Scripts/animationDisposal.js"></script>
+@*<script src="~/Scripts/animationDisposal.js"></script>*@
 
 <script type="text/javascript">
     document.getElementById("opacqueBackground").style.opacity = "1";
     document.getElementById("hor-menu").style.marginTop = "-4.5%";
     var refreshId = setInterval(function () {
         var pumpStatus1 = null;
-        var pumpStatus2 = null;
-        var pumpStatus3 = null;
-        var pumpStatus4 = null;
-        var pumpStatus5 = null;
-        var pumpStatus6 = null;
-        var pumpStatus7 = null;
-        var pumpStatus8 = null;
-        var pumpStatus9 = null;
-        var pumpStatus10 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
+        var pumpStatus1 = null;
         var well1Level = null;
         var well2Level = null;
         var video = '';
         var url = "/Disposals/getHMIStatus";
         var properID = $.get(url, { resourceName: ' ' }, function (data) {
+			console.log(@(Convert.ToInt32(ViewBag.WellLevel1)));
             var obj = JSON.parse(data);
             //console.log(data);
             pumpStatus1 = obj.pumpStatus1;
@@ -41,33 +42,122 @@
             pumpStatus10 = obj.pumpStatus10;
             well1Level = obj.wellLevel1;
             well2Level = obj.wellLevel2;
+			$('.well-2').text('Wet Well No. 1 : ' + parseInt(well1Level) + ' ft');
+            $('.well-3').text('Wet Well No. 2 : ' + parseInt(well2Level) + ' ft');
             var totalPumps = parseInt(pumpStatus1) + parseInt(pumpStatus2) + parseInt(pumpStatus3) + parseInt(pumpStatus4) + parseInt(pumpStatus5) + parseInt(pumpStatus6) + parseInt(pumpStatus7) + parseInt(pumpStatus8) + parseInt(pumpStatus9) + parseInt(pumpStatus10);
             if (parseInt(totalPumps) >= 1) {
-                console.log(totalPumps);
+                //console.log('1.00');
                 video = $('#top-view-seamless');
+				//console.log('1.01');
                 video.get(0).currentTime = 0;
+				//console.log('1.02');
                 video.addClass('show');
-                //$('#seamless-stop-flow').removeClass('show');
+				//console.log('1.03');
+                $('#seamless-stop-flow').removeClass('show');
                 video.get(0).play();
+				//console.log('1.04');
             }
             else {
-                console.log(totalPumps);
+                //console.log('0.00');
                 video = $('#seamless-stop-flow');
-                video2 = $('#top-view-seamless');
+				//console.log('0.01');
                 video.get(0).currentTime = 0;
-                $('#top-view-seamless').removeClass('show');
+				//console.log('0.02');
                 video.addClass('show');
+				//console.log('0.03');
+                $('#top-view-seamless').removeClass('show');
+				//console.log('0.04');
                 video.get(0).play();
+				//console.log('0.05');
             }
-            if (parseInt(pumpStatus1) === 1) {
-                $('.motor-1').removeClass('off-state');
-                $('.motor-1').addClass('on-state');
-                $('.motor-1').text('Pump No. 1: ON');
+			if (parseInt(pumpStatus1) === 1) {
+                $('.off-state.motor.motor-1').hide();
+                $('.on-state.motor.motor-1').show();
             }
             else {
-                $('.motor-1').addClass('off-state');
-                $('.motor-1').removeClass('on-state');
-                $('.motor-1').text('Pump No. 1: OFF');
+                $('.on-state.motor.motor-1').hide();
+                $('.off-state.motor.motor-1').show();
+            }
+			
+			if (parseInt(pumpStatus2) === 1) {
+                $('.off-state.motor.motor-2').hide();
+                $('.on-state.motor.motor-2').show();
+            }
+            else {
+                $('.on-state.motor.motor-2').hide();
+                $('.off-state.motor.motor-2').show();
+            }
+
+            if (parseInt(pumpStatus3) === 1) {
+                $('.off-state.motor.motor-3').hide();
+                $('.on-state.motor.motor-3').show();
+            }
+            else {
+                $('.on-state.motor.motor-3').hide();
+                $('.off-state.motor.motor-3').show();
+            }
+
+            if (parseInt(pumpStatus4) === 1) {
+                $('.off-state.motor.motor-4').hide();
+                $('.on-state.motor.motor-4').show();
+            }
+            else {
+                $('.on-state.motor.motor-4').hide();
+                $('.off-state.motor.motor-4').show();
+            }
+
+            if (parseInt(pumpStatus5) === 1) {
+                $('.off-state.motor.motor-5').hide();
+                $('.on-state.motor.motor-5').show();
+            }
+            else {
+                $('.on-state.motor.motor-5').hide();
+                $('.off-state.motor.motor-5').show();
+            }
+
+            if (parseInt(pumpStatus6) === 1) {
+                $('.off-state.motor.motor-6').hide();
+                $('.on-state.motor.motor-6').show();
+            }
+            else {
+                $('.on-state.motor.motor-6').hide();
+                $('.off-state.motor.motor-6').show();
+            }
+
+            if (parseInt(pumpStatus7) === 1) {
+                $('.off-state.motor.motor-7').hide();
+                $('.on-state.motor.motor-7').show();
+            }
+            else {
+                $('.on-state.motor.motor-7').hide();
+                $('.off-state.motor.motor-7').show();
+            }
+
+            if (parseInt(pumpStatus8) === 1) {
+                $('.off-state.motor.motor-8').hide();
+                $('.on-state.motor.motor-8').show();
+            }
+            else {
+                $('.on-state.motor.motor-8').hide();
+                $('.off-state.motor.motor-8').show();
+            }
+
+            if (parseInt(pumpStatus9) === 1) {
+                $('.off-state.motor.motor-9').hide();
+                $('.on-state.motor.motor-9').show();
+            }
+            else {
+                $('.on-state.motor.motor-9').hide();
+                $('.off-state.motor.motor-9').show();
+            }
+
+            if (parseInt(pumpStatus10) === 1) {
+                $('.off-state.motor.motor-10').hide();
+                $('.on-state.motor.motor-10').show();
+            }
+            else {
+                $('.on-state.motor.motor-10').hide();
+                $('.off-state.motor.motor-10').show();
             }
             
         });
@@ -87,7 +177,7 @@
         if (properID > 0) {
             clearInterval(refreshId);
         }
-    }, 30000);
+    }, 10000);
 
 
 </script>
@@ -161,9 +251,12 @@
                         <source src="~/Content/videos/stop-motors/start-holes-flow.mp4" type="video/mp4">
                     </video>*@
                 <div class="main-scene-elements show">
-                    <span class="well on-state well-2">Wet Well No. 1 : @(Convert.ToInt32(ViewBag.WellLevel1)) ft</span>
-                    <span class="well on-state well-3">Wet Well No. 2 : @(Convert.ToInt32(ViewBag.WellLevel2)) ft</span>
-                    @if (Convert.ToInt32(ViewBag.PumpStatus10) == 1)
+                    @*<span class="well on-state well-2">Wet Well No. 2 : @(Convert.ToInt32(ViewBag.WellLevel2)) ft</span>
+                    <span class="well on-state well-3">Wet Well No. 1 : @(Convert.ToInt32(ViewBag.WellLevel1)) ft</span>*@
+					<span class="well on-state well-2" style="min-width: 200px; min-height: 40px;"></span>
+                    <span class="well on-state well-3" style="min-width: 200px; min-height: 40px;"></span>
+                    
+					@*@if (Convert.ToInt32(ViewBag.PumpStatus10) == 1)
                     {
                         <span class="on-state motor motor-10">Pump No. 10: ON</span>
                     }
@@ -235,7 +328,7 @@
                     {
                         <span class="off-state motor motor-2">Pump No. 2: OFF</span>
                     }
-                    @*@if (Convert.ToInt32(ViewBag.PumpStatus1) == 1)
+                    @if (Convert.ToInt32(ViewBag.PumpStatus1) == 1)
                     {
                         <span class="on-state motor motor-1">Pump No. 1: ON</span>
                     }
@@ -243,8 +336,31 @@
                     {
                         <span class="off-state motor motor-1">Pump No. 1: OFF</span>
                     }*@
-                    <span class="off-state motor motor-1"></span>
-                    <span class="generator">Gen Set</span>
+					
+					<span class="on-state motor motor-10">Pump No. 10: ON</span>
+                    <span class="off-state motor motor-10">Pump No. 10: OFF</span>
+                    <span class="on-state motor motor-9">Pump No. 9: ON</span>
+                    <span class="off-state motor motor-9">Pump No. 9: OFF</span>
+                    <span class="on-state motor motor-8">Pump No. 8: ON</span>
+                    <span class="off-state motor motor-8">Pump No. 8: OFF</span>
+                    <span class="on-state motor motor-7">Pump No. 7: ON</span>
+                    <span class="off-state motor motor-7">Pump No. 7: OFF</span>
+                    <span class="on-state motor motor-6">Pump No. 6: ON</span>
+                    <span class="off-state motor motor-6">Pump No. 6: OFF</span>
+                    <span class="on-state motor motor-5">Pump No. 5: ON</span>
+                    <span class="off-state motor motor-5">Pump No. 5: OFF</span>
+                    <span class="on-state motor motor-4">Pump No. 4: ON</span>
+                    <span class="off-state motor motor-4">Pump No. 4: OFF</span>
+                    <span class="on-state motor motor-3">Pump No. 3: ON</span>
+                    <span class="off-state motor motor-3">Pump No. 3: OFF</span>
+                    <span class="on-state motor motor-2">Pump No. 2: ON</span>
+                    <span class="off-state motor motor-2">Pump No. 2: OFF</span>
+                    <span class="on-state motor motor-1">Pump No. 1: ON</span>
+                    <span class="off-state motor motor-1">Pump No. 1: OFF</span>
+					
+					<span class="on-state motor motor-1">Pump No. 1: ON</span>
+                    <span class="off-state motor motor-1">Pump No. 1: OFF</span>
+                    <span class="generator off-state">Gen Set</span>
                     <span class="transformer">Transformer</span>
 
                     <span class="main-left-text">

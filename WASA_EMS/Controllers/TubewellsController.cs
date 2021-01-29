@@ -24,6 +24,268 @@ namespace WASA_EMS.Controllers
         {
             return View();
         }
+
+        public ActionResult ParameterizedData()
+        {
+            WASA_EMS_Entities db = new WASA_EMS_Entities();
+            IList<string> parameterList = new List<string>();
+            IList<string> resourceList = new List<string>();
+            string paramsListQuery = "select p.ParameterDescription from tblParameter p inner join tblTemplateParameter tp on tp.ParameterID = p.ParameterID where tp.TemplateID = 64 order by p.paramOrder";
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    DataTable dtParams = new DataTable();
+                    conn.Open();
+                    SqlDataAdapter sdaParams = new SqlDataAdapter(paramsListQuery, conn);
+                    sdaParams.Fill(dtParams);
+                    foreach (DataRow dr in dtParams.Rows)
+                    {
+                        parameterList.Add(dr["ParameterDescription"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            foreach (var item in db.tblResources.AsEnumerable().Where(item => item.CompanyID == 4 && item.TemplateID == 64))
+            {
+                resourceList.Add(item.ResourceLocation);
+            }
+            ResourceAndParameterSelector rs = new ResourceAndParameterSelector();
+            rs.resourceID = "C-II Block Johar Town";
+            rs.parameterID = "Pump Status";
+            rs.dateFrom = "";
+            rs.timeFrom = "";
+            rs.dateTo = "";
+            rs.timeTo = "";
+            ViewBag.ResourceList = resourceList;
+            ViewBag.ParameterList = parameterList;
+            return View(rs);
+        }
+
+        [HttpPost]
+        public ActionResult ParameterizedData(FormCollection review)
+        {
+            string resource = review["resource"].ToString();
+            string Parameter = review["parameter"].ToString();
+            DateTime dateFrom = DateTime.Parse(review["dateFrom"].ToString());
+            DateTime dateTo = DateTime.Parse(review["dateTo"].ToString());
+            string df_date = dateFrom.ToString("d");
+            string dt_date = dateTo.ToString("d");
+            string TF = review["timeFrom"];
+            string TT = review["timeTo"];
+            string abc = review["timeFrom"];
+            string[] abc1 = abc.Split(',');
+            string a = abc1[0];
+            if (abc1.Length > 1)
+            {
+                TF = abc1[1];
+            }
+            else
+            {
+                TF = abc1[0];
+            }
+            DataTable dt121 = new DataTable();
+            Session["TimeFrom"] = TF;
+            DateTime timeFrom = DateTime.Parse(TF);
+            string cba = review["timeTo"];
+            string[] cba1 = cba.Split(',');
+            TT = cba1[0];
+            DateTime timeTo = DateTime.Parse(TT);
+            string tf_time = timeFrom.ToString("t");
+            string tt_time = timeTo.ToString("t");
+            if (tt_time == "12:00 AM" || tt_time == "11:59 PM")
+            {
+                tt_time = "11:59:59 PM";
+            }
+            DateTime FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
+            DateTime FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
+            int c_id = Convert.ToInt32(Session["CompanyID"]);
+            WASA_EMS_Entities db = new WASA_EMS_Entities();
+            IList<string> parameterList = new List<string>();
+            IList<string> resourceList = new List<string>();
+            string paramsListQuery = "select p.ParameterDescription from tblParameter p inner join tblTemplateParameter tp on tp.ParameterID = p.ParameterID where tp.TemplateID = 64 order by p.paramOrder";
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    DataTable dtParams = new DataTable();
+                    conn.Open();
+                    SqlDataAdapter sdaParams = new SqlDataAdapter(paramsListQuery, conn);
+                    sdaParams.Fill(dtParams);
+                    foreach (DataRow dr in dtParams.Rows)
+                    {
+                        parameterList.Add(dr["ParameterDescription"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            foreach (var item in db.tblResources.AsEnumerable().Where(item => item.CompanyID == 4 && item.TemplateID == 64))
+            {
+                resourceList.Add(item.ResourceLocation);
+            }
+            ViewBag.ResourceList = resourceList;
+            ViewBag.ParameterList = parameterList;
+            ViewBag.SelectedResource = resource;
+            ViewBag.SelectedParameter = Parameter;
+            ViewBag.SelectedTimeFrom = TF;
+            ViewBag.SelectedTimeTo = TT;
+            ViewBag.SelectedTimeFrom = TF.ToString();
+            ViewBag.SelectedTimeTo = TT.ToString();
+            ViewBag.timeFrom = TF;
+            ViewBag.timeTo = TT;
+            ViewBag.dateFrom = df_date;
+            ViewBag.dateTo = dt_date;
+            ResourceAndParameterSelector rs = new ResourceAndParameterSelector();
+            rs.resourceID = resource;
+            rs.parameterID = Parameter;
+            rs.dateFrom = dateFrom.ToString();
+            rs.timeFrom = TF;
+            rs.dateTo = dateTo.ToString();
+            rs.timeTo = TT;
+            return View(rs);
+        }
+        [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
+        public PartialViewResult _ParameterizedDataView(string resources, string parameter, string datFrom, string timFrom, string datTo, string timTo)
+        {
+            DateTime FinalTimeFrom = DateTime.Now;
+            DateTime FinalTimeTo = DateTime.Now;
+            if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
+            {
+                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
+                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
+            }
+            else
+            {
+                DateTime dateFrom = DateTime.Parse(datFrom);
+                DateTime dateTo = DateTime.Parse(datTo);
+                string df_date = dateFrom.ToString("d");
+                string dt_date = dateTo.ToString("d");
+                string TF = timFrom;
+                string TT = timTo;
+                string abc = timFrom;
+                string[] abc1 = abc.Split(',');
+                string a = abc1[0];
+                if (abc1.Length > 1)
+                {
+                    TF = abc1[1];
+                }
+                else
+                {
+                    TF = abc1[0];
+                }
+                DataTable dt121 = new DataTable();
+                Session["TimeFrom"] = TF;
+                DateTime timeFrom = DateTime.Parse(TF);
+                string cba = timTo;
+                string[] cba1 = cba.Split(',');
+                TT = cba1[0];
+                DateTime timeTo = DateTime.Parse(TT);
+                string tf_time = timeFrom.ToString("t");
+                string tt_time = timeTo.ToString("t");
+                if (tt_time == "12:00 AM" || tt_time == "11:59 PM")
+                {
+                    tt_time = "11:59:59 PM";
+                }
+                FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
+                FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
+            }
+            DataTable dtRes = new DataTable();
+            DataTable Dashdt = new DataTable();
+            var tubewellDataList = new List<TubewellDataClass>();
+
+            ////////////////////////////////////////////////////////////////////////
+
+            string scriptString = "";
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    string getResFromTemp = "select ParameterID from tblParameter where ParameterDescription = '" + parameter + "'";
+                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+                    DataTable dtRes1 = new DataTable();
+                    sdaRes.Fill(dtRes1);
+                    int ite = 0;
+                    foreach (DataRow drRes in dtRes1.Rows)
+                    {
+                        //string resName = drRes["resourceLocationName"].ToString();
+                        ite += 1;
+                        string getParamsFromRes = "";
+                        getParamsFromRes = "select r.ResourceID, r.ResourceName from tblResource r where r.ResourceName = '" + resources + "' ";
+                        SqlDataAdapter sdaPar = new SqlDataAdapter(getParamsFromRes, conn);
+                        DataTable dtPar = new DataTable();
+                        sdaPar.Fill(dtPar);
+                        scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
+                        scriptString += "theme: \"light2\",";
+                        scriptString += "animationEnabled: true,";
+                        scriptString += "zoomEnabled: true, ";
+                        scriptString += "title: {text: \""+ parameter + "\" },exportEnabled: true,";
+                        string TheSelectedResource = "All Tubewells";
+                        if (resources == "All")
+                        {
+                            TheSelectedResource = "All Tubewells ";
+                        }
+                        else
+                        {
+                            TheSelectedResource = "" + resources + " Tubewell";
+                        }
+                        //Session["ReportTitle"] = "Data Fetched for " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
+                        scriptString += "subtitles: [{text: \" "+ parameter + " Data Fetched from " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }],";
+                        scriptString += "axisY:{labelFontSize: 15},";
+                        //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
+                        scriptString += "toolTip: { shared: false },";
+                        scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 12},";
+                        scriptString += " data: [";
+                        foreach (DataRow drPar in dtPar.Rows)
+                        {
+                            //string parName = drPar["parameterName"].ToString();
+                            string aquery = ";WITH CTE AS ( ";
+                            aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
+                            aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
+                            aquery += "ORDER BY e.InsertionDateTime DESC) ";
+                            aquery += "FROM tblEnergy e ";
+                            aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
+                            aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                            aquery += ") ";
+                            aquery += "SELECT top 1400000 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 1440001 Order by InsertionDateTime ASC";
+                            string theQuery = aquery;
+                            SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
+                            DataTable dtVal = new DataTable();
+                            sdaVal.Fill(dtVal);
+                            scriptString += "{ type: \"line\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"hh:mm TT DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+                            List<DataPoint> dataPoints = new List<DataPoint>();
+                            DateTime dt = DateTime.Now;
+                            foreach (DataRow drVal in dtVal.Rows)
+                            {
+                                dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Math.Abs(Convert.ToDouble(drVal["ParameterValue"]))));
+                                dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+                            }
+                            scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
+                            scriptString += "},";
+
+                        }
+                        scriptString = scriptString.Remove(scriptString.Length - 1);
+                        scriptString = scriptString + "]";
+                        scriptString = scriptString + "}";
+                        scriptString += ");";
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            string NewscripString = scriptString;
+            ViewData["chartData"] = NewscripString;
+            return PartialView();
+        }
+
         public ActionResult HMI()
         {
             int c_id = Convert.ToInt32(Session["CompanyID"]);
@@ -903,81 +1165,7 @@ namespace WASA_EMS.Controllers
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 5)]
         public PartialViewResult _ParameterReportView()
         {
-            //DataTable dtParams = new DataTable();
-            //dtReport.Clear();
-            //dtReport.Columns.Add("Location");
-            //string scriptString = "";
-            //scriptString = "var chart = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true,  title:{ text: \"Tubewell All Parameters\" }, axisY:{labelFontSize: 10, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, toolTip: {fontSize: 10, shared: true }, data: [";
-            //string getAllParametersQuery = "select p.ParameterID, p.ParameterName from tblParameter p inner join tblTemplateParameter tp on tp.ParameterID = p.ParameterID where tp.TemplateID = 64 order by p.paramOrder";
-            //using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            //{
-            //    try
-            //    {
-            //        conn.Open();
-            //        SqlDataAdapter sdaParams = new SqlDataAdapter(getAllParametersQuery, conn);
-            //        sdaParams.Fill(dtParams);
-            //        foreach (DataRow dr in dtParams.Rows)
-            //        {
-            //            dtReport.Columns.Add(dr["ParameterName"].ToString());
-            //            DataTable dtResource = new DataTable();
-            //            scriptString += "{ type: \"stackedColumn\", name: \"" + dr["ParameterName"].ToString() + "\", showInLegend: false, dataPoints: [";
-            //            string getAllResourceQuery = "select ResourceID, ResourceLocation from tblResource where TemplateID = 64 order by ResourceID";
-            //            SqlDataAdapter sdaResource = new SqlDataAdapter(getAllResourceQuery, conn);
-            //            sdaResource.Fill(dtResource);
-            //            foreach (DataRow drRe in dtResource.Rows)
-            //            {
-            //                if (dtReport.Rows.Count < 7)
-            //                {
-            //                    DataRow newRow = dtReport.NewRow();
-            //                    newRow[0] = drRe["ResourceLocation"].ToString();
-            //                    string getParameterValue = "select top(1)ParameterValue from tblEnergy where ResourceID = " + Convert.ToInt32(drRe["ResourceID"]) + " and ParameterID = " + Convert.ToInt32(dr["ParameterID"]) + " and InsertionDateTime > dateadd(minute,520, getdate()) order by ID DESC";
-            //                    SqlCommand cmdVal = new SqlCommand(getParameterValue, conn);
-            //                    object valObj = cmdVal.ExecuteScalar();
-            //                    if (valObj != null)
-            //                    {
-            //                        double val = Math.Round(Math.Abs(Convert.ToDouble(cmdVal.ExecuteScalar())),2);
-            //                        newRow[dtParams.Rows.IndexOf(dr) + 1] = val;
-            //                        dtReport.Rows.Add(newRow);
-            //                        scriptString += "{ y: " + val + " , label: \"" + drRe["ResourceLocation"].ToString() + "\" },";
-            //                    }
-            //                    else
-            //                    {
-            //                        dtReport.Rows.Add(newRow);
-            //                        scriptString += "{ y: null , label: \"" + drRe["ResourceLocation"].ToString() + "\" },";
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    dtReport.Rows[dtResource.Rows.IndexOf(drRe)][0] = drRe["ResourceLocation"].ToString();
-            //                    string getParameterValue = "select top(1)ParameterValue from tblEnergy where ResourceID = " + Convert.ToInt32(drRe["ResourceID"]) + " and ParameterID = " + Convert.ToInt32(dr["ParameterID"]) + " and InsertionDateTime > dateadd(minute,520, getdate()) order by ID DESC";
-            //                    SqlCommand cmdVal = new SqlCommand(getParameterValue, conn);
-            //                    object valObj = cmdVal.ExecuteScalar();
-            //                    if (valObj != null)
-            //                    {
-            //                        double val = Math.Round(Math.Abs(Convert.ToDouble(cmdVal.ExecuteScalar())),2);
-            //                        dtReport.Rows[dtResource.Rows.IndexOf(drRe)][dtParams.Rows.IndexOf(dr) + 1] = val;
-            //                        scriptString += "{ y: " + val + " , label: \"" + drRe["ResourceLocation"].ToString() + "\" },";
-            //                    }
-            //                    else
-            //                    {
-            //                        scriptString += "{ y: null , label: \"" + drRe["ResourceLocation"].ToString() + "\" },";
-            //                    }
-            //                }
-            //            }
-            //            scriptString = scriptString.Remove(scriptString.Length - 1);
-            //            scriptString += "]},";
-            //        }
-            //        scriptString = scriptString.Remove(scriptString.Length - 1);
-            //        scriptString += "] })";
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //    }
-            //}
-            //string NewscripString = scriptString;
-            //NewscripString = NewscripString.Replace("&quot;", "\"");
-            //ViewData["chartData"] = NewscripString;
+            
             DataTable dtRes = new DataTable();
             DataTable dtReport = new DataTable();
             string getAllResourceQuery = "select ResourceID, ResourceLocation from tblResource where TemplateID = 64 order by ResourceID";
@@ -996,7 +1184,7 @@ namespace WASA_EMS.Controllers
                             dtReport.Columns.Add("Location");
                         }
                         DataTable dtParamVals = new DataTable();
-                        string allParamsQueryForRes = "select p.ParameterName, e.ParameterValue from tblEnergy e left join tblParameter p on e.ParameterID = p.ParameterID left join tblResource r on e.ResourceID = r.ResourceID left join tblRemoteSensor rms on r.ResourceID = rms.ResourceID left join tblTemplate t on r.TemplateID = t.TemplateID where e.InsertionDateTime = ( select max(InsertionDateTime) from tblEnergy where ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " ) and e.InsertionDateTime > dateadd(minute,-20,getdate()) and r.ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " order by p.ParamOrder";
+                        string allParamsQueryForRes = "select p.ParameterName, e.ParameterValue from tblEnergy e left join tblParameter p on e.ParameterID = p.ParameterID left join tblResource r on e.ResourceID = r.ResourceID left join tblRemoteSensor rms on r.ResourceID = rms.ResourceID left join tblTemplate t on r.TemplateID = t.TemplateID where e.InsertionDateTime = ( select max(InsertionDateTime) from tblEnergy where ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " ) and e.InsertionDateTime > dateadd(minute,-200,getdate()) and r.ResourceID = " + Convert.ToInt32(dr["ResourceID"]) + " order by p.ParamOrder";
                         SqlDataAdapter sdaParamVals = new SqlDataAdapter(allParamsQueryForRes, conn);
                         sdaParamVals.Fill(dtParamVals);
                         if (dtReport.Rows.Count < 1)
@@ -1009,7 +1197,132 @@ namespace WASA_EMS.Controllers
                             }
                             foreach (DataRow drParamVals in dtParamVals.Rows)
                             {
-                                dtReport.Columns.Add(drParamVals["ParameterName"].ToString());
+                                string parameterValuesString = "";
+                                if (drParamVals["ParameterName"].ToString() == "V1N.")
+                                {
+                                    parameterValuesString += "V1N";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "V2N.")
+                                {
+                                    parameterValuesString += "V2N";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "V3N.")
+                                {
+                                    parameterValuesString += "V3N";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "I1.")
+                                {
+                                    parameterValuesString += "I1";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "I2.")
+                                {
+                                    parameterValuesString += "I2";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "I3.")
+                                {
+                                    parameterValuesString += "I3";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "Frequency.")
+                                {
+                                    parameterValuesString += "Frequency";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "PKVA.")
+                                {
+                                    parameterValuesString += "PKVA";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "PF.")
+                                {
+                                    parameterValuesString += "Power Factor";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "Remote.")
+                                {
+                                    parameterValuesString += "Remote Mode";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "PumpStatus")
+                                {
+                                    parameterValuesString += "Pump Status";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "CurrentTrip.")
+                                {
+                                    parameterValuesString += "Current Trip";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "VoltageTrip.")
+                                {
+                                    parameterValuesString += "Voltage Trip";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "TimeSchedule.")
+                                {
+                                    parameterValuesString += "Scheduling Mode";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "ChlorineLevel.")
+                                {
+                                    parameterValuesString += "Chlorine Level";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "WaterFlow(Cusec).")
+                                {
+                                    parameterValuesString += "Water Flow (cfs)";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "PKVAR.")
+                                {
+                                    parameterValuesString += "PKVAR";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "PKW.")
+                                {
+                                    parameterValuesString += "PKW";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "V12")
+                                {
+                                    parameterValuesString += "V12";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "V13")
+                                {
+                                    parameterValuesString += "V13";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "V23")
+                                {
+                                    parameterValuesString += "V23";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "PrimingLevel")
+                                {
+                                    parameterValuesString += "Priming Level";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "Pressure(Bar)")
+                                {
+                                    parameterValuesString += "Pressure(Bar)";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "Manual")
+                                {
+                                    parameterValuesString += "Manual Mode";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "IndoorLight")
+                                {
+                                    parameterValuesString += "Indoor Lights";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "OutdoorLight")
+                                {
+                                    parameterValuesString += "Outdoor Lights";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "Exhaust Fan")
+                                {
+                                    parameterValuesString += "Exhaust Fan";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "vib_x")
+                                {
+                                    parameterValuesString += "Vibration Velocity in (mm/s)";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "vib_y")
+                                {
+                                    parameterValuesString += "Vibration Acceleration in (m/s2)";
+                                }
+                                else if (drParamVals["ParameterName"].ToString() == "vib_z")
+                                {
+                                    parameterValuesString += "Vibration Displacement in (um)";
+                                }
+                                else
+                                {
+                                    parameterValuesString += drParamVals["ParameterName"].ToString();
+                                }
+                                dtReport.Columns.Add(parameterValuesString);
                             }
                         }
                         if (dtParamVals.Rows.Count == 0)
@@ -1030,6 +1343,14 @@ namespace WASA_EMS.Controllers
                                     drNew[1] = dtParamVals.Rows[0][1];
                                     dtReport.Rows.Add(drNew);
                                 }
+                                else if (i == 28)
+                                {
+                                    dtReport.Rows[dtRes.Rows.IndexOf(dr)][i + 1] = Math.Round(((Convert.ToDouble(dtParamVals.Rows[i][1])) * 0.3),2);
+                                }
+                                else if (i == 29)
+                                {
+                                    dtReport.Rows[dtRes.Rows.IndexOf(dr)][i + 1] = Math.Round(((Convert.ToDouble(dtParamVals.Rows[i][1])) / 0.3), 2);
+                                }
                                 else
                                 {
                                     dtReport.Rows[dtRes.Rows.IndexOf(dr)][i + 1] = dtParamVals.Rows[i][1];
@@ -1044,7 +1365,7 @@ namespace WASA_EMS.Controllers
                 }
             }
             string scriptString = "";
-            scriptString += "var chart = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true,  title:{ text: \"Tubewell All Parameters\" }, dataPointWidth: 30, axisY:{labelFontSize: 10, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, toolTip: {fontSize: 10, shared: true }, data: [";
+            scriptString += "var chart = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true,  title:{ text: \"PARAMETERS LIVE DATA\" },exportEnabled: true, dataPointWidth: 30, axisY:{labelFontSize: 18, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, toolTip: {fontSize: 11, fontWeight: \"bold\", shared: true }, data: [";
             for (int col = 1; col < dtReport.Columns.Count; col++)
             {
                 scriptString += "{ type: \"stackedColumn\", name: \"" + dtReport.Columns[col].ColumnName + "\", showInLegend: false, dataPoints: [";
@@ -1054,7 +1375,75 @@ namespace WASA_EMS.Controllers
                     if (!(valObj is DBNull))
                     {
                         double val = Math.Round(Math.Abs(Convert.ToDouble(dtReport.Rows[ro][col])), 2);
-                        scriptString += "{ y: " + val + " , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                        if (col < 5)
+                        {
+                            if (val == 0)
+                            {
+                                scriptString += "{ y:'<b>OFF</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                            else
+                            {
+                                scriptString += "{ y:'<b>ON</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                        }
+                        else if(col == 19 || col == 20)
+                        {
+                            if (val == 0)
+                            {
+                                scriptString += "{ y:'<b>No Error</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                            else
+                            {
+                                scriptString += "{ y:'<b>Error</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                        }
+                        else if (col == 21)
+                        {
+                            val = Math.Round((val/101.94),2);
+                            //value = "\'<b>" + value + "</b>\'";
+                            //scriptString += "{ y:" + val + " , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            scriptString += "{ y:" + val.ToString() + " , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                        }
+                        else if (col == 23)
+                        {
+                            if (val == 0)
+                            {
+                                scriptString += "{ y:'<b>EMPTY</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                            else
+                            {
+                                scriptString += "{ y:'<b>FULL</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                        }
+                        else if (col == 24)
+                        {
+                            if (val == 0)
+                            {
+                                scriptString += "{ y:'<b>HALF</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                            else
+                            {
+                                scriptString += "{ y:'<b>FULL</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                        }
+                        else if (col == 25 || col == 26 || col == 27)
+                        {
+                            if (val == 0)
+                            {
+                                scriptString += "{ y:'<b>OFF</b>' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                            else
+                            {
+                                scriptString += "{ y:'ON' , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            }
+                        }
+                        else
+                        {
+                            string value = val.ToString();
+                            //value = "\'<b>" + value + "</b>\'";
+                            //scriptString += "{ y:" + val + " , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                            scriptString += "{ y:" + val.ToString() + " , label: \"" + dtReport.Rows[ro][0] + "\" },";
+                        }
                     }
                     else
                     {
@@ -1191,12 +1580,12 @@ namespace WASA_EMS.Controllers
                         scriptString += "theme: \"light2\",";
                         scriptString += "animationEnabled: true,";
                         scriptString += "zoomEnabled: true, ";
-                        scriptString += "title: {text: \"Tubewells Working Status\" },";
-                        string TheSelectedResource = "All Tubewells";
+                        scriptString += "title: {text: \"TUBEWELLS WORKING STATUS\" },exportEnabled: true,";
+                        string TheSelectedResource = "all tubewells";
                         //Session["ReportTitle"] = "Data Fetched for " + TheSelectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-                        scriptString += "subtitles: [{text: \" Data Fetched from " + TheSelectedResource + " Today   \" }],";
+                        scriptString += "subtitles: [{text: \" Data fetched from " + TheSelectedResource + " today   \" }],";
                         scriptString += "axisY: {labelFontSize: 10, labelFormatter: function(){ return \" \"; }},";
-                        scriptString += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
+                        scriptString += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\"<b>: OFF</b> at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\"<b>: ON</b> at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
                         scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 12},";
                         scriptString += " data: [";
                         foreach (DataRow drPar in dtPar.Rows)
@@ -1339,7 +1728,7 @@ namespace WASA_EMS.Controllers
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
                 FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
             }
             else
             {
@@ -1510,7 +1899,7 @@ namespace WASA_EMS.Controllers
                     scriptString += "theme: \"light2\",";
                     scriptString += "animationEnabled: true,";
                     scriptString += "zoomEnabled: true, ";
-                    scriptString += "title: {text: \"Water Flow (m3/h)\" },";
+                    scriptString += "title: {text: \"WATER FLOW (m3/h)\" },exportEnabled: true,";
                     string TheSelectedResource = "All Tubewells";
                     if (resources == "All")
                     {
@@ -1601,6 +1990,10 @@ namespace WASA_EMS.Controllers
                                 if (Convert.ToDouble(drVal["WaterFlow(Cusec)."]) > 425)
                                 {
                                     dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), 425));
+                                }
+                                else if (Convert.ToDouble(drVal["WaterFlow(Cusec)."]) < 0)
+                                {
+                                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), 0));
                                 }
                                 else
                                 { 
@@ -1733,7 +2126,7 @@ namespace WASA_EMS.Controllers
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
                 FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
             }
             else
             {
@@ -1808,7 +2201,7 @@ namespace WASA_EMS.Controllers
                         scriptString += "theme: \"light2\",";
                         scriptString += "animationEnabled: true,";
                         scriptString += "zoomEnabled: true, ";
-                        scriptString += "title: {text: \"Vibration Velocity (mm/s)\" },";
+                        scriptString += "title: {text: \"VIBRATION VELOCITY (mm/s)\" },exportEnabled: true,";
                         string TheSelectedResource = "All Tubewells";
                         if (resources == "All")
                         {
@@ -2012,87 +2405,6 @@ namespace WASA_EMS.Controllers
             rs.timeFrom = "";
             rs.dateTo = "";
             rs.timeTo = "";
-            //string scriptString = "";
-            //using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            //{
-            //    try
-            //    {
-            //        string getResFromTemp = "select ParameterID from tblParameter where parameterName = 'PumpStatus'";
-            //        SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
-            //        DataTable dtRes = new DataTable();
-            //        sdaRes.Fill(dtRes);
-            //        int ite = 0;
-            //        foreach (DataRow drRes in dtRes.Rows)
-            //        {
-            //            //string resName = drRes["resourceLocationName"].ToString();
-            //            ite += 1;
-            //            string getParamsFromRes = "";
-            //            getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'PumpStatus'  and rtp.TemplateID = 64 order by cast(r.ResourceID as int) asc";
-            //            SqlDataAdapter sdaPar = new SqlDataAdapter(getParamsFromRes, conn);
-            //            DataTable dtPar = new DataTable();
-            //            sdaPar.Fill(dtPar);
-            //            scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
-            //            scriptString += "theme: \"light2\",";
-            //            scriptString += "animationEnabled: true,";
-            //            scriptString += "zoomEnabled: true, ";
-            //            scriptString += "title: {text: \"PumpStatus\" },";
-            //            scriptString += "subtitles: [{text: \" All Tubewells Recent Working  \" }],";
-            //            scriptString += "axisY: {suffix: \" \" },";
-            //            //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
-            //            scriptString += "toolTip: { shared: false },";
-            //            scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries},";
-            //            scriptString += " data: [";
-            //            foreach (DataRow drPar in dtPar.Rows)
-            //            {
-            //                //string parName = drPar["parameterName"].ToString();
-            //                string aquery = ";WITH CTE AS ( ";
-            //                aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
-            //                aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
-            //                aquery += "ORDER BY e.InsertionDateTime DESC) ";
-            //                aquery += "FROM tblEnergy e ";
-            //                aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-            //                aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= ' 2020-03-19 ' and e.InsertionDateTime < ' 2020-03-20 '  ";
-            //                aquery += ") ";
-            //                aquery += "SELECT top 1400 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 14401 Order by InsertionDateTime ASC";
-            //                string theQuery = aquery;
-            //                SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
-            //                DataTable dtVal = new DataTable();
-            //                sdaVal.Fill(dtVal);
-            //                scriptString += "{ type: \"line\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
-            //                List<DataPoint> dataPoints = new List<DataPoint>();
-            //                DateTime dt = DateTime.Now;
-            //                foreach (DataRow drVal in dtVal.Rows)
-            //                {
-            //                   // if (dtVal.Rows.IndexOf(drVal) != 0)
-            //                   // {
-            //                       //  dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(dt).AddHours(-5).AddMinutes(1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
-            //                       // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5).AddMinutes(-1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
-            //                       // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-            //                       // dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
-            //                   // }
-            //                    //else
-            //                    //{
-            //                        dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-            //                        dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
-            //                    //}
-            //                    //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
-            //                }
-            //                scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
-            //                scriptString += "},";
-            //            }
-            //            scriptString = scriptString.Remove(scriptString.Length - 1);
-            //            scriptString = scriptString + "]";
-            //            scriptString = scriptString + "}";
-            //            scriptString += ");";
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //    }
-            //}
-            //string NewscripString = scriptString;
-            //ViewData["chartData"] = NewscripString;
             return View(rs);
         }
         [HttpPost]
@@ -2193,7 +2505,7 @@ namespace WASA_EMS.Controllers
             {
                 CultureInfo culture = new CultureInfo("en-US");
                 FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
+                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
             }
             else
             {
@@ -2347,7 +2659,7 @@ namespace WASA_EMS.Controllers
 
             ///////////////////////////
 
-            scriptString = "var chart1 = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true, title:{ text: \"Energy Monitoring Stats\" }, dataPointWidth: 30, subtitles: [{text: \" Energy Data Fetched from " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }], axisY:{labelFontSize: 10, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 8, horizontalAlign: \"center\"}, toolTip: {fontSize: 10, shared: true }, data: [";
+            scriptString = "var chart1 = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true, title:{ text: \"ENERGY MONITORING STATS\" },exportEnabled: true, dataPointWidth: 30, subtitles: [{text: \"  Data Fetched from " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }], axisY:{labelFontSize: 11, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 11}, legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 11, horizontalAlign: \"center\"}, toolTip: {fontSize: 12, fontWeight: \"bold\", shared: true }, data: [";
 
             scriptString += "{ type: \"stackedColumn\", name: \"Motor Rating\", showInLegend: true, dataPoints: [";
 
@@ -2355,7 +2667,7 @@ namespace WASA_EMS.Controllers
             {
                 if (item.workingHoursToday != null)
                 {
-                    scriptString += "{ y: " + item.Specification + " , label: \"" + item.locationName + "\" },";
+                    scriptString += "{ y: '<b>" + item.Specification + "</b>' , label: \"" + item.locationName + "\" },";
                 }
                 else
                 {
@@ -2370,7 +2682,7 @@ namespace WASA_EMS.Controllers
             {
                 if (item.workingHoursToday != null)
                 {
-                    scriptString += "{ y: " + item.WorkingInHours + " , label: \"" + item.locationName + "\" },";
+                    scriptString += "{ y: '<b>" + Math.Round((item.WorkingInHours),1) + "</b>' , label: \"" + item.locationName + "\" },";
                 }
                 else
                 {
@@ -2403,7 +2715,7 @@ namespace WASA_EMS.Controllers
                         counter = 1;
                     }
                     pff = Math.Round((pff / counter), 2);
-                    scriptString += "{ y: " + pff + " , label: \"" + item.locationName + "\" },";
+                    scriptString += "{ y: '<b>" + pff + "<b>' , label: \"" + item.locationName + "\" },";
                 }
                 else
                 {
@@ -2856,7 +3168,7 @@ namespace WASA_EMS.Controllers
                         scriptString += "theme: \"light2\",";
                         scriptString += "animationEnabled: true,";
                         scriptString += "zoomEnabled: true, ";
-                        scriptString += "title: {text: \"Mode Status\" },";
+                        scriptString += "title: {text: \"MODE STATUS REPORT\" },exportEnabled: true,";
                         string TheSelectedResource = "";
                         if (resources == "All")
                         {
@@ -2873,7 +3185,7 @@ namespace WASA_EMS.Controllers
                         //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
                         //scriptString += "toolTip: { shared: false },";
                         //scriptString += "axisX: { xValueType: \"dateTime\", valueFormatString: \"hh:mm TT DD-MM-YYYY\" }, ";
-                        scriptString += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\": OFF at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\": ON at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
+                        scriptString += "toolTip: { shared: false , contentFormatter: function(e){ var str = \" \" ; for (var i = 0; i < e.entries.length; i++){ var utcSeconds = e.entries[i].dataPoint.x; var d = new Date(utcSeconds); if(e.entries[i].dataPoint.y == 0){ var temp = e.entries[i].dataSeries.name + \" \" +\"<b>: OFF</b> at  \" + d.toLocaleString('en-IN'); str = str+temp; } else { var temp = e.entries[i].dataSeries.name + \" \" +\"<b>: ON</b> at \" + d.toLocaleString('en-IN'); str = str+temp; } } return (str); }},";
                         scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 12},";
                         scriptString += " data: [";
                         foreach (DataRow drPar in dtPar.Rows)
@@ -3023,6 +3335,7 @@ namespace WASA_EMS.Controllers
                             if (Dashdt.Rows.Count > 0)
                             {
                                 TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes),ftf);
+                                sd.noOfDays = Convert.ToInt32(noOfDays);
                                 tubewellDataList.Add(sd);
                             }
                             else
@@ -3056,6 +3369,7 @@ namespace WASA_EMS.Controllers
                                 sd.workingHoursTodayRemote = "-";
                                 sd.workingHoursTodayScheduling = "-";
                                 sd.logDate = ftf.ToShortDateString();
+                                sd.noOfDays = Convert.ToInt32(noOfDays);
                                 tubewellDataList.Add(sd);
                             }
                         }
@@ -4448,7 +4762,7 @@ namespace WASA_EMS.Controllers
                     ps = dr["ChlorineLevel."];
                     if (ps == DBNull.Value)
                     {
-                        tableData.chlorineLevel.Add(tableData.chlorineLevel.LastOrDefault());
+                        tableData.chlorineLevel.Add(1.0);
                     }
                     else
                     {
@@ -4628,7 +4942,7 @@ namespace WASA_EMS.Controllers
                     ps = dr["TimeSchedule."];
                     if (ps == DBNull.Value)
                     {
-                        tableData.schedulingStatus.Add(tableData.schedulingStatus.LastOrDefault());
+                        tableData.schedulingStatus.Add(1.0);
                     }
                     else
                     {
@@ -4682,7 +4996,7 @@ namespace WASA_EMS.Controllers
                 }
                 if (spellDataList.Count == 0)
                 {
-                    tableData.workingHoursToday = "0 Minutes";
+                    tableData.workingHoursToday = "0 Hours, 0 Minutes";
                     tableData.accWaterDischargePerDay = "0 Cusecs";
                     tableData.workingHoursTodayManual = "0";
                     tableData.workingHoursTodayRemote = "0";
@@ -4777,7 +5091,7 @@ namespace WASA_EMS.Controllers
                     ps = dr["ChlorineLevel."];
                     if (ps == DBNull.Value)
                     {
-                        tableData.chlorineLevel.Add(tableData.chlorineLevel.LastOrDefault());
+                        tableData.chlorineLevel.Add(1.0);
                     }
                     else
                     {
@@ -4957,7 +5271,7 @@ namespace WASA_EMS.Controllers
                     ps = dr["TimeSchedule."];
                     if (ps == DBNull.Value)
                     {
-                        tableData.schedulingStatus.Add(tableData.schedulingStatus.LastOrDefault());
+                        tableData.schedulingStatus.Add(1.0);
                     }
                     else
                     {
@@ -5011,7 +5325,7 @@ namespace WASA_EMS.Controllers
                 }
                 if (spellDataList.Count == 0)
                 {
-                    tableData.workingHoursToday = "0 Minutes";
+                    tableData.workingHoursToday = "0 Hours, 0 Minutes";
                     tableData.accWaterDischargePerDay = "0 Cusecs";
                     tableData.workingHoursTodayManual = "0";
                     tableData.workingHoursTodayRemote = "0";

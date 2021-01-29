@@ -21,12 +21,12 @@
         var v1n = null;
         var v2n = null;
         var v3n = null;
-        var delTime = null;
+		var delTime = null;
         var url = "/Tubewells/getHMIStatus";
         var properID = $.get(url, { resourceName: '@Model.resourceName' }, function (data) {
             var obj = JSON.parse(data);
             pumpStatus = obj.pumpStatus;
-            delTime = obj.delTime;
+			delTime = obj.delTime;
             chlorineStatus = obj.chlorineStatus;
             primingStatus = obj.primingStatus;
             flowRate = obj.flowRate;
@@ -34,12 +34,11 @@
             v2n = obj.v2n;
             v3n = obj.v3n;
             var video = '';
-            //alert(delTime);
             pressureRate = obj.pressureRate;
             if (pumpStatus == 1 && delTime < 20 ) {
 
                 if (start_flag == true) {
-                    console.log(delTime);    
+                    console.log(pumpStatus);
                     //startPump();
                     video = $('#start-tubewell');
                     video.get(0).currentTime = 0;
@@ -83,7 +82,7 @@
                 
             }
             $('.flow-meter .flow-meter-inner .meter-nib')
-                .css('transform', 'rotate(' + ((flowRate*45)+45) + 'deg)');
+                .css('transform', 'rotate(' + (((flowRate*45)/101)+45) + 'deg)');
             $('.reading-flow-meter').text(flowRate);
             $('.pressure-transmitter .reading').text(pressureRate);
 

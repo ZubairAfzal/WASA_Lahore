@@ -1,7 +1,28 @@
-﻿@using System.Data;
+@using System.Data;
 @using System.Data.SqlClient;
 @using Newtonsoft.Json;
 @model IEnumerable<DisposalDataClassFinal>
+
+<style>
+    div#chartContainer1 {
+        position: relative;
+    }
+
+        div#chartContainer1:after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #fff;
+            width: 57px;
+            height: 14px;
+        }
+
+    a.canvasjs-chart-credit {
+        display: none;
+    }
+</style>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -44,6 +65,7 @@
                 //    'copy', 'csv', 'excel', 'pdf', 'print'
                 //]
                 buttons: [
+					'print', 'csv',
                     {
                         extend: 'excelHtml5',
                         title: '@Session["ReportTitle"]'
@@ -161,7 +183,7 @@
 @*<table id="tubeWellTable" class="display" style="width:100%">
         <thead>
             <tr style="background-color: #a8c9cd;">
-                <th>Name Of Location</th>
+                <th>Name of Location</th>
                 <th>Pump 1</th>
                 <th>Pump 2</th>
                 <th>Pump 3</th>
@@ -529,8 +551,6 @@
                                     </tr>
 
                                     
-
-
                                 </tbody>
                                 <tfoot>
                                     @*<tr>
@@ -542,20 +562,20 @@
                                     <th>@(Model.First().WorkingHoursPump6 + Model.First().WorkingHoursPump7 + Model.First().WorkingHoursPump8 + Model.First().WorkingHoursPump9 + Model.First().WorkingHoursPump10) Hours</th>
                                     </tr>*@
                                     <tr>
-                                        <td colspan="2">
+                                        <th colspan="2">
                                             Wet Well Level No.1
-                                        </td>
+                                        </th>
                                         <td style="display:none">&nbsp;</td>
-                                        <th>
+                                        <td>
                                             @Model.First().Well1Level.FirstOrDefault() ft
-                                        </th>
-                                        <td colspan="2">
-                                            Wet Well Level No.2
                                         </td>
-                                        <td style="display:none">&nbsp;</td>
-                                        <th>
-                                            @Model.First().Well2Level.FirstOrDefault() ft
+                                        <th colspan="2">
+                                            Wet Well Level No.2
                                         </th>
+                                        <td style="display:none">&nbsp;</td>
+                                        <td>
+                                            @Model.First().Well2Level.FirstOrDefault() ft
+                                        </td>
                                     </tr>
                                 </tfoot>
                                     

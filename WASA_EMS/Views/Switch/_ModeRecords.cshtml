@@ -22,7 +22,34 @@
             @for (int i = 0; i < 7; i ++)
             {
 
-                <tr>
+                @*<tr>
+                    <td>@Model.Rows[i][1]</td>
+                    @if (Convert.ToInt32(Model.Rows[i][2]) == 0)
+                    {
+                        <td style=" text-align: center;">
+                            Remote Control
+                        </td>
+                    }
+                    else
+                    {
+                        <td style=" text-align: center;">
+                            Time Scheduling
+                        </td>
+                    }
+                    @if (Convert.ToInt32(Model.Rows[i][2]) == 0)
+                    {
+                    <td style=" text-align: center;">
+                        @Html.ActionLink("Switch to Time Scheduling", "EditMode", new { id = Model.Rows[i][0] , mode = Model.Rows[i][2] })
+                    </td>
+                    }
+                    else
+                    {
+                    <td style=" text-align: center;">
+                        @Html.ActionLink("Switch to Remote Control", "EditMode", new { id = Model.Rows[i][0] , mode = Model.Rows[i][2]})
+                    </td>
+                    }
+                </tr>*@
+				<tr>
                     <td>@Model.Rows[i][1]</td>
                     @if (Convert.ToInt32(Model.Rows[i][2]) == 0)
                     {

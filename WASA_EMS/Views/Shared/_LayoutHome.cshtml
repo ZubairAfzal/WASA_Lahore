@@ -46,73 +46,15 @@ License: You must have a valid license purchased only from themeforest(the above
     <!-- END THEME LAYOUT STYLES -->
     <!-- <link rel="shortcut icon" href="favicon.ico" /> -->
 
-    <style type="text/css">
-        /*Added css for design notification area, you can design by your self*/
-        /* COPY css content from youtube video description*/
-        .noti-content {
-            position: fixed;
-            right: 100px;
-            background: yellow;
-            color: blue;
-            font-size: medium;
-            font-style: oblique;
-            font-family: Arial;
-            border-radius: 4px;
-            top: 47px;
-            width: 440px;
-            display: none;
-            border: 1px solid #9E988B;
-        }
 
-        ul#notiContent {
-            max-height: 200px;
-            overflow: auto;
-            padding: 0px;
-            margin: 0px;
-            padding-left: 20px;
-        }
-
-            ul#notiContent li {
-                margin: 3px;
-                padding: 6px;
-                background: #FF6600;
-            }
-
-        .noti-top-arrow {
-            border-color: transparent;
-            border-bottom-color: #F5DEB3;
-            border-style: dashed dashed solid;
-            border-width: 0 8.5px 8.5px;
-            position: absolute;
-            right: 32px;
-            top: -8px;
-        }
-
-        span.noti {
-            color: lightgreen;
-            margin: 15px;
-            position: fixed;
-            right: 100px;
-            font-size: 30px;
-            cursor: pointer;
-        }
-
-        span.count {
-            position: fixed;
-            top: -1px;
-            /*color:white;*/
-        }
-        /*.noti:hover {
-            color:white;
-        }*/
-    </style>
     @section Styles{
         <link rel="Stylesheet" href="@Href("~/Assets/site.css")" />
     }
 </head>
 <!-- END HEAD -->
 
-<body class="page-container-bg-solid" style="background: url(../../Metronic/assets/img/home-background63.jpg) no-repeat center center fixed;">
+<!-- <body class="page-container-bg-solid" style="background: url(../../Metronic/assets/img/home-background63.jpg) no-repeat center center fixed;"> -->
+<body class="page-container-bg-solid" style="background-color:#d9e7f9">
 
     <div id="opacqueBackground" class="page-wrapper" style="opacity:0.9">
         <div class="page-wrapper-row">
@@ -134,11 +76,6 @@ License: You must have a valid license purchased only from themeforest(the above
                             <!-- END RESPONSIVE MENU TOGGLER -->
                             <!-- BEGIN TOP NAVIGATION MENU -->
                             <div class="top-menu">
-                                <span class="noti glyphicon glyphicon-globe"><span class="count"> </span></span>
-                                <div class="noti-content">
-                                    <div class="noti-top-arrow"></div>
-                                    <ul id="notiContent"></ul>
-                                </div>
                                 <ul class="nav navbar-nav pull-right">
                                     <!-- BEGIN NOTIFICATION DROPDOWN -->
                                     <!-- DOC: Apply "dropdown-hoverable" class after "dropdown" and remove data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to enable hover dropdown mode -->
@@ -267,6 +204,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                                     </li>
                                                 </ul>
                                             </li>
+											<li aria-haspopup="true" class="  ">
+                                                  <a href="/Home/Schedule">
+                                                      Tubewell Schedule
+                                                  </a>
+                                              </li>
                                         </ul>
                                     </li>
                                     <li aria-haspopup="true" class="menu-dropdown classic-menu-dropdown ">
@@ -501,85 +443,9 @@ License: You must have a valid license purchased only from themeforest(the above
     <script src="~/WASARMS_Contents/JS/raphael-min.js"></script>
     <script src="~/WASARMS_Contents/JS/serial.js"></script>
     <script src="~/WASARMS_Contents/JS/worldLow.js"></script>
+
     
     <!-- END THEME LAYOUT SCRIPTS -->
-
-
-    <!-- START OF SIGNALR SCRIPTS -->
-    <script src="~/Scripts/jquery.signalR-2.4.1.js"></script>
-    <script src="~/Scripts/modernizr-2.6.2.js"></script>
-    <script src="/signalr/hubs"></script>
-    <script type="text/javascript">
-
-        $(function () {
-            $('span.noti').click(function (e) {
-                //debugger;
-                e.stopPropagation();
-                $('span.noti').css("color", "lightgreen");
-                $('span.count').hide();
-                $('.noti-content').show();
-                var count = 0;
-                count = parseInt($('span.count').html()) || 0;
-                count++;
-                // only load notification if not already loaded
-                if (count > 0) {
-                    updateNotification();
-                }
-                $('span.count', this).html(' ');
-            })
-            // hide notifications
-            $('html').click(function () {
-                $('.noti-content').hide();
-            })
-            // update notification
-            function updateNotification() {
-                $('#notiContent').empty();
-                $('#notiContent').append($('<li>Loading...</li>'));
-                $.ajax({
-                    type: 'GET',
-                    url: '/home/GetNotifications',
-                    success: function (response) {
-                        //debugger;
-                        $('#notiContent').empty();
-                        if (response.length == 0) {
-                            $('#notiContent').append($('<li>Currently You Have No New Notifications.</li>'));
-                        }
-                        $.each(response, function (index, value) {
-
-                            $('#notiContent').append($('<li>The User , ' + value.Name + ' ' + 'Of ID' + ' (' + value.ID + ') Is Written Something.</li>'));
-                        });
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                })
-            }
-            // update notification count
-            function updateNotificationCount() {
-                $('span.count').show();
-                var count = 0;
-                count = parseInt($('span.count').html()) || 0;
-                count++;
-                $('span.noti').css("color", "white");
-                $('span.count').css({ "background-color": "red", "color": "white" });
-                $('span.count').html(count);
-
-            }
-            // signalr js code for start hub and send receive notification
-            var notificationHub = $.connection.notificationHub;
-            $.connection.hub.start().done(function () {
-                console.log('Notification hub started');
-            });
-            //signalr method for push server message to client
-            notificationHub.client.notify = function (message) {
-                if (message && message.toLowerCase() == "added") {
-                    updateNotificationCount();
-                }
-            }
-        })
-    </script>
-
-    <!--  END OF SIGNALR SCRIPTS  -->
     <script>
         $(document).ready(function () {
             $('#clickmewow').click(function () {
@@ -754,21 +620,21 @@ License: You must have a valid license purchased only from themeforest(the above
 
         // Carousel
         // Activate Carousel
-        //$('#myCarousel').carousel({
-        //    interval: 10000,
-        //    pause: true
-        //})
+        $('#myCarousel').carousel({
+            interval: 10000,
+            pause: true
+        })
 
-        //// Enable Carousel Indicators
-        //$(".item1").click(function () {
-        //    $("#myCarousel").carousel(0);
-        //});
-        //$(".item2").click(function () {
-        //    $("#myCarousel").carousel(1);
-        //});
-        //$(".item3").click(function () {
-        //    $("#myCarousel").carousel(2);
-        //});
+        // Enable Carousel Indicators
+        $(".item1").click(function () {
+            $("#myCarousel").carousel(0);
+        });
+        $(".item2").click(function () {
+            $("#myCarousel").carousel(1);
+        });
+        $(".item3").click(function () {
+            $("#myCarousel").carousel(2);
+        });
 
             });
 

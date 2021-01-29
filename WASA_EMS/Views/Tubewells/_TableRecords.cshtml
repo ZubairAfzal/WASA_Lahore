@@ -8,6 +8,7 @@
                 //"sAjaxSource": "/Tubewells/_TableRecords",
                 "scrollX": true,
                 "paging": false,
+				"searching": false,
                 "ordering": false,
                 "info": false,
                 "columnDefs": [
@@ -33,7 +34,7 @@
                 Water Discharge
             </th>
             <th>
-                Pressure
+                Pressure (Bar)
             </th>
             <th>
                 Chlorine Level
@@ -42,7 +43,7 @@
                 Power Factor
             </th>
             <th>
-                Vibration m/s2
+                Vibration Velocity in (mm/s)
             </th>
             <th>
                 Average Voltage
@@ -172,7 +173,6 @@
         {
             <td style="background-image: url(/Images/green_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
         }
-                ViewBag.Manual
         else
         {
             <td style="background-image: url(/Images/red_light.png);background-size: 20px;background-repeat: no-repeat;background-position: center;"></td>
