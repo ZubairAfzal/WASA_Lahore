@@ -290,17 +290,41 @@
                                         int psec2 = (int)pp2.Seconds;
                                         string pstr2 = " " + phour2.ToString() + " Hours, " + pmin2.ToString() + " Minutes";
                                     }
+
 							
-							<tr>
-                                    <th colspan="2"> Total Working Hours : </th>
-                                    <th style="display:none"></th>
-                                    @*<th>@(Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2 + Model.First().WorkingHoursPump3 ) Hours</th>*@
-                                    <th>@(pstr1 )</th>
-                                    <th colspan="2"> Total Working Hours : </th>
-                                    <th style="display:none"></th>
-                                    @*<th>@(Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2 + Model.Last().WorkingHoursPump3 ) Hours</th>*@
-                                    <th>@(pstr2 )</th>
-                                </tr>
+                                    <tr>
+                                        <th colspan="2"> Total Working Hours : </th>
+                                        <th style="display:none"></th>
+                                        @*<th>@(Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2 + Model.First().WorkingHoursPump3 ) Hours</th>*@
+                                        @if (Model.First().WorkingInHoursPump1 == "0 Hours, 0 Minutes")
+                                        {
+                                            <th>@Model.First().WorkingInHoursPump2</th>
+                                        }
+                                        else if (Model.First().WorkingInHoursPump2 == "0 Hours, 0 Minutes")
+                                        {
+                                            <th>@Model.First().WorkingInHoursPump1</th>
+                                        }
+                                        else
+                                        {
+                                            <th>@(pstr1 )</th>
+                                        }
+                                        <th colspan="2"> Total Working Hours : </th>
+                                        <th style="display:none"></th>
+                                        @*<th>@(Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2 + Model.Last().WorkingHoursPump3 ) Hours</th>*@
+
+                                        @if (Model.Last().WorkingInHoursPump1.ToString() == "0 Hours, 0 Minutes")
+                                        {
+                                            <th>@Model.Last().WorkingInHoursPump2</th>
+                                        }
+                                        else if (Model.Last().WorkingInHoursPump2.ToString() == "0 Hours, 0 Minutes")
+                                        {
+                                            <th>@Model.Last().WorkingInHoursPump1</th>
+                                        }
+                                        else
+                                        {
+                                            <th>@(pstr2 )</th>
+                                        }
+                                    </tr>
 
                                 </tbody>
                                 

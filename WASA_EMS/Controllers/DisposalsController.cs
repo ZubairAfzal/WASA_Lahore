@@ -312,7 +312,7 @@ namespace WASA_EMS.Controllers
             scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 15},";
             scriptString += " data: [";
             
-            scriptString += "{ type: \"area\", name: \"Tank No. 1\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Wet Well Level No.1\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
             List<DataPoint> dataPointsTank1 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -322,7 +322,7 @@ namespace WASA_EMS.Controllers
             scriptString += "},";
 
 
-            scriptString += "{ type: \"area\", name: \"Tank No. 2\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Wet Well Level No. 2\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
             List<DataPoint> dataPointsTank2 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -1043,7 +1043,7 @@ namespace WASA_EMS.Controllers
                         df.WorkingHoursPump8 +
                         df.WorkingHoursPump9 +
                         df.WorkingHoursPump10;
-                    var pp = TimeSpan.FromMinutes(df.TotalWorkingHours*60);
+                    var pp = TimeSpan.FromMinutes(df.TotalWorkingHours*1);
                     int phour = (int)pp.TotalHours;
                     int pmin = (int)pp.Minutes;
                     int psec = (int)pp.Seconds;
@@ -1786,7 +1786,7 @@ namespace WASA_EMS.Controllers
             scriptString += "toolTip: { shared: false },";
             scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 15},";
             scriptString += " data: [";
-            scriptString += "{ type: \"area\", name: \"Pump 1\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 1\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump1 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -1795,7 +1795,7 @@ namespace WASA_EMS.Controllers
             scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPointsPump1) + "";
             scriptString += "},";
 
-            scriptString += "{ type: \"area\", name: \"Pump 2\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 2\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump2 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -1805,7 +1805,7 @@ namespace WASA_EMS.Controllers
             scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPointsPump2) + "";
             scriptString += "},";
 
-            scriptString += "{ type: \"area\", name: \"Pump 3\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 3\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump3 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -1814,7 +1814,7 @@ namespace WASA_EMS.Controllers
             scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPointsPump3) + "";
             scriptString += "},";
 
-            scriptString += "{ type: \"area\", name: \"Pump 4\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 4\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump4 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -1823,7 +1823,7 @@ namespace WASA_EMS.Controllers
             scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPointsPump4) + "";
             scriptString += "},";
 
-            scriptString += "{ type: \"area\", name: \"Pump 5\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 5\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump5 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -1833,7 +1833,7 @@ namespace WASA_EMS.Controllers
             scriptString += "},";
 
 
-            scriptString += "{ type: \"area\", name: \"Pump 6\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 6\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump6 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -1844,7 +1844,7 @@ namespace WASA_EMS.Controllers
 
 
 
-            scriptString += "{ type: \"area\", name: \"Pump 7\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 7\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump7 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -1854,7 +1854,7 @@ namespace WASA_EMS.Controllers
             scriptString += "},";
 
 
-            scriptString += "{ type: \"area\", name: \"Pump 8\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 8\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump8 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -1865,7 +1865,7 @@ namespace WASA_EMS.Controllers
 
 
 
-            scriptString += "{ type: \"area\", name: \"Pump 9\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 9\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump9 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -1875,7 +1875,7 @@ namespace WASA_EMS.Controllers
             scriptString += "},";
 
 
-            scriptString += "{ type: \"area\", name: \"Pump 10\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Pump No. 10\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
             List<DataPoint> dataPointsPump10 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -1885,7 +1885,7 @@ namespace WASA_EMS.Controllers
             scriptString += "},";
 
 
-            scriptString += "{ type: \"area\", name: \"Tank Level 1\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Wet Well Level No. 1\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
             List<DataPoint> dataPointsTank1 = new List<DataPoint>();
             for (int i = 0; i < df.Pump1TimeArray.Count; i++)
             {
@@ -1894,7 +1894,7 @@ namespace WASA_EMS.Controllers
             scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPointsTank1) + "";
             scriptString += "},";
 
-            scriptString += "{ type: \"area\", name: \"Tank Level 2\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
+            scriptString += "{ type: \"area\", name: \"Wet Well Level No. 2\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} ft</strong> at {x}\", ";
             List<DataPoint> dataPointsTank2 = new List<DataPoint>();
             for (int i = 0; i < df.Pump6TimeArray.Count; i++)
             {
@@ -2166,7 +2166,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump1 = pstr;
-                tableData.WorkingHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump1 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -2213,7 +2213,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump1 = pstr;
-                tableData.WorkingHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump1 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -2476,7 +2476,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump2 = pstr;
-                tableData.WorkingHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump2 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -2521,7 +2521,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump2 = pstr;
-                tableData.WorkingHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump2 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -2784,7 +2784,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump3 = pstr;
-                tableData.WorkingHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump3 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -2829,7 +2829,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump3 = pstr;
-                tableData.WorkingHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump3 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -3093,7 +3093,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump4 = pstr;
-                tableData.WorkingHoursPump4 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump4 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump4 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -3138,7 +3138,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump4 = pstr;
-                tableData.WorkingHoursPump4 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump4 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump4 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -3401,7 +3401,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump5 = pstr;
-                tableData.WorkingHoursPump5 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump5 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump5 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -3446,7 +3446,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump5 = pstr;
-                tableData.WorkingHoursPump5 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump5 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump5 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -3712,7 +3712,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump6 = pstr;
-                tableData.WorkingHoursPump6 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump6 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump6 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -3759,7 +3759,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump6 = pstr;
-                tableData.WorkingHoursPump6 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump6 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump6 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -4025,7 +4025,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump7 = pstr;
-                tableData.WorkingHoursPump7 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump7 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump7 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -4070,7 +4070,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump7 = pstr;
-                tableData.WorkingHoursPump7 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump7 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump7 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -4334,7 +4334,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump8 = pstr;
-                tableData.WorkingHoursPump8 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump8 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump8 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -4379,7 +4379,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump8 = pstr;
-                tableData.WorkingHoursPump8 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump8 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump8 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -4643,7 +4643,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump9 = pstr;
-                tableData.WorkingHoursPump9 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump9 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump9 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -4688,7 +4688,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump9 = pstr;
-                tableData.WorkingHoursPump9 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump9 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump9 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
@@ -4952,7 +4952,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump10 = pstr;
-                tableData.WorkingHoursPump10 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump10 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump10 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 if (spellDataList.Count == 0)
@@ -4997,7 +4997,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump10 = pstr;
-                tableData.WorkingHoursPump10 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump10 = Math.Floor(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 1);
                 //tableData.WorkingInHoursPump10 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2).ToString();
                 //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
                 double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());

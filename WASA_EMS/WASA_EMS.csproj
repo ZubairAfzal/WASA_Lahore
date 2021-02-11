@@ -413,6 +413,7 @@
     <Compile Include="RangeAndResourceSelector.cs" />
     <Compile Include="RecyclingPlantController_With_13Hours_Increment.cs" />
     <Compile Include="ResourceSellector.cs" />
+    <Compile Include="TubewellParameterChartClass.cs" />
     <Compile Include="webServe.asmx.cs">
       <DependentUpon>webServe.asmx</DependentUpon>
       <SubType>Component</SubType>

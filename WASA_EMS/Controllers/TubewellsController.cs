@@ -156,6 +156,9 @@ namespace WASA_EMS.Controllers
         {
             DateTime FinalTimeFrom = DateTime.Now;
             DateTime FinalTimeTo = DateTime.Now;
+
+            DataTable dtVal = new DataTable();
+            string parameterName = "";
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
             {
                 FinalTimeFrom = DateTime.Now.AddHours(0).Date;
@@ -198,7 +201,7 @@ namespace WASA_EMS.Controllers
             }
             DataTable dtRes = new DataTable();
             DataTable Dashdt = new DataTable();
-            var tubewellDataList = new List<TubewellDataClass>();
+            var tubewellDataList = new List<TubewellParameterChartClass>();
 
             ////////////////////////////////////////////////////////////////////////
 
@@ -207,14 +210,14 @@ namespace WASA_EMS.Controllers
             {
                 try
                 {
-                    string getResFromTemp = "select ParameterID from tblParameter where ParameterDescription = '" + parameter + "'";
+                    string getResFromTemp = "select ParameterID, ParameterName from tblParameter where ParameterDescription = '" + parameter + "'";
                     SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
                     DataTable dtRes1 = new DataTable();
                     sdaRes.Fill(dtRes1);
                     int ite = 0;
                     foreach (DataRow drRes in dtRes1.Rows)
                     {
-                        //string resName = drRes["resourceLocationName"].ToString();
+                        parameterName = drRes["ParameterName"].ToString();
                         ite += 1;
                         string getParamsFromRes = "";
                         getParamsFromRes = "select r.ResourceID, r.ResourceName from tblResource r where r.ResourceName = '" + resources + "' ";
@@ -245,26 +248,75 @@ namespace WASA_EMS.Controllers
                         foreach (DataRow drPar in dtPar.Rows)
                         {
                             //string parName = drPar["parameterName"].ToString();
-                            string aquery = ";WITH CTE AS ( ";
-                            aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
-                            aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
-                            aquery += "ORDER BY e.InsertionDateTime DESC) ";
-                            aquery += "FROM tblEnergy e ";
-                            aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
-                            aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
-                            aquery += ") ";
-                            aquery += "SELECT top 1400000 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 1440001 Order by InsertionDateTime ASC";
-                            string theQuery = aquery;
+                            //string aquery = ";WITH CTE AS ( ";
+                            //aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
+                            //aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
+                            //aquery += "ORDER BY e.InsertionDateTime DESC) ";
+                            //aquery += "FROM tblEnergy e ";
+                            //aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
+                            //aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                            //aquery += ") ";
+                            //aquery += "SELECT top 1400000 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 1440001 Order by InsertionDateTime ASC";
+                            string Dashdtquery = ";WITH cte AS ( ";
+                            Dashdtquery += "SELECT* FROM ";
+                            Dashdtquery += "( ";
+                            Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
+                            //Dashdtquery += " r.ResourceSpecification AS specifications, r.WaterLevel_m, r.PumpingWaterLevel_hpl, r.RatedDischarge_Q, r.RatedHead_H, r.Discharge_Dia_Dd, ";
+                            Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
+                            Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
+                            Dashdtquery += "s.InsertionDateTime as tim ";
+                            //Dashdtquery += ", DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                            Dashdtquery += "FROM tblEnergy s ";
+                            Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
+                            Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
+                            Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
+                            Dashdtquery += "where ";
+                            Dashdtquery += "r.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and ";
+                            //Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,10,GETDATE())), 0) ";
+                            Dashdtquery += "InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                            Dashdtquery += ") ";
+                            Dashdtquery += "AS SourceTable ";
+                            Dashdtquery += "PIVOT ";
+                            Dashdtquery += "( ";
+                            Dashdtquery += "SUM(pVal) FOR pID ";
+                            Dashdtquery += "IN ";
+                            Dashdtquery += "( ";
+                            if (drRes["ParameterName"].ToString() == "PumpStatus" || drRes["ParameterName"].ToString() == "Remote." || drRes["ParameterName"].ToString() == "TimeSchedule." || drRes["ParameterName"].ToString() == "Manual")
+                            {
+                                Dashdtquery += "[PumpStatus] , [Remote.] , [TimeSchedule.] , [Manual] ";
+                            }
+                            else
+                            {
+                                Dashdtquery += "[PumpStatus], [Remote.] , [TimeSchedule.] , [Manual] ,[" + drRes["ParameterName"].ToString() + "]  ";
+                            }
+                            Dashdtquery += ") ";
+                            Dashdtquery += ")  ";
+                            Dashdtquery += "AS PivotTable ";
+                            Dashdtquery += ")  ";
+                            Dashdtquery += "SELECT* FROM cte ";
+                            Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
+                            Dashdtquery += "tim DESC";
+                            string theQuery = Dashdtquery;
                             SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
-                            DataTable dtVal = new DataTable();
                             sdaVal.Fill(dtVal);
                             scriptString += "{ type: \"line\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"hh:mm TT DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
                             List<DataPoint> dataPoints = new List<DataPoint>();
                             DateTime dt = DateTime.Now;
                             foreach (DataRow drVal in dtVal.Rows)
                             {
-                                dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Math.Abs(Convert.ToDouble(drVal["ParameterValue"]))));
-                                dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+                                if (parameter == "Vibration Acceleration in (m/s2)")
+                                {
+                                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Math.Round(Math.Abs(Convert.ToDouble(drVal[drRes["ParameterName"].ToString()])*0.3),2)));
+                                    dt = Convert.ToDateTime(drVal["tim"]);
+                                }
+                                else if (parameter == "Vibration Displacement in (um)") {
+                                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Math.Round(Math.Abs(Convert.ToDouble(drVal[drRes["ParameterName"].ToString()])/0.3), 2)));
+                                    dt = Convert.ToDateTime(drVal["tim"]);
+                                }
+                                else { 
+                                    dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["tim"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Math.Abs(Convert.ToDouble(drVal[drRes["ParameterName"].ToString()]))));
+                                    dt = Convert.ToDateTime(drVal["tim"]);
+                                }
                             }
                             scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
                             scriptString += "},";
@@ -274,6 +326,7 @@ namespace WASA_EMS.Controllers
                         scriptString = scriptString + "]";
                         scriptString = scriptString + "}";
                         scriptString += ");";
+                        //TubewellParameterChartClass tableData1 = getAllSpellsForTubewellParameterizedChart(dtVal, parameterName, FinalTimeFrom, FinalTimeTo);
                     }
                 }
                 catch (Exception ex)
@@ -283,7 +336,30 @@ namespace WASA_EMS.Controllers
             }
             string NewscripString = scriptString;
             ViewData["chartData"] = NewscripString;
-            return PartialView();
+            TubewellParameterChartClass tableData = new TubewellParameterChartClass();
+            if (dtVal.Rows.Count > 0)
+            {
+                tableData = getAllSpellsForTubewellParameterizedChart(dtVal, parameterName, FinalTimeFrom, FinalTimeTo);
+            }
+            else {
+                tableData.locationName = resources;
+                tableData.parameterName = parameter;
+                tableData.workingInHours = 0;
+                tableData.totalHours = 0;
+                tableData.availableHours = 0;
+                tableData.nonAvailableHours = 0;
+                tableData.workingInHoursManual = 0;
+                tableData.workingInHoursRemote = 0;
+                tableData.workingInHoursScheduling = 0;
+                tableData.minValue = 0;
+                tableData.maxValue = 0;
+                tableData.avgVale = 0;
+                tableData.avgOfAvailableHours = 0;
+                tableData.avgOfNonAvailableHours = 0;
+            }
+            tableData.parameterName = parameter;
+            tubewellDataList.Add(tableData);
+            return PartialView(tubewellDataList);
         }
 
         public ActionResult HMI()
@@ -1365,7 +1441,7 @@ namespace WASA_EMS.Controllers
                 }
             }
             string scriptString = "";
-            scriptString += "var chart = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true,  title:{ text: \"PARAMETERS LIVE DATA\" },exportEnabled: true, dataPointWidth: 30, axisY:{labelFontSize: 18, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, toolTip: {fontSize: 11, fontWeight: \"bold\", shared: true }, data: [";
+            scriptString += "var chart = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true,  title:{ text: \"PARAMETERS OF TUBEWELLS\" },exportEnabled: true, dataPointWidth: 30, axisY:{labelFontSize: 18, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, toolTip: {fontSize: 11, fontWeight: \"bold\", shared: true }, data: [";
             for (int col = 1; col < dtReport.Columns.Count; col++)
             {
                 scriptString += "{ type: \"stackedColumn\", name: \"" + dtReport.Columns[col].ColumnName + "\", showInLegend: false, dataPoints: [";
@@ -5384,6 +5460,1037 @@ namespace WASA_EMS.Controllers
         public ActionResult Tubewell()
         {
             return View();
+        }
+
+        public double workingHoursToday(string sender)
+        {
+
+            DataTable dtRes = new DataTable();
+            DataTable Dashdt = new DataTable();
+            var tubewellDataList = new List<TubewellDataClass>();
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string getResFromTemp = "select DISTINCT r.ResourceID, r.ResourceLocation from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells'";
+                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+                    dtRes.Clear();
+                    sdaRes.Fill(dtRes);
+                    string getResId = "select ResourceID from tblResource where MobileNumber = '" + sender + "'";
+                    var cmdResId = new SqlCommand(getResId, conn);
+                    int resourceID = Convert.ToInt32(cmdResId.ExecuteScalar());
+                    string resourceLocation = "";
+                    int ite = 0;
+                    //iterate through the list of resources within the desired set of resources chosen
+                    //getting resourceID 
+                    //getting resourceLocation 
+                    //query will get the list of data available against given resourceID (latest first)
+                    string Dashdtquery = ";WITH cte AS ( ";
+                    Dashdtquery += "SELECT* FROM ";
+                    Dashdtquery += "( ";
+                    Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
+                    Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
+                    Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
+                    Dashdtquery += "s.InsertionDateTime as tim ,";
+                    Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                    Dashdtquery += "FROM tblEnergy s ";
+                    Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
+                    Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
+                    Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
+                    Dashdtquery += "where ";
+                    Dashdtquery += "r.ResourceID = " + resourceID + " and ";
+                    Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,0,GETDATE())), 0) ";
+                    Dashdtquery += ") ";
+                    Dashdtquery += "AS SourceTable ";
+                    Dashdtquery += "PIVOT ";
+                    Dashdtquery += "( ";
+                    Dashdtquery += "SUM(pVal) FOR pID ";
+                    Dashdtquery += "IN ";
+                    Dashdtquery += "( ";
+                    Dashdtquery += "[PumpStatus],[WaterFlow(Cusec).] ";
+                    Dashdtquery += ") ";
+                    Dashdtquery += ")  ";
+                    Dashdtquery += "AS PivotTable ";
+                    Dashdtquery += ")  ";
+                    Dashdtquery += "SELECT* FROM cte ";
+                    Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
+                    Dashdtquery += "tim DESC";
+                    SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
+                    SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
+                    Dashdt.Clear();
+                    sda.Fill(Dashdt);
+                    if (Dashdt.Rows.Count > 0)
+                    {
+                        TubewellDataClass sd = getWorkingHours(Dashdt);
+                        tubewellDataList.Add(sd);
+                    }
+                    else
+                    {
+                        TubewellDataClass sd = new TubewellDataClass();
+                        sd.locationName = "";
+                        sd.pumpStatus = new List<double>();
+                        tubewellDataList.Add(sd);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                conn.Close();
+                double hhours = 0;
+                if (tubewellDataList.Count > 0)
+                {
+                    hhours = Convert.ToDouble(tubewellDataList.FirstOrDefault().WorkingInHours);
+                }
+                else
+                {
+
+                }
+                return hhours;
+            }
+        }
+
+
+        public TubewellDataClass getWorkingHoursFromDatatable(DataTable dt, string ParameterName)
+        {
+            var tableData = new TubewellDataClass();
+            var spelldata = new TubewellSpellData();
+            //int resourceID = Convert.ToInt32(dt.Rows[0]["resourceID"]);
+            string location = dt.Rows[0]["Location"].ToString();
+            double currentMotorStatus = Math.Round((Convert.ToDouble(dt.Rows[0]["PumpStatus"])), 2);
+            string currentTime = dt.Rows[0]["tim"].ToString();
+            double DeltaMinutes = Convert.ToDouble(dt.Rows[0]["DeltaMinutes"]);
+            bool S = false;
+            bool E = false;
+            bool T = true;
+            bool F = false;
+            int spell = 0;
+            List<TubewellSpellData> spellDataList = new List<TubewellSpellData>();
+            string curtm = "";
+            foreach (DataRow dr in dt.Rows)
+            {
+                double currValue = Math.Round((Convert.ToDouble(dr["PumpStatus"])), 2);
+                //double currValueRemote = Math.Round((Convert.ToDouble(dr["Remote."])), 2);
+                //double currValueManual = Math.Round((Convert.ToDouble(dr["Manual"])), 2);
+                //double currValueScheduling = Math.Round((Convert.ToDouble(dr["TimeSchedule."])), 2);
+                double FlowRate = Math.Round((Convert.ToDouble(dr["WaterFlow(Cusec)."])), 2);
+                string currTime = dr["tim"].ToString();
+                string clearaceTime = "";
+                //start scenario 3 (inactive)
+                if (DeltaMinutes > 28800)
+                {
+
+                }
+                // end  scenario 3 (inactive)
+                else
+                {
+                    //start scenario 1 (No Ponding since many time/cleared/ zero received (find out what is the last ponding time if any))
+                    if (currentMotorStatus < 1)
+                    {
+                        if (E == F && S == F)
+                        {
+                            if (currValue < 1)
+                            {
+                                if (spelldata.SpellDataArray.Count > 0)
+                                {
+                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
+                                    E = T;
+                                    S = T;
+                                    spelldata.SpellDataArray.Add(lastvalue);
+                                    spelldata.SpellTimeArray.Add(lastTime);
+                                    spelldata.SpellEndTime = currTime;
+                                    clearaceTime = currTime;
+                                }
+
+                            }
+                            else
+                            {
+                                E = T;
+                                spell = spell + 1;
+                                spelldata.SpellNumber = spell;
+                                spelldata.SpellDataArray.Add(FlowRate);
+                                spelldata.SpellTimeArray.Add(currTime);
+                                spelldata.SpellEndTime = currTime;
+                                clearaceTime = currTime;
+
+                            }
+                        }
+                        else if (E == T && S == F)
+                        {
+                            if (currValue < 1)
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = lastTime;
+                                    S = T;
+                                }
+                                else
+                                {
+
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                            }
+                            else
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                                else
+                                {
+                                    spelldata.SpellDataArray.Add(FlowRate);
+                                    spelldata.SpellTimeArray.Add(currTime);
+                                }
+                            }
+                        }
+                        if (E == T && S == T)
+                        {
+                            E = F;
+                            S = F;
+                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
+                            {
+                                //int indexMax = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value > b.Value) ? a : b).Index;
+                                //int indexMin = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value < b.Value) ? a : b).Index;
+                                //spelldata.spellMaxTime = spelldata.SpellTimeArray.ElementAt(indexMax);
+                                //spelldata.spellMinTime = spelldata.SpellTimeArray.ElementAt(indexMin);
+                                //spelldata.SpellMax = spelldata.SpellDataArray.DefaultIfEmpty().Max();
+                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                if (spelldata.spellPeriod == 0)
+                                {
+                                    spelldata.spellPeriod = 1;
+                                }
+                                //spelldata.spellFlowDown = Math.Round(spelldata.SpellMax / spelldata.spellPeriod, 2);
+                                //spelldata.spellFlowUp = Math.Round(spelldata.SpellMax / Math.Abs((Convert.ToDateTime(spelldata.spellMaxTime) - Convert.ToDateTime(spelldata.SpellStartTime)).TotalMinutes), 2);
+                                spellDataList.Add(spelldata);
+                                spelldata = new TubewellSpellData();
+                            }
+                        }
+                    }
+                    // end  scenario 1 (No Ponding since many time/cleared/ zero received)
+                    //////////////////////////////////////////////////////////////////////
+                    //start scenario 2 (uncleared/ ponding continues (find out when the ponding is started))
+                    else
+                    {
+                        if (E == F && S == F)
+                        {
+                            if (currValue < 1)
+                            {
+                                if (spelldata.SpellDataArray.Count > 0)
+                                {
+                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
+                                    E = T;
+                                    S = T;
+                                    spelldata.SpellDataArray.Add(lastvalue);
+                                    spelldata.SpellTimeArray.Add(lastTime);
+                                    spelldata.SpellEndTime = currTime;
+                                    clearaceTime = currTime;
+                                }
+
+                            }
+                            else
+                            {
+                                E = T;
+                                spell = spell + 1;
+                                spelldata.SpellNumber = spell;
+                                spelldata.SpellDataArray.Add(FlowRate);
+                                spelldata.SpellTimeArray.Add(currTime);
+                                spelldata.SpellEndTime = currTime;
+                                clearaceTime = currTime;
+
+                            }
+                        }
+                        else if (E == T && S == F)
+                        {
+                            if (currValue < 1)
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = lastTime;
+                                    S = T;
+                                }
+                                else
+                                {
+
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                            }
+                            else
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                                else
+                                {
+                                    spelldata.SpellDataArray.Add(FlowRate);
+                                    spelldata.SpellTimeArray.Add(currTime);
+                                }
+                            }
+                        }
+                        if (E == T && S == T)
+                        {
+                            E = F;
+                            S = F;
+                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
+                            {
+                                //int indexMax = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value > b.Value) ? a : b).Index;
+                                //int indexMin = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value < b.Value) ? a : b).Index;
+                                //spelldata.spellMaxTime = spelldata.SpellTimeArray.ElementAt(indexMax);
+                                //spelldata.spellMinTime = spelldata.SpellTimeArray.ElementAt(indexMin);
+                                //spelldata.SpellMax = spelldata.SpellDataArray.DefaultIfEmpty().Max();
+                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                if (spelldata.spellPeriod == 0)
+                                {
+                                    spelldata.spellPeriod = 1;
+                                }
+                                //spelldata.spellFlowDown = Math.Round(spelldata.SpellMax / spelldata.spellPeriod, 2);
+                                //spelldata.spellFlowUp = Math.Round(spelldata.SpellMax / Math.Abs((Convert.ToDateTime(spelldata.spellMaxTime) - Convert.ToDateTime(spelldata.SpellStartTime)).TotalMinutes), 2);
+                                spellDataList.Add(spelldata);
+                                spelldata = new TubewellSpellData();
+                            }
+                        }
+                    }
+                    // end  scenario 2 (uncleared/ ponding continues)
+                }
+                curtm = currTime;
+            }
+            if (spellDataList.Count < 1)
+            {
+                if (spelldata.SpellDataArray.Count > 0)
+                {
+                    spelldata.SpellStartTime = curtm;
+                    spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                    if (spelldata.spellPeriod == 0)
+                    {
+                        spelldata.spellPeriod = 1;
+                    }
+                    spellDataList.Add(spelldata);
+                }
+            }
+            if (spelldata.SpellDataArray.Count == 0)
+            {
+                spelldata.SpellDataArray.Add(currentMotorStatus);
+                spelldata.SpellTimeArray.Add(currentTime);
+                spelldata.SpellStartTime = currentTime;
+                spelldata.SpellEndTime = currentTime;
+            }
+            if (/*DeltaMinutes > 1440 ||*/ spelldata.SpellDataArray.Count == 0 || spellDataList.Count == 0)
+            {
+
+                var pp = TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)));
+                int phour = (int)pp.TotalHours;
+                int pmin = (int)pp.Minutes;
+                int psec = (int)pp.Seconds;
+                string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                tableData.workingHoursToday = pstr;
+                tableData.WorkingInHours = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
+                if (spellDataList.Count == 0)
+                {
+                    tableData.accWaterDischargePerDay = "0";
+                }
+                else
+                {
+                    double avgWaterFlow = spellDataList.DefaultIfEmpty().Average(x => x.SpellDataArray.DefaultIfEmpty().Average());
+                    if (avgWaterFlow == 0)
+                    {
+                        avgWaterFlow = 1;
+                    }
+                    tableData.accWaterDischargePerDay = (((Convert.ToDouble(spellDataList.DefaultIfEmpty().Sum(i => i.spellPeriod)) / 60) * 102) * avgWaterFlow).ToString();
+                    //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
+                    //tableData.accWaterDischargePerDay = ((tableData.waterFlow.Sum(x => Convert.ToDouble(x)) / Convert.ToDouble(tableData.workingHoursToday)) * 60).ToString();
+                }
+            }
+            else
+            {
+                var pp = TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)));
+                int phour = (int)pp.TotalHours;
+                int pmin = (int)pp.Minutes;
+                int psec = (int)pp.Seconds;
+                string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                tableData.workingHoursToday = pstr;
+                tableData.WorkingInHours = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                //tableData.workingHoursToday = spellDataList.Sum(i => i.spellPeriod).ToString();
+                double avgWaterFlow = spellDataList.Average(x => x.SpellDataArray.Average());
+                tableData.accWaterDischargePerDay = (((Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)) / 60) * 102) * avgWaterFlow).ToString();
+            }
+            return tableData;
+        }
+
+        public TubewellParameterChartClass getAllSpellsForTubewellParameterizedChart(DataTable dt, string ParameterName, DateTime timeFrom, DateTime timeTo)
+        {
+            var tableData = new TubewellParameterChartClass();
+            var spelldata = new TubewellSpellData();
+            string location = dt.Rows[0]["Location"].ToString();
+
+            var cms = dt.Rows[0]["PumpStatus"];
+            double currentMotorStatus = 0;
+            if (cms == DBNull.Value)
+            {
+                currentMotorStatus = 0;
+            }
+            else
+            {
+                currentMotorStatus = Math.Round((Convert.ToDouble(dt.Rows[0]["PumpStatus"])), 2);
+            }
+            string currentTime = dt.Rows[0]["tim"].ToString();
+
+            bool S = false;
+            bool E = false;
+            bool T = true;
+            bool F = false;
+            int spell = 0;
+            List<TubewellSpellData> spellDataList = new List<TubewellSpellData>();
+            string curtm = "";
+            foreach (DataRow dr in dt.Rows)
+            {
+                var currV = dr["PumpStatus"];
+                var currVR = dr["Remote."];
+                var currVM = dr["Manual"];
+                var currVT = dr["TimeSchedule."];
+                var wf = dr[ParameterName];
+                double currValue = 0;
+                double currValueRemote = 0;
+                double currValueManual = 0;
+                double currValueScheduling = 0;
+                double FlowRate = 0;
+                if (currV == DBNull.Value)
+                { }
+                else
+                {
+                    currValue = Math.Round((Convert.ToDouble(dr["PumpStatus"])), 2);
+                }
+                if (currVM == DBNull.Value)
+                { }
+                else
+                {
+                    currValueManual = Math.Round((Convert.ToDouble(dr["Manual"])), 2);
+                }
+                if (currVR == DBNull.Value)
+                { }
+                else
+                {
+                    currValueRemote = Math.Round((Convert.ToDouble(dr["Remote."])), 2);
+                }
+                if (currVT == DBNull.Value)
+                { }
+                else
+                {
+                    currValueScheduling = Math.Round((Convert.ToDouble(dr["TimeSchedule."])), 2);
+                }
+                if (wf == DBNull.Value)
+                { }
+                else
+                {
+                    FlowRate = Math.Round((Convert.ToDouble(dr[ParameterName])), 2);
+                }
+                string currTime = dr["tim"].ToString();
+                string clearaceTime = "";
+                //start scenario 3 (inactive)
+                if (0 > 1)
+                {
+
+                }
+                // end  scenario 3 (inactive)
+                else
+                {
+                    //start scenario 1 (No Ponding since many time/cleared/ zero received (find out what is the last ponding time if any))
+                    if (currentMotorStatus < 1)
+                    {
+                        if (E == F && S == F)
+                        {
+                            if (currValue < 1)
+                            {
+                                if (spelldata.SpellDataArray.Count > 0)
+                                {
+                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
+                                    E = T;
+                                    S = T;
+                                    spelldata.SpellDataArray.Add(lastvalue);
+                                    spelldata.SpellTimeArray.Add(lastTime);
+                                    spelldata.SpellEndTime = currTime;
+                                    if (currValueManual == 0 && currValueRemote == 0 && currValueScheduling == 0)
+                                    {
+                                        spelldata.spellMode = 1;
+                                    }
+                                    // Manual Mode 1
+                                    else if (currValueManual == 1 && currValueRemote == 0 && currValueScheduling == 0)
+                                    {
+                                        spelldata.spellMode = 1;
+                                    }
+                                    // Remote Mode 2
+                                    else if (currValueManual == 0 && currValueRemote == 1 && currValueScheduling == 0)
+                                    {
+                                        spelldata.spellMode = 2;
+                                    }
+                                    // Scheduling Mode 3
+                                    else
+                                    {
+                                        spelldata.spellMode = 3;
+                                    }
+                                    clearaceTime = currTime;
+                                }
+
+                            }
+                            else
+                            {
+                                E = T;
+                                spell = spell + 1;
+                                spelldata.SpellNumber = spell;
+                                spelldata.SpellDataArray.Add(FlowRate);
+                                spelldata.SpellTimeArray.Add(currTime);
+                                spelldata.SpellEndTime = currTime;
+                                if (currValueManual == 0 && currValueRemote == 0 && currValueScheduling == 0)
+                                {
+                                    spelldata.spellMode = 1;
+                                }
+                                // Manual Mode 1
+                                else if (currValueManual == 1 && currValueRemote == 0 && currValueScheduling == 0)
+                                {
+                                    spelldata.spellMode = 1;
+                                }
+                                // Remote Mode 2
+                                else if (currValueManual == 0 && currValueRemote == 1 && currValueScheduling == 0)
+                                {
+                                    spelldata.spellMode = 2;
+                                }
+                                // Scheduling Mode 3
+                                else
+                                {
+                                    spelldata.spellMode = 3;
+                                }
+                                clearaceTime = currTime;
+
+                            }
+                        }
+                        else if (E == T && S == F)
+                        {
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = lastTime;
+                                    S = T;
+                                }
+                                else
+                                {
+
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                            }
+                            else
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                                else
+                                {
+                                    spelldata.SpellDataArray.Add(FlowRate);
+                                    spelldata.SpellTimeArray.Add(currTime);
+                                }
+                            }
+                        }
+                        if (E == T && S == T)
+                        {
+                            E = F;
+                            S = F;
+                            if (spelldata.SpellDataArray.Count > 1 )
+                            {
+                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                if (spelldata.spellPeriod == 0)
+                                {
+                                    spelldata.spellPeriod = 1;
+                                }
+                                spellDataList.Add(spelldata);
+                                spelldata = new TubewellSpellData();
+                            }
+                        }
+                    }
+                    // end  scenario 1 (No Ponding since many time/cleared/ zero received)
+                    //////////////////////////////////////////////////////////////////////
+                    //start scenario 2 (uncleared/ ponding continues (find out when the ponding is started))
+                    else
+                    {
+                        if (E == F && S == F)
+                        {
+                            if (currValue < 1)
+                            {
+                                if (spelldata.SpellDataArray.Count > 0)
+                                {
+                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
+                                    E = T;
+                                    S = T;
+                                    spelldata.SpellDataArray.Add(lastvalue);
+                                    spelldata.SpellTimeArray.Add(lastTime);
+                                    spelldata.SpellEndTime = currTime;
+                                    if (currValueManual == 0 && currValueRemote == 0 && currValueScheduling == 0)
+                                    {
+                                        spelldata.spellMode = 1;
+                                    }
+                                    // Manual Mode 1
+                                    else if (currValueManual == 1 && currValueRemote == 0 && currValueScheduling == 0)
+                                    {
+                                        spelldata.spellMode = 1;
+                                    }
+                                    // Remote Mode 2
+                                    else if (currValueManual == 0 && currValueRemote == 1 && currValueScheduling == 0)
+                                    {
+                                        spelldata.spellMode = 2;
+                                    }
+                                    // Scheduling Mode 3
+                                    else
+                                    {
+                                        spelldata.spellMode = 3;
+                                    }
+                                    clearaceTime = currTime;
+                                }
+
+                            }
+                            else
+                            {
+                                E = T;
+                                spell = spell + 1;
+                                spelldata.SpellNumber = spell;
+                                spelldata.SpellDataArray.Add(FlowRate);
+                                spelldata.SpellTimeArray.Add(currTime);
+                                spelldata.SpellEndTime = currTime;
+                                if (currValueManual == 0 && currValueRemote == 0 && currValueScheduling == 0)
+                                {
+                                    spelldata.spellMode = 1;
+                                }
+                                // Manual Mode 1
+                                else if (currValueManual == 1 && currValueRemote == 0 && currValueScheduling == 0)
+                                {
+                                    spelldata.spellMode = 1;
+                                }
+                                // Remote Mode 2
+                                else if (currValueManual == 0 && currValueRemote == 1 && currValueScheduling == 0)
+                                {
+                                    spelldata.spellMode = 2;
+                                }
+                                // Scheduling Mode 3
+                                else
+                                {
+                                    spelldata.spellMode = 3;
+                                }
+                                clearaceTime = currTime;
+
+                            }
+                        }
+                        else if (E == T && S == F)
+                        {
+                            if (currValue < 1 || dr == dt.Rows[dt.Rows.Count - 1])
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = lastTime;
+                                    S = T;
+                                }
+                                else
+                                {
+
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                            }
+                            else
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                                else
+                                {
+                                    spelldata.SpellDataArray.Add(FlowRate);
+                                    spelldata.SpellTimeArray.Add(currTime);
+                                }
+                            }
+                        }
+                        if (E == T && S == T)
+                        {
+                            E = F;
+                            S = F;
+                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
+                            {
+                                //int indexMax = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value > b.Value) ? a : b).Index;
+                                //int indexMin = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value < b.Value) ? a : b).Index;
+                                //spelldata.spellMaxTime = spelldata.SpellTimeArray.ElementAt(indexMax);
+                                //spelldata.spellMinTime = spelldata.SpellTimeArray.ElementAt(indexMin);
+                                //spelldata.SpellMax = spelldata.SpellDataArray.DefaultIfEmpty().Max();
+                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                if (spelldata.spellPeriod == 0)
+                                {
+                                    spelldata.spellPeriod = 1;
+                                }
+                                //spelldata.spellFlowDown = Math.Round(spelldata.SpellMax / spelldata.spellPeriod, 2);
+                                //spelldata.spellFlowUp = Math.Round(spelldata.SpellMax / Math.Abs((Convert.ToDateTime(spelldata.spellMaxTime) - Convert.ToDateTime(spelldata.SpellStartTime)).TotalMinutes), 2);
+                                spellDataList.Add(spelldata);
+                                spelldata = new TubewellSpellData();
+                                string s = JsonConvert.SerializeObject(spellDataList);
+                            }
+                        }
+                    }
+                    // end  scenario 2 (uncleared/ ponding continues)
+                }
+                curtm = currTime;
+            }
+            if (spellDataList.Count < 1)
+            {
+                if (spelldata.SpellDataArray.Count > 0)
+                {
+                    spelldata.SpellStartTime = curtm;
+                    spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                    if (spelldata.spellPeriod == 0)
+                    {
+                        spelldata.spellPeriod = 1;
+                    }
+                    spellDataList.Add(spelldata);
+                }
+            }
+            if (spellDataList.Count == 0)
+            {
+                tableData.locationName = location;
+                tableData.workingInHours = 0;
+                tableData.totalHours = 0;
+                tableData.availableHours = 0;
+                tableData.nonAvailableHours = 0;
+                tableData.workingInHoursManual = 0;
+                tableData.workingInHoursRemote = 0;
+                tableData.workingInHoursScheduling = 0;
+                tableData.minValue = 0;
+                tableData.maxValue = 0;
+                tableData.avgVale = 0;
+                tableData.avgOfAvailableHours = 0;
+                tableData.avgOfNonAvailableHours = 0;
+            }
+            else
+            {
+                tableData.locationName = location;
+                if (timeTo > DateTime.Now)
+                {
+                    timeTo = DateTime.Now;
+                }
+                tableData.totalHours = Math.Round((((timeTo-timeFrom).TotalMinutes)/60),2) ;
+                if (tableData.totalHours == 23.98)
+                {
+                    tableData.totalHours = 24;
+                }
+                tableData.workingInHoursManual = Math.Round(((spellDataList.Where(r => r.spellMode == 1).Sum(i => i.spellPeriod) )/60), 2);
+                tableData.workingInHoursRemote = Math.Round(((spellDataList.Where(r => r.spellMode == 2).Sum(i => i.spellPeriod))/60), 2);
+                tableData.workingInHoursScheduling = Math.Round(((spellDataList.Where(r => r.spellMode == 3).Sum(i => i.spellPeriod))/60), 2);
+                tableData.workingInHours = Math.Round(((Convert.ToDouble(tableData.workingInHoursManual) +
+                Convert.ToDouble(tableData.workingInHoursRemote) +
+                Convert.ToDouble(tableData.workingInHoursScheduling))), 2);
+                tableData.nonWorkingInHours = Math.Round((tableData.totalHours - tableData.workingInHours), 2);
+                tableData.availableHours = Math.Round((getAvailableHours(dt, ParameterName)), 2);
+                tableData.nonAvailableHours = Math.Round((tableData.totalHours - tableData.availableHours), 2);
+                double availableSum = 0;
+                double unavailableSum = 0;
+                int availableCount = 0;
+                int unavailableCount = 0;
+                List<double> valList = new List<double>();
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (Convert.ToInt32(dr["PumpStatus"]) == 0)
+                    {
+                        unavailableSum += Convert.ToDouble(dr[ParameterName]);
+                        unavailableCount += 1;
+                        valList.Add(Convert.ToDouble(dr[ParameterName]));
+                    }
+                    else
+                    {
+                        availableSum += Convert.ToDouble(dr[ParameterName]);
+                        availableCount += 1;
+                        valList.Add(Convert.ToDouble(dr[ParameterName]));
+                    }
+                }
+                if (availableCount == 0)
+                {
+                    availableCount = 1;
+                }
+                if (unavailableCount == 0)
+                {
+                    unavailableCount = 1;
+                }
+                tableData.avgOfAvailableHours = Math.Round((availableSum / availableCount), 2);
+                tableData.avgOfNonAvailableHours = Math.Round((unavailableSum / unavailableCount), 2);
+
+                tableData.minValue = Math.Round((valList.Min()), 2);
+                tableData.maxValue = Math.Round((valList.Max()), 2);
+                tableData.avgVale = Math.Round((valList.Average()), 2);
+
+                tableData.totalHoursString = minutesToTime(tableData.totalHours*60);
+                tableData.workingInHoursString = minutesToTime(tableData.workingInHours*60);
+                tableData.nonWorkingInHoursString = minutesToTime(tableData.nonWorkingInHours*60);
+                tableData.workingInHoursRemoteString = minutesToTime(tableData.workingInHoursRemote*60);
+                tableData.workingInHoursManualString = minutesToTime(tableData.workingInHoursManual*60);
+                tableData.workingInHoursSchedulingString = minutesToTime(tableData.workingInHoursScheduling*60);
+                tableData.availableHoursString = minutesToTime(tableData.availableHours*60);
+                tableData.nonAvailableHoursString = minutesToTime(tableData.nonAvailableHours*60);
+                tableData.parameterName = ParameterName;
+            }
+            return tableData;
+        }
+
+        public double getAvailableHours(DataTable dt, string ParameterName)
+        {
+            var tableData = new TubewellParameterChartClass();
+            var spelldata = new TubewellSpellData();
+            //int resourceID = Convert.ToInt32(dt.Rows[0]["resourceID"]);
+            string location = dt.Rows[0]["Location"].ToString();
+            double currentMotorStatus = Math.Round((Convert.ToDouble(dt.Rows[0][ParameterName])), 2);
+            string currentTime = dt.Rows[0]["tim"].ToString();
+            bool S = false;
+            bool E = false;
+            bool T = true;
+            bool F = false;
+            int spell = 0;
+            List<TubewellSpellData> spellDataList = new List<TubewellSpellData>();
+            string curtm = "";
+            foreach (DataRow dr in dt.Rows)
+            {
+                double currValue = Math.Round((Convert.ToDouble(dr[ParameterName])), 2);
+                //double currValueRemote = Math.Round((Convert.ToDouble(dr["Remote."])), 2);
+                //double currValueManual = Math.Round((Convert.ToDouble(dr["Manual"])), 2);
+                //double currValueScheduling = Math.Round((Convert.ToDouble(dr["TimeSchedule."])), 2);
+                double FlowRate = Math.Round((Convert.ToDouble(dr[ParameterName])), 2);
+                string currTime = dr["tim"].ToString();
+                string clearaceTime = "";
+                //start scenario 3 (inactive)
+                if (0 > 1)
+                {
+
+                }
+                // end  scenario 3 (inactive)
+                else
+                {
+                    //start scenario 1 (No Ponding since many time/cleared/ zero received (find out what is the last ponding time if any))
+                    if (currentMotorStatus == 0)
+                    {
+                        if (E == F && S == F)
+                        {
+                            if (currValue == 0)
+                            {
+                                if (spelldata.SpellDataArray.Count > 0)
+                                {
+                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
+                                    E = T;
+                                    S = T;
+                                    spelldata.SpellDataArray.Add(lastvalue);
+                                    spelldata.SpellTimeArray.Add(lastTime);
+                                    spelldata.SpellEndTime = currTime;
+                                    clearaceTime = currTime;
+                                }
+
+                            }
+                            else
+                            {
+                                E = T;
+                                spell = spell + 1;
+                                spelldata.SpellNumber = spell;
+                                spelldata.SpellDataArray.Add(FlowRate);
+                                spelldata.SpellTimeArray.Add(currTime);
+                                spelldata.SpellEndTime = currTime;
+                                clearaceTime = currTime;
+
+                            }
+                        }
+                        else if (E == T && S == F)
+                        {
+                            if (currValue == 0 || dr == dt.Rows[dt.Rows.Count - 1])
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = lastTime;
+                                    S = T;
+                                }
+                                else
+                                {
+
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                            }
+                            else
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                                else
+                                {
+                                    spelldata.SpellDataArray.Add(FlowRate);
+                                    spelldata.SpellTimeArray.Add(currTime);
+                                }
+                            }
+                        }
+                        if (E == T && S == T)
+                        {
+                            E = F;
+                            S = F;
+                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
+                            {
+                                //int indexMax = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value > b.Value) ? a : b).Index;
+                                //int indexMin = !spelldata.SpellDataArray.Any() ? 0 : spelldata.SpellDataArray.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value < b.Value) ? a : b).Index;
+                                //spelldata.spellMaxTime = spelldata.SpellTimeArray.ElementAt(indexMax);
+                                //spelldata.spellMinTime = spelldata.SpellTimeArray.ElementAt(indexMin);
+                                //spelldata.SpellMax = spelldata.SpellDataArray.DefaultIfEmpty().Max();
+                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                if (spelldata.spellPeriod == 0)
+                                {
+                                    spelldata.spellPeriod = 1;
+                                }
+                                //spelldata.spellFlowDown = Math.Round(spelldata.SpellMax / spelldata.spellPeriod, 2);
+                                //spelldata.spellFlowUp = Math.Round(spelldata.SpellMax / Math.Abs((Convert.ToDateTime(spelldata.spellMaxTime) - Convert.ToDateTime(spelldata.SpellStartTime)).TotalMinutes), 2);
+                                spellDataList.Add(spelldata);
+                                spelldata = new TubewellSpellData();
+                                string s = JsonConvert.SerializeObject(spellDataList);
+                            }
+                        }
+                    }
+                    // end  scenario 1 (No Ponding since many time/cleared/ zero received)
+                    //////////////////////////////////////////////////////////////////////
+                    //start scenario 2 (uncleared/ ponding continues (find out when the ponding is started))
+                    else
+                    {
+                        if (E == F && S == F)
+                        {
+                            if (currValue == 0)
+                            {
+                                if (spelldata.SpellDataArray.Count > 0)
+                                {
+                                    string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                    double lastvalue = spelldata.SpellDataArray.LastOrDefault();
+                                    E = T;
+                                    S = T;
+                                    spelldata.SpellDataArray.Add(lastvalue);
+                                    spelldata.SpellTimeArray.Add(lastTime);
+                                    spelldata.SpellEndTime = currTime;
+                                    clearaceTime = currTime;
+                                }
+
+                            }
+                            else
+                            {
+                                E = T;
+                                spell = spell + 1;
+                                spelldata.SpellNumber = spell;
+                                spelldata.SpellDataArray.Add(FlowRate);
+                                spelldata.SpellTimeArray.Add(currTime);
+                                spelldata.SpellEndTime = currTime;
+                                clearaceTime = currTime;
+
+                            }
+                        }
+                        else if (E == T && S == F)
+                        {
+                            if (currValue == 0 || dr == dt.Rows[dt.Rows.Count - 1])
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = lastTime;
+                                    S = T;
+                                }
+                                else
+                                {
+
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                            }
+                            else
+                            {
+                                string lastTime = spelldata.SpellTimeArray.LastOrDefault().ToString();
+                                if (((Convert.ToDateTime(lastTime)) - (Convert.ToDateTime(currTime))).TotalMinutes > 10)
+                                {
+                                    spelldata.SpellStartTime = currTime;
+                                    S = T;
+                                }
+                                else
+                                {
+                                    spelldata.SpellDataArray.Add(FlowRate);
+                                    spelldata.SpellTimeArray.Add(currTime);
+                                }
+                            }
+                        }
+                        if (E == T && S == T)
+                        {
+                            E = F;
+                            S = F;
+                            if (spelldata.SpellDataArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
+                            {
+                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                if (spelldata.spellPeriod == 0)
+                                {
+                                    spelldata.spellPeriod = 1;
+                                }
+                                spellDataList.Add(spelldata);
+                                spelldata = new TubewellSpellData();
+                                string s = JsonConvert.SerializeObject(spellDataList);
+                            }
+                        }
+                    }
+                }
+                curtm = currTime;
+            }
+            if (spellDataList.Count < 1)
+            {
+                if (spelldata.SpellDataArray.Count > 0)
+                {
+                    spelldata.SpellStartTime = curtm;
+                    spelldata.spellPeriod = Convert.ToDouble(Convert.ToInt32(Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes)));
+                    if (spelldata.spellPeriod == 0)
+                    {
+                        spelldata.spellPeriod = 1;
+                    }
+                    spellDataList.Add(spelldata);
+                }
+            }
+            string c = JsonConvert.SerializeObject(spellDataList);
+            if (spelldata.SpellDataArray.Count == 0)
+            {
+                spelldata.SpellDataArray.Add(currentMotorStatus);
+                spelldata.SpellTimeArray.Add(currentTime);
+                spelldata.SpellStartTime = currentTime;
+                spelldata.SpellEndTime = currentTime;
+            }
+            double availableHours = 0;
+            if (spelldata.SpellDataArray.Count == 0 || spellDataList.Count == 0)
+            {
+                availableHours = 0;
+            }
+            else
+            {
+                var pp = TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod)));
+                availableHours = Convert.ToDouble(pp.TotalMinutes) / 60;
+            }
+            return availableHours;
         }
 
     }

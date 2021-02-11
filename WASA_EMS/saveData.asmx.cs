@@ -653,7 +653,7 @@ namespace WASA_EMS
                                     }
                                     else if (sdr1["ParameterName"].ToString() == "Well1Level(ft)")
                                     {
-                                        parameterValuesString += "Well 1 Level (ft) : ";
+                                        parameterValuesString += "Wet Well Level No. 1 (ft) : ";
                                     }
                                     else if (sdr1["ParameterName"].ToString() == "PumpStatus6.")
                                     {
@@ -677,7 +677,7 @@ namespace WASA_EMS
                                     }
                                     else if (sdr1["ParameterName"].ToString() == "Well2Level(ft)")
                                     {
-                                        parameterValuesString += "Well 2 Level (ft) : ";
+                                        parameterValuesString += "Wet Well Level No. 2 (ft) : ";
                                     }
                                     else if (sdr1["ParameterName"].ToString() == "vib_M")
                                     {
@@ -1207,29 +1207,29 @@ namespace WASA_EMS
                 theStatusp = "True";
             }
 
-            parameterValuesString = "Pump 1 : " + p1;
+            parameterValuesString = "Pump No. 1 : " + p1;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 2 : " + p2;
+            parameterValuesString += "Pump No. 2 : " + p2;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 3 : " + p3;
+            parameterValuesString += "Pump No. 3 : " + p3;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 4 : " + p4;
+            parameterValuesString += "Pump No. 4 : " + p4;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 5 : " + p5;
+            parameterValuesString += "Pump No. 5 : " + p5;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 6 : " + p6;
+            parameterValuesString += "Pump No. 6 : " + p6;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 7 : " + p7;
+            parameterValuesString += "Pump No. 7 : " + p7;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 8 : " + p8;
+            parameterValuesString += "Pump No. 8 : " + p8;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 9 : " + p9;
+            parameterValuesString += "Pump No. 9 : " + p9;
             parameterValuesString += "<br />";
-            parameterValuesString += "Pump 10 : " + p10;
+            parameterValuesString += "Pump No. 10 : " + p10;
             parameterValuesString += "<br />";
-            parameterValuesString += "Well 1 Level : " + plevel1;
+            parameterValuesString += "Wet Well Level No. 1 : " + plevel1;
             parameterValuesString += "<br />";
-            parameterValuesString += "Well 2 Level : " + plevel2;
+            parameterValuesString += "Wet Well Level No. 2 : " + plevel2;
             parameterValuesString += "<br />";
 
             if (Convert.ToDateTime(ptime2) > Convert.ToDateTime(ptime))

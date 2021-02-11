@@ -20,8 +20,8 @@
 <script src="~/Scripts/jquery-ui.js"></script>
 <script src="~/Metronic/assets/global/plugins/moment.min.js"></script>
 @*<script type="text/javascript" src="~/Metronic/assets/global/scripts/datatable.js"></script>
-<script type="text/javascript" src="~/Metronic/assets/global/plugins/datatables/datatables.min.js"></script>
-<script src="~/Metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js"></script>*@
+    <script type="text/javascript" src="~/Metronic/assets/global/plugins/datatables/datatables.min.js"></script>
+    <script src="~/Metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js"></script>*@
 <script src="~/Metronic/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js"></script>
 <script>
     $(function () {
@@ -62,8 +62,12 @@
         });
     });
 </script>
+
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <div class="row">
-    <div class="col-lg-12 col-xs-12 col-sm-12" style="z-index:-1">
+    <div class="col-lg-12 col-xs-12 col-sm-12">
         <div class="portlet light ">
             <div class="portlet-body">
 
@@ -111,8 +115,8 @@
                                                             }
                                                         </div>
                                                         @*<div class="col-md-1">
-                                                            <label class="form-control" style="border:0px">From</label>
-                                                        </div>*@
+                                                                <label class="form-control" style="border:0px">From</label>
+                                                            </div>*@
                                                         <div class="col-md-2">
 
                                                             @if (ViewBag.dateFrom != null)
@@ -235,8 +239,8 @@
                                                             }
                                                         </div>
                                                         @*<div class="col-md-1">
-                                                            <label class="form-control" style="border:0px">To</label>
-                                                        </div>*@
+                                                                <label class="form-control" style="border:0px">To</label>
+                                                            </div>*@
                                                         <div class="col-md-2">
                                                             @if (ViewBag.dateTo != null)
                                                             {
