@@ -509,7 +509,7 @@ namespace WASA_EMS.Controllers
                             S = F;
                             if (spelldata.SpellTimeArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
                             {
-                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                spelldata.spellPeriod = Math.Abs(Math.Floor((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes));
                                 if (spelldata.spellPeriod == 0)
                                 {
                                     spelldata.spellPeriod = 1;
@@ -529,7 +529,7 @@ namespace WASA_EMS.Controllers
                 if (spelldata.SpellTimeArray.Count > 0)
                 {
                     spelldata.SpellStartTime = curtm;
-                    spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                    spelldata.spellPeriod = Math.Abs(Math.Floor((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes));
                     if (spelldata.spellPeriod == 0)
                     {
                         spelldata.spellPeriod = 1;
@@ -562,7 +562,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump1 = pstr;
-                tableData.WorkingHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) , 2);
                 
             }
             else
@@ -581,7 +581,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump1 = pstr;
-                tableData.WorkingHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump1 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) , 2);
                 
             }
             return tableData;
@@ -684,7 +684,7 @@ namespace WASA_EMS.Controllers
                             S = F;
                             if (spelldata.SpellTimeArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
                             {
-                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                spelldata.spellPeriod = Math.Abs(Math.Floor((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes));
                                 if (spelldata.spellPeriod == 0)
                                 {
                                     spelldata.spellPeriod = 1;
@@ -765,7 +765,7 @@ namespace WASA_EMS.Controllers
                             S = F;
                             if (spelldata.SpellTimeArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
                             {
-                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                spelldata.spellPeriod = Math.Abs(Math.Floor((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes));
                                 if (spelldata.spellPeriod == 0)
                                 {
                                     spelldata.spellPeriod = 1;
@@ -818,7 +818,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump2 = pstr;
-                tableData.WorkingHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) , 2);
 
             }
             else
@@ -837,7 +837,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump2 = pstr;
-                tableData.WorkingHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump2 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) , 2);
 
             }
             return tableData;
@@ -1021,7 +1021,7 @@ namespace WASA_EMS.Controllers
                             S = F;
                             if (spelldata.SpellTimeArray.Count > 1 /*&& spelldata.SpellDataArray.Sum() > 0*/)
                             {
-                                spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                                spelldata.spellPeriod = Math.Abs(Math.Floor((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes));
                                 if (spelldata.spellPeriod == 0)
                                 {
                                     spelldata.spellPeriod = 1;
@@ -1041,7 +1041,7 @@ namespace WASA_EMS.Controllers
                 if (spelldata.SpellTimeArray.Count > 0)
                 {
                     spelldata.SpellStartTime = curtm;
-                    spelldata.spellPeriod = Math.Abs((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes);
+                    spelldata.spellPeriod = Math.Abs(Math.Floor((Convert.ToDateTime(spelldata.SpellStartTime) - Convert.ToDateTime(spelldata.SpellEndTime)).TotalMinutes));
                     if (spelldata.spellPeriod == 0)
                     {
                         spelldata.spellPeriod = 1;
@@ -1073,7 +1073,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump3 = pstr;
-                tableData.WorkingHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) , 2);
 
             }
             else
@@ -1092,7 +1092,7 @@ namespace WASA_EMS.Controllers
                 int psec = (int)pp.Seconds;
                 string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
                 tableData.WorkingInHoursPump3 = pstr;
-                tableData.WorkingHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) / 60, 2);
+                tableData.WorkingHoursPump3 = Math.Round(Convert.ToDouble(TimeSpan.FromMinutes(Convert.ToDouble(spellDataList.Sum(i => i.spellPeriod))).TotalMinutes) , 2);
 
             }
             return tableData;

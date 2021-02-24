@@ -280,13 +280,13 @@
 
                                     </tbody>
                                     @{
-                                var pp1 = TimeSpan.FromMinutes((Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2) * 60);
+                                var pp1 = TimeSpan.FromMinutes((Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2) );
                                 int phour1 = (int)pp1.TotalHours;
                                 int pmin1 = (int)pp1.Minutes;
                                 int psec1 = (int)pp1.Seconds;
                                 string pstr1 = " " + phour1.ToString() + " Hours, " + pmin1.ToString() + " Minutes";
 
-                                var pp2 = TimeSpan.FromMinutes((Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2) * 60);
+                                var pp2 = TimeSpan.FromMinutes((Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2) );
                                 int phour2 = (int)pp2.TotalHours;
                                 int pmin2 = (int)pp2.Minutes;
                                 int psec2 = (int)pp2.Seconds;

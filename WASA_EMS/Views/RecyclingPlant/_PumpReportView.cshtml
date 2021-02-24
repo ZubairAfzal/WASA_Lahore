@@ -62,21 +62,21 @@
 </div>
 @*<div class="portlet light bordered">
 
-    <div class="row" style="opacity:0.9">
-        <div class="portlet-body">
-            <div class="widget stacked">
-                <div class="widget-content">
-                    <div>
-                        <center>
-                            <div id="chartContainer3" style="width: 95%; height: 200px"></div>
-                        </center>
+        <div class="row" style="opacity:0.9">
+            <div class="portlet-body">
+                <div class="widget stacked">
+                    <div class="widget-content">
+                        <div>
+                            <center>
+                                <div id="chartContainer3" style="width: 95%; height: 200px"></div>
+                            </center>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>*@
+    </div>*@
 
 <hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
 <div class="row" style="opacity:0.9">
@@ -156,14 +156,28 @@
                                         </td>
                                         <td style="display:none">&nbsp;</td>
                                         <td>
-                                            @timeFromNumber(Model.First().WorkingHoursPump1)
+                                            @{
+                                                var p1t1 = TimeSpan.FromMinutes((Model.First().WorkingHoursPump1));
+                                                int p1t1hour = (int)p1t1.TotalHours;
+                                                int p1t1min = (int)p1t1.Minutes;
+                                                int p1t1sec = (int)p1t1.Seconds;
+                                                string p1t1str = " " + p1t1hour.ToString() + " Hours, " + p1t1min.ToString() + " Minutes";
+                                            }
+                                            @p1t1str
                                         </td>
                                         <td colspan="2">
                                             Working Hours
                                         </td>
                                         <td style="display:none">&nbsp;</td>
                                         <td>
-                                            @timeFromNumber(Model.Last().WorkingHoursPump1)
+                                            @{
+                                                var p2t1 = TimeSpan.FromMinutes((Model.Last().WorkingHoursPump1) );
+                                                int p2t1hour = (int)p2t1.TotalHours;
+                                                int p2t1min = (int)p2t1.Minutes;
+                                                int p2t1sec = (int)p2t1.Seconds;
+                                                string p2t1str = " " + p2t1hour.ToString() + " Hours, " + p2t1min.ToString() + " Minutes";
+                                            }
+                                            @p2t1str
                                         </td>
                                     </tr>
 
@@ -211,96 +225,53 @@
                                         </td>
                                         <td style="display:none">&nbsp;</td>
                                         <td>
-                                            @timeFromNumber(Model.First().WorkingHoursPump2)
+                                            @{
+                                                var p1t2 = TimeSpan.FromMinutes((Model.First().WorkingHoursPump2) );
+                                                int p1t2hour = (int)p1t2.TotalHours;
+                                                int p1t2min = (int)p1t2.Minutes;
+                                                int p1t2sec = (int)p1t2.Seconds;
+                                                string p1t2str = " " + p1t2hour.ToString() + " Hours, " + p1t2min.ToString() + " Minutes";
+                                            }
+                                            @p1t2str
                                         </td>
                                         <td colspan="2">
                                             Working Hours
                                         </td>
                                         <td style="display:none">&nbsp;</td>
                                         <td>
-                                            @timeFromNumber(Model.Last().WorkingHoursPump2)
+                                            @{
+                                                var p2t2 = TimeSpan.FromMinutes((Model.Last().WorkingHoursPump2) );
+                                                int p2t2hour = (int)p2t2.TotalHours;
+                                                int p2t2min = (int)p2t2.Minutes;
+                                                int p2t2sec = (int)p2t2.Seconds;
+                                                string p2t2str = " " + p2t2hour.ToString() + " Hours, " + p2t2min.ToString() + " Minutes";
+                                            }
+                                            @p2t2str
                                         </td>
                                     </tr>
 
-
-                                    @*<tr>
-                                        <th>
-                                            Fresh Water Pump
-                                        </th>
-                                        <td>
-                                            Status
-                                        </td>
-                                        @if (Convert.ToInt32(Model.First().PumpStatus3.FirstOrDefault()) == 0)
-                                        {
-                                            <td>
-                                                OFF
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <th>
-                                                ON
-                                            </th>
-                                        }
-                                        <th>
-                                            Fresh Water Pump
-                                        </th>
-                                        <td>
-                                            Status
-                                        </td>
-                                        @if (Convert.ToInt32(Model.Last().PumpStatus3.FirstOrDefault()) == 0)
-                                        {
-                                            <td>
-                                                OFF
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <th>
-                                                ON
-                                            </th>
-                                        }
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            Working Hours
-                                        </td>
-                                        <td style="display:none">&nbsp;</td>
-                                        <td>
-                                            @Model.First().WorkingInHoursPump3
-                                        </td>
-                                        <td colspan="2">
-                                            Working Hours
-                                        </td>
-                                        <td style="display:none">&nbsp;</td>
-                                        <td>
-                                            @Model.Last().WorkingInHoursPump3
-                                        </td>
-                                    </tr>*@
-									@{
-                                        var pp1 = TimeSpan.FromMinutes((Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2) * 60);
+                                    @{
+                                        var pp1 = TimeSpan.FromMinutes((Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2) );
                                         int phour1 = (int)pp1.TotalHours;
                                         int pmin1 = (int)pp1.Minutes;
                                         int psec1 = (int)pp1.Seconds;
                                         string pstr1 = " " + phour1.ToString() + " Hours, " + pmin1.ToString() + " Minutes";
 
-                                        var pp2 = TimeSpan.FromMinutes((Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2) * 60);
+                                        var pp2 = TimeSpan.FromMinutes((Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2) );
                                         int phour2 = (int)pp2.TotalHours;
                                         int pmin2 = (int)pp2.Minutes;
                                         int psec2 = (int)pp2.Seconds;
                                         string pstr2 = " " + phour2.ToString() + " Hours, " + pmin2.ToString() + " Minutes";
                                     }
 
-							
                                     <tr>
                                         <th colspan="2"> Total Working Hours : </th>
                                         <th style="display:none"></th>
-                                        @*<th>@(Model.First().WorkingHoursPump1 + Model.First().WorkingHoursPump2 + Model.First().WorkingHoursPump3 ) Hours</th>*@
-                                        @if (Model.First().WorkingInHoursPump1 == "0 Hours, 0 Minutes")
+                                        @if (Model.First().WorkingInHoursPump1.ToString() == " 0 Hours, 0 Minutes")
                                         {
                                             <th>@Model.First().WorkingInHoursPump2</th>
                                         }
-                                        else if (Model.First().WorkingInHoursPump2 == "0 Hours, 0 Minutes")
+                                        else if (Model.First().WorkingInHoursPump2.ToString() == " 0 Hours, 0 Minutes")
                                         {
                                             <th>@Model.First().WorkingInHoursPump1</th>
                                         }
@@ -310,13 +281,11 @@
                                         }
                                         <th colspan="2"> Total Working Hours : </th>
                                         <th style="display:none"></th>
-                                        @*<th>@(Model.Last().WorkingHoursPump1 + Model.Last().WorkingHoursPump2 + Model.Last().WorkingHoursPump3 ) Hours</th>*@
-
-                                        @if (Model.Last().WorkingInHoursPump1.ToString() == "0 Hours, 0 Minutes")
+                                        @if (Model.Last().WorkingInHoursPump1.ToString() == " 0 Hours, 0 Minutes")
                                         {
                                             <th>@Model.Last().WorkingInHoursPump2</th>
                                         }
-                                        else if (Model.Last().WorkingInHoursPump2.ToString() == "0 Hours, 0 Minutes")
+                                        else if (Model.Last().WorkingInHoursPump2.ToString() == " 0 Hours, 0 Minutes")
                                         {
                                             <th>@Model.Last().WorkingInHoursPump1</th>
                                         }
@@ -327,24 +296,11 @@
                                     </tr>
 
                                 </tbody>
-                                
-                            
+
+
                             </table>
                         }
 
-
-                        @{ 
-                            string timeFromNumber(double time)
-                            {
-                                var pp1 = TimeSpan.FromMinutes(time);
-                                int phour1 = (int)pp1.TotalHours;
-                                int pmin1 = (int)pp1.Minutes;
-                                int psec1 = (int)pp1.Seconds;
-                                string pstr1 = " " + phour1.ToString() + " Hours, " + pmin1.ToString() + " Minutes";
-                                return pstr1;
-                            }
-
-                        }
 
                     </center>
                 </div>

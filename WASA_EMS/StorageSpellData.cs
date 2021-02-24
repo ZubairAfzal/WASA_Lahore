@@ -13,9 +13,10 @@ namespace WASA_EMS
         public List<double> SpellDataArray = new List<double>();
         public List<string> SpellTimeArray = new List<string>();
         public int ResourceId { get; set; }
-        public string resourceName { get; set; }
-        public double spellPeriod { get; set; }
+        public string ResourceName { get; set; }
+        public double SpellPeriod { get; set; }
         public List<double> WellLevel1 = new List<double>();
+        public int SpellMode { get; set; }
     }
     public class StoragePump2SpellData
     {
@@ -25,8 +26,9 @@ namespace WASA_EMS
         public List<double> SpellDataArray = new List<double>();
         public List<string> SpellTimeArray = new List<string>();
         public int ResourceId { get; set; }
-        public string resourceName { get; set; }
-        public double spellPeriod { get; set; }
+        public string ResourceName { get; set; }
+        public double SpellPeriod { get; set; }
         public List<double> WellLevel1 = new List<double>();
+        public int SpellMode { get; set; }
     }
 }

@@ -1,12 +1,11 @@
-@using System.Data.SqlClient;
-
-@{
-    ViewBag.Title = "Ponding | Dashboard";
+﻿﻿@{
+    ViewBag.Title = "Storage Tank | Dashboard";
 }
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css" />
+
 
 <div class="row">
     <div class="page-wrapper-middle" style="background: transparent !important; ">
@@ -16,14 +15,14 @@
             <div class="portlet light ">
                 <!-- BEGIN CONTENT BODY -->
                 <!-- BEGIN PAGE HEAD-->
-                <div class="page-head" style="background: transparent !important">
+                <div class="page-head">
                     <div class="container">
                         <!-- BEGIN PAGE TITLE -->
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="page-title" style="width:100%; padding:10px 0;">
                                     <h1 style="color:white;">
-                                        Overview of the Ponding Points
+                                        Overview of the Storage Tank
                                     </h1>
                                 </div>
                             </div>
@@ -39,7 +38,7 @@
                         <div class="page-content-inner">
                             <div class="row widget-row">
                                 <div class="col-md-1">
-                                    <img src="~/Assets/img/Ponding.png" style="width:90px;" />
+                                    <img src="~/Assets/img/icons8-dam-30.png" style="width:90px;" />
                                 </div>
                                 <div class="col-md-11">
                                     <div class="col-md-4 col-sm-12">
@@ -49,11 +48,11 @@
                                                 <img src="~/Assets/img/gol.png" style="width:50px;" />
                                             </div>
                                             <div class="col-md-9 col-sm-9 col-xs-9" style="text-align: center; padding-top: 20px;height: 100px;line-height: 40px;background-color: #5dabdc;border-radius: 0px 10px 10px 0px !important; opacity:0.8;">
-                                                <h4 class="widget-thumb-heading" style="color:white; text-align:center; margin:0 0 5px;">Total Ponding Points</h4>
+                                                <h4 class="widget-thumb-heading" style="color:white; text-align:center; margin:0 0 5px;">Total Storage Tanks</h4>
                                                 <hr style="border-top:3px solid white; margin: 10px 4px 4px 4px;" />
                                                 <div class="widget-thumb-wrap">
                                                     <div class="widget-thumb-body">
-                                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="@ViewBag.TotalPonding" style="color:white;text-align:center">0</span>
+                                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="@ViewBag.TotalStorageTank" style="color:white;text-align:center">0</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -67,13 +66,13 @@
                                                 <img src="~/Assets/img/2959838-128.png" style="width:50px;" />
                                             </div>
                                             <div class="col-md-9 col-sm-9 col-xs-9" style="text-align: center; padding-top: 20px;height: 100px;line-height: 40px;background-color:#6d5da4;border-radius: 0px 10px 10px 0px !important; opacity:0.8;">
-                                                <h4 class="widget-thumb-heading" style="color:white;  text-align:center; margin:0 0 5px;">Running Ponding Points</h4>
+                                                <h4 class="widget-thumb-heading" style="color:white;  text-align:center; margin:0 0 5px;">Active  Storage Tanks</h4>
                                                 <hr style="border-top:3px solid white; margin: 10px 4px 4px 4px;" />
                                                 <div class="widget-thumb-wrap">
                                                     <div class="widget-thumb-body">
                                                         <div class="widget-thumb-wrap">
                                                             <div class="widget-thumb-body">
-                                                                <span class="widget-thumb-body-stat" data-counter="counterup" data-value="@ViewBag.RunningPonding" style="color:white;text-align:center">0</span>
+                                                                <span class="widget-thumb-body-stat" data-counter="counterup" data-value="@ViewBag.ActiveStorageTank" style="color:white;text-align:center">0</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -89,13 +88,13 @@
                                                 <img src="~/Assets/img/PondingOff.png" style="width:50px;" />
                                             </div>
                                             <div class="col-md-9 col-sm-9 col-xs-9" style="text-align: center; padding-top: 20px;height: 100px;line-height: 40px;background-color:#f7941c;border-radius: 0px 10px 10px 0px !important; opacity:0.8;">
-                                                <h4 class="widget-thumb-heading" style="color:white;  text-align:center; margin:0 0 5px;">Inactive Ponding Points</h4>
+                                                <h4 class="widget-thumb-heading" style="color:white;  text-align:center; margin:0 0 5px;">Inactive  Storage Tanks</h4>
                                                 <hr style="border-top:3px solid white; margin: 10px 4px 4px 4px;" />
                                                 <div class="widget-thumb-wrap">
                                                     <div class="widget-thumb-body">
                                                         <div class="widget-thumb-wrap">
                                                             <div class="widget-thumb-body">
-                                                                <span class="widget-thumb-body-stat" data-counter="counterup" data-value="@ViewBag.InactivePonding" style="color:white;text-align:center">0</span>
+                                                                <span class="widget-thumb-body-stat" data-counter="counterup" data-value="@ViewBag.InactiveStorageTank" style="color:white;text-align:center">0</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -111,7 +110,7 @@
                                     <div class="portlet light " style="background-color:transparent;">
                                         <div class="portlet-title" style="border-width:0px;margin-bottom:0px;min-height:20px;">
                                             <div class="caption">
-                                                <span class="caption-subject bold uppercase font-dark" style="color:white !important;">Ponding Points Dashboard</span>
+                                                <span class="caption-subject bold uppercase font-dark" style="color:white !important;">Storage Tank Dashboard</span>
                                             </div>
                                         </div>
                                         <div class="portlet-body">
@@ -122,14 +121,14 @@
                                                             <div class="portlet-title">
                                                                 <div class="caption font-dark">
                                                                     <i class="font-dark"><img src="~/Assets/img/graph1.png" style="width:28px;vertical-align:baseline; margin-right:5px;" /></i>
-                                                                    <span class="caption-subject bold uppercase" style="vertical-align:bottom;">Area Wise Ponding</span>
+                                                                    <span class="caption-subject bold uppercase" style="vertical-align:bottom;">Latest Tank Levels</span>
                                                                 </div>
                                                             </div>
                                                         </button>
                                                     </div>
                                                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                                                         <div class="card-body">
-                                                            @Html.Partial("_DashboardTop")
+                                                            @Html.Partial("_StorageTankDashboardTop")
                                                         </div>
                                                     </div>
                                                 </div>
@@ -142,14 +141,14 @@
                                                             <div class="portlet-title">
                                                                 <div class="caption font-dark">
                                                                     <i class="font-dark"><img src="~/Assets/img/location1.png" style="width:28px;vertical-align:baseline; margin-right:5px;" /></i>
-                                                                    <span class="caption-subject bold uppercase" style="vertical-align:bottom;">Live Location of Ponding Points</span>
+                                                                    <span class="caption-subject bold uppercase" style="vertical-align:bottom;">Live Location of Storage Tanks</span>
                                                                 </div>
                                                             </div>
                                                         </button>
                                                     </div>
                                                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                                                         <div class="card-body">
-                                                            @Html.Partial("_DashboardMid")
+                                                            @Html.Partial("_StorageTankDashboardMid")
                                                         </div>
                                                     </div>
                                                 </div>
@@ -162,31 +161,20 @@
                                                             <div class="portlet-title">
                                                                 <div class="caption font-dark">
                                                                     <i class="font-dark"><img src="~/Assets/img/report1.png" style="width:28px;vertical-align:baseline; margin-right:5px;" /></i>
-                                                                    <span class="caption-subject bold uppercase" style="vertical-align:bottom;">Listing of All Available Ponding Stats</span>
+                                                                    <span class="caption-subject bold uppercase" style="vertical-align:bottom;">Storage Tank Outline Data</span>
                                                                 </div>
                                                             </div>
                                                         </button>
                                                     </div>
                                                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                                                         <div class="card-body">
-                                                            @Html.Partial("_DashboardBottom")
+                                                            @Html.Partial("_StorageTankDashboardBottom")
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Left and right controls -->
-                                    @*<a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                                            <span class="glyphicon glyphicon-chevron-left"></span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                                            <span class="glyphicon glyphicon-chevron-right"></span>
-                                            <span class="sr-only">Next</span>
-                                        </a>*@
-
                                 </div>
                             </div>
                         </div>
@@ -201,11 +189,11 @@
         <!-- END CONTAINER -->
     </div>
 </div>
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlT_-WIkJ_8eKmEGZZFOGzugRIHjviICI"
         type="text/javascript"></script>
-
 <script>
     $(document).ready(function () {
         $('#collapseTwo').collapse('show');
@@ -213,7 +201,7 @@
             $('#collapseTwo').collapse('hide');
         }, 500);
     });
-    var markers = @Html.Raw(ViewBag.PondingMarkers);
+    var markers = @Html.Raw(ViewBag.MapMarkers);
     window.onload = function () {
         var mapOptions = {
             center: new google.maps.LatLng(31.527174, 74.319424),
@@ -224,128 +212,26 @@
         var map = new google.maps.Map(document.getElementById("ponding_map"), mapOptions);
         for (i = 0; i < markers.length; i++) {
             var data = markers[i]
-            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var myLatlng = new google.maps.LatLng(data.lat, data.lnt);
+            var Status = data.Status;
+            var Letter = data.Template;
             var iconcolor = "";
-            //console.log(data.Delta);
-            if (parseInt(data.Delta) > -520) {
-                //#08a3cc
-                //iconcolor = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=";
-                iconcolor = "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=glyphish_target";
-                //iconcolor = iconcolor + data.category;
-                iconcolor = iconcolor + "";
-                iconcolor = iconcolor + "|08A3CC|000000";
-            }
-            else
-            {
-                var maxThreshold = data.maxThrs;
-                if (maxThreshold == "")
-                {
-                    maxThreshold = 10;
-                }
-                if (parseInt(data.ponding)/2.54 < maxThreshold) {
-                    //iconcolor = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=";
-                    iconcolor = "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=glyphish_target";
-                    //iconcolor = iconcolor + data.category;
-                    iconcolor = iconcolor + "";
-                    iconcolor = iconcolor + "|00FF00|000000";
-                }
-                else
-                {
-                    //#08a3cc
-                    //iconcolor = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=";
-                    iconcolor = "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=glyphish_target";
-                    //iconcolor = iconcolor + data.category;
-                    iconcolor = iconcolor + "";
-                    iconcolor = iconcolor + "|FF0000|000000";
-                }
-            }
+            iconcolor = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=";
+            iconcolor = iconcolor + "";
+            iconcolor = iconcolor + " |00FF00|000000";
             var marker = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
-                title: data.category,
+                title: data.title,
+                label: { text: Letter, color: "#000", fontsize: "6px", fontWeight: "bold", labelOrigin: new google.maps.Point(-10, 2) },
                 icon: { url: iconcolor, origin: { x: 0, y: 0 } }
-            });
-            var col = '';
-            var size = 0;
-            var Status = false;
-            var pon = Math.round((data.ponding * 2.54), 1)
-            if (data.ponding / 2.54 <= 3) {
-                Status = true;
-                col = '#00FFFF';
-                size = 3;
-            }
-            else if (data.ponding / 2.54 > 3 && data.ponding / 2.54 <= 6) {
-                col = '#0000FF';
-                size = 3;
-            }
-            else if (data.ponding / 2.54 > 6 && data.ponding / 2.54 <= 9) {
-                size = 3;
-                col = '#CC00CC';
-            }
-            else if (data.ponding / 2.54 > 9 && data.ponding / 2.54 <= 12) {
-                size = 3;
-                col = '#FF3399';
-            }
-            else if (data.ponding / 2.54 > 12 && data.ponding / 2.54 <= 15) {
-                size = 3;
-                col = '#FFFF00';
-            }
-            else if (data.ponding / 2.54 > 15 && data.ponding / 2.54 <= 18) {
-                size = 3;
-                col = '#FF8000';
-            }
-            else if (data.ponding / 2.54 > 18 && data.ponding / 2.54 <= 21) {
-                size = 3;
-                col = '#FF0000';
-            }
-            else {
-                size = 3;
-                col = '#990000';
-            }
-            var cityCircle = new google.maps.Circle({
-                cache: false,
-                strokeColor: col,
-                strokeOpacity: 1,
-                strokeWeight: 0,
-                //strokeWeight: 2,
-                fillColor: col,
-                fillOpacity: 0.5,
-                map: map,
-                title: data.category + "<br />" + data.time + "<br />" + data.ponding.toString(),
-                center: myLatlng,
-                radius: 0,
-                //radius: Math.sqrt((size * size)) * 40,
             });
             (function (marker, data) {
                 google.maps.event.addListener(marker, "click", function (e) {
-                    infoWindow.setContent("<center><b>" + data.category + "</b>" + "<br />Time: " + data.time + "<br />" + data.pName + ": " + Math.round((data.ponding / 2.54), 1) + " " + data.pUnit + "</center>");
+                    infoWindow.setContent("<center>" + data.description + "</center>");
                     infoWindow.open(map, marker);
                 });
             })(marker, data);
         }
     }
 </script>
-<script type="text/javascript">
-    console.log(@Html.Raw(ViewData["SpellData"]));
-    console.log(@Html.Raw(ViewData["TableData"]));
-</script>
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            setTimeout(function () {
-                debugger;
-                var mainDiv = $('#dashboard_amchart_1');
-                var mainDivHtml = mainDiv.html();
-                mainDiv.html("");
-                setTimeout(function () {
-                    debugger;
-                    mainDiv.html(mainDivHtml);
-                    var legendDiv = $('.amChartsLegend amcharts-legend-div');
-                    var legendChildDiv = $('.amcharts-legend-item-g2');
-                    legendChildDiv.click();
-                    legendDiv.click();
-                }, 5000);
-
-            }, 5000);
-        });
-    </script>*@

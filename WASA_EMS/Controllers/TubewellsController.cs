@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -2463,6 +2464,7 @@ namespace WASA_EMS.Controllers
             Session["ReportTitle"] = "Vibration Report of " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
             return PartialView(tubewellDataList);
         }
+
         public ActionResult EnergyMonitoringReport()
         {
             int c_id = Convert.ToInt32(Session["CompanyID"]);
@@ -2481,6 +2483,87 @@ namespace WASA_EMS.Controllers
             rs.timeFrom = "";
             rs.dateTo = "";
             rs.timeTo = "";
+            //string scriptString = "";
+            //using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            //{
+            //    try
+            //    {
+            //        string getResFromTemp = "select ParameterID from tblParameter where parameterName = 'PumpStatus'";
+            //        SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+            //        DataTable dtRes = new DataTable();
+            //        sdaRes.Fill(dtRes);
+            //        int ite = 0;
+            //        foreach (DataRow drRes in dtRes.Rows)
+            //        {
+            //            //string resName = drRes["resourceLocationName"].ToString();
+            //            ite += 1;
+            //            string getParamsFromRes = "";
+            //            getParamsFromRes = "select r.ResourceID, r.ResourceName, rtp.TemplateID from tblResource r inner join tblTemplateParameter rtp on r.TemplateID = rtp.TemplateID inner join tblParameter p on rtp.ParameterID = p.ParameterID where p.ParameterName = 'PumpStatus'  and rtp.TemplateID = 64 order by cast(r.ResourceID as int) asc";
+            //            SqlDataAdapter sdaPar = new SqlDataAdapter(getParamsFromRes, conn);
+            //            DataTable dtPar = new DataTable();
+            //            sdaPar.Fill(dtPar);
+            //            scriptString += "var chart" + ite + " = new CanvasJS.Chart(\"chartContainer" + ite + "\", {";
+            //            scriptString += "theme: \"light2\",";
+            //            scriptString += "animationEnabled: true,";
+            //            scriptString += "zoomEnabled: true, ";
+            //            scriptString += "title: {text: \"PumpStatus\" },";
+            //            scriptString += "subtitles: [{text: \" All Tubewells Recent Working  \" }],";
+            //            scriptString += "axisY: {suffix: \" \" },";
+            //            //scriptString += "axisY: {includeZero: false, prefix: \"\", labelFormatter: function(e){if(e.value == NaN){return \"No Data\";}else{return e.value;}} },";
+            //            scriptString += "toolTip: { shared: false },";
+            //            scriptString += "legend: { cursor: \"pointer\", itemclick: toogleDataSeries},";
+            //            scriptString += " data: [";
+            //            foreach (DataRow drPar in dtPar.Rows)
+            //            {
+            //                //string parName = drPar["parameterName"].ToString();
+            //                string aquery = ";WITH CTE AS ( ";
+            //                aquery += "SELECT e.ParameterID, e.ParameterValue, e.InsertionDateTime,  ";
+            //                aquery += " RN = ROW_NUMBER() OVER(PARTITION BY e.ParameterID ";
+            //                aquery += "ORDER BY e.InsertionDateTime DESC) ";
+            //                aquery += "FROM tblEnergy e ";
+            //                aquery += "inner join tblResource r on e.ResourceID = r.ResourceID ";
+            //                aquery += "WHERE e.ResourceID = " + Convert.ToInt32(drPar["ResourceID"]) + " and e.ParameterID = " + Convert.ToInt32(drRes["ParameterID"]) + " and e.InsertionDateTime >= ' 2020-03-19 ' and e.InsertionDateTime < ' 2020-03-20 '  ";
+            //                aquery += ") ";
+            //                aquery += "SELECT top 1400 ParameterID, ParameterValue, InsertionDateTime FROM CTE WHERE RN < 14401 Order by InsertionDateTime ASC";
+            //                string theQuery = aquery;
+            //                SqlDataAdapter sdaVal = new SqlDataAdapter(theQuery, conn);
+            //                DataTable dtVal = new DataTable();
+            //                sdaVal.Fill(dtVal);
+            //                scriptString += "{ type: \"line\", name: \"" + drPar["ResourceName"].ToString() + "\", showInLegend: true,  markerSize: 1, xValueType: \"dateTime\", xValueFormatString: \"HH:mm:ss DD-MM-YYYY\", yValueFormatString: \"#,##0.##\", toolTipContent: \"{label}<br/>{name}, <strong>{y} </strong> at {x}\", ";
+            //                List<DataPoint> dataPoints = new List<DataPoint>();
+            //                DateTime dt = DateTime.Now;
+            //                foreach (DataRow drVal in dtVal.Rows)
+            //                {
+            //                   // if (dtVal.Rows.IndexOf(drVal) != 0)
+            //                   // {
+            //                       //  dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(dt).AddHours(-5).AddMinutes(1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
+            //                       // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5).AddMinutes(-1) - new DateTime(1970, 1, 1)).TotalMilliseconds), double.NaN));
+            //                       // dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+            //                       // dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+            //                   // }
+            //                    //else
+            //                    //{
+            //                        dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+            //                        dt = Convert.ToDateTime(drVal["InsertionDateTime"]);
+            //                    //}
+            //                    //dataPoints.Add(new DataPoint(Convert.ToDouble((long)(Convert.ToDateTime(drVal["InsertionDateTime"]).AddHours(-5) - new DateTime(1970, 1, 1)).TotalMilliseconds), Convert.ToDouble(drVal["ParameterValue"])));
+            //                }
+            //                scriptString += "dataPoints: " + Newtonsoft.Json.JsonConvert.SerializeObject(dataPoints) + "";
+            //                scriptString += "},";
+            //            }
+            //            scriptString = scriptString.Remove(scriptString.Length - 1);
+            //            scriptString = scriptString + "]";
+            //            scriptString = scriptString + "}";
+            //            scriptString += ");";
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+
+            //    }
+            //}
+            //string NewscripString = scriptString;
+            //ViewData["chartData"] = NewscripString;
             return View(rs);
         }
         [HttpPost]
@@ -2581,7 +2664,7 @@ namespace WASA_EMS.Controllers
             {
                 CultureInfo culture = new CultureInfo("en-US");
                 FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
+                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date;
             }
             else
             {
@@ -2691,7 +2774,7 @@ namespace WASA_EMS.Controllers
                         sda.Fill(Dashdt);
                         if (Dashdt.Rows.Count > 0)
                         {
-                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes),FinalTimeFrom);
+                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes), FinalTimeFrom);
                             tubewellDataList.Add(sd);
                         }
                         else
@@ -2735,7 +2818,7 @@ namespace WASA_EMS.Controllers
 
             ///////////////////////////
 
-            scriptString = "var chart1 = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true, title:{ text: \"ENERGY MONITORING STATS\" },exportEnabled: true, dataPointWidth: 30, subtitles: [{text: \"  Data Fetched from " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }], axisY:{labelFontSize: 11, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 11}, legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 11, horizontalAlign: \"center\"}, toolTip: {fontSize: 12, fontWeight: \"bold\", shared: true }, data: [";
+            scriptString = "var chart1 = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true, title:{ text: \"Energy Monitoring Stats\" },exportEnabled: true, dataPointWidth: 30, subtitles: [{text: \" Energy Data Fetched from " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }], axisY:{labelFontSize: 10, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 10}, legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 11, horizontalAlign: \"center\"}, toolTip: {fontSize: 12, fontWeight: \"bold\", shared: true }, data: [";
 
             scriptString += "{ type: \"stackedColumn\", name: \"Motor Rating\", showInLegend: true, dataPoints: [";
 
@@ -2758,7 +2841,7 @@ namespace WASA_EMS.Controllers
             {
                 if (item.workingHoursToday != null)
                 {
-                    scriptString += "{ y: '<b>" + Math.Round((item.WorkingInHours),1) + "</b>' , label: \"" + item.locationName + "\" },";
+                    scriptString += "{ y: '<b>" + Math.Round((item.WorkingInHours), 1) + "</b>' , label: \"" + item.locationName + "\" },";
                 }
                 else
                 {
@@ -3077,6 +3160,803 @@ namespace WASA_EMS.Controllers
 
 
             return PartialView(tubewellDataList);
+        }
+
+        public ActionResult EnergyMonitoringReport2()
+        {
+            int c_id = Convert.ToInt32(Session["CompanyID"]);
+            WASA_EMS_Entities db = new WASA_EMS_Entities();
+            IList<string> ResourceList = new List<string>();
+            //ResourceList.Add("All");
+            foreach (var item in db.tblResources.AsQueryable().Where(item => item.CompanyID == c_id & item.TemplateID == 64))
+            {
+                ResourceList.Add(item.ResourceLocation);
+            }
+            ViewBag.ResourceList = ResourceList;
+            RangeAndResourceSelector rs = new RangeAndResourceSelector();
+            rs.resourceType = "Tubewells";
+            //rs.resourceName = "All";
+            rs.dateFrom = "";
+            rs.timeFrom = "";
+            rs.dateTo = "";
+            rs.timeTo = "";
+            return View(rs);
+        }
+        [HttpPost]
+        public ActionResult EnergyMonitoringReport2(FormCollection review)
+        {
+            string resource = "";
+            if (review["resource"] == null)
+            {
+                resource = "All";
+            }
+            else
+            {
+                resource = review["resource"].ToString();
+                string[] resourcesArray = resource.Split(',');
+                string newOne = "";
+                for (int i = 0; i < resourcesArray.Count(); i++)
+                {
+                    newOne += "'";
+                    newOne += resourcesArray[i];
+                    newOne += "',";
+                }
+                newOne = newOne.Remove(newOne.Length - 1, 1);
+                resource = newOne;
+            }
+
+            DateTime dateFrom = DateTime.Parse(review["dateFrom"].ToString());
+            DateTime dateTo = DateTime.Parse(review["dateTo"].ToString());
+            string df_date = dateFrom.ToString("d");
+            string dt_date = dateTo.ToString("d");
+            string TF = review["timeFrom"];
+            string TT = review["timeTo"];
+            string abc = review["timeFrom"];
+            string[] abc1 = abc.Split(',');
+            string a = abc1[0];
+            if (abc1.Length > 1)
+            {
+                TF = abc1[1];
+            }
+            else
+            {
+                TF = abc1[0];
+            }
+            DataTable dt121 = new DataTable();
+            Session["TimeFrom"] = TF;
+            DateTime timeFrom = DateTime.Parse(TF);
+            string cba = review["timeTo"];
+            string[] cba1 = cba.Split(',');
+            TT = cba1[0];
+            DateTime timeTo = DateTime.Parse(TT);
+            string tf_time = timeFrom.ToString("t");
+            string tt_time = timeTo.ToString("t");
+            if (tt_time == "12:00 AM" || tt_time == "11:59 PM")
+            {
+                tt_time = "11:59:59 PM";
+            }
+            DateTime FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
+            DateTime FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
+            int c_id = Convert.ToInt32(Session["CompanyID"]);
+            WASA_EMS_Entities db = new WASA_EMS_Entities();
+            IList<string> ResourceList = new List<string>();
+            //ResourceList.Add("All");
+            foreach (var item in db.tblResources.AsQueryable().Where(item => item.CompanyID == c_id & item.TemplateID == 64))
+            {
+                ResourceList.Add(item.ResourceLocation);
+            }
+            ViewBag.ResourceList = ResourceList;
+            ViewBag.SelectedResource = resource;
+            ViewBag.SelectedTimeFrom = TF;
+            ViewBag.SelectedTimeTo = TT;
+            ViewBag.SelectedTimeFrom = TF.ToString();
+            ViewBag.SelectedTimeTo = TT.ToString();
+            ViewBag.timeFrom = TF;
+            ViewBag.timeTo = TT;
+            ViewBag.dateFrom = df_date;
+            ViewBag.dateTo = dt_date;
+            RangeAndResourceSelector rs = new RangeAndResourceSelector();
+            rs.resourceType = "Tubewells";
+            rs.resourceName = resource;
+            rs.dateFrom = dateFrom.ToString();
+            rs.timeFrom = TF;
+            rs.dateTo = dateTo.ToString();
+            rs.timeTo = TT;
+            return View(rs);
+        }
+        [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
+        [ValidateInput(false)]
+        public PartialViewResult _EnergyMonitoringReportView2(string resources, string datFrom, string timFrom, string datTo, string timTo)
+        {
+            resources = System.Web.HttpUtility.HtmlDecode(resources);
+            DateTime FinalTimeFrom = DateTime.Now;
+            if (resources == "")
+            {
+                resources = "All";
+            }
+            DateTime FinalTimeTo = DateTime.Now;
+            if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
+            {
+                CultureInfo culture = new CultureInfo("en-US");
+                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
+                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
+            }
+            else
+            {
+                DateTime dateFrom = DateTime.Parse(datFrom);
+                DateTime dateTo = DateTime.Parse(datTo);
+                string df_date = dateFrom.ToString("d");
+                string dt_date = dateTo.ToString("d");
+                string TF = timFrom;
+                string TT = timTo;
+                string abc = timFrom;
+                string[] abc1 = abc.Split(',');
+                string a = abc1[0];
+                if (abc1.Length > 1)
+                {
+                    TF = abc1[1];
+                }
+                else
+                {
+                    TF = abc1[0];
+                }
+                DataTable dt121 = new DataTable();
+                Session["TimeFrom"] = TF;
+                DateTime timeFrom = DateTime.Parse(TF);
+                string cba = timTo;
+                string[] cba1 = cba.Split(',');
+                TT = cba1[0];
+                DateTime timeTo = DateTime.Parse(TT);
+                string tf_time = timeFrom.ToString("t");
+                string tt_time = timeTo.ToString("t");
+                if (tt_time == "12:00 AM" || tt_time == "11:59 PM")
+                {
+                    tt_time = "11:59:59 PM";
+                }
+                FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
+                FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
+            }
+            DataTable dtRes = new DataTable();
+            DataTable Dashdt = new DataTable();
+            dynamic mymodel = new ExpandoObject();
+            var tubewellDataList1 = new List<TubewellDataClass>();
+            var tubewellDataList = new List<TubewellDataClass>();
+            int resourceID = 0;
+
+
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string getResFromTemp = "";
+                    if (resources.ToLower() == "all")
+                    {
+                        getResFromTemp = "select DISTINCT r.ResourceID, r.ResourceLocation, r.ResourceSpecification from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells'";
+                    }
+                    else
+                    {
+                        getResFromTemp = "select DISTINCT r.ResourceID, r.ResourceLocation, r.ResourceSpecification from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells' and r.ResourceName in (" + resources + ")";
+                    }
+                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+                    dtRes.Clear();
+                    sdaRes.Fill(dtRes);
+                    string resourceLocation = "";
+                    string resourceSpecification = "";
+                    int ite = 0;
+                    //iterate through the list of resources within the desired set of resources chosen
+                    foreach (DataRow drRes in dtRes.Rows)
+                    {
+                        //getting resourceID 
+                        resourceID = Convert.ToInt32(drRes["ResourceID"]);
+                        //getting resourceLocation 
+                        resourceLocation = drRes["ResourceLocation"].ToString();
+                        resourceSpecification = drRes["ResourceSpecification"].ToString();
+                        //query will get the list of data available against given resourceID (latest first)
+                        string Dashdtquery = ";WITH cte AS ( ";
+                        Dashdtquery += "SELECT* FROM ";
+                        Dashdtquery += "( ";
+                        Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
+                        Dashdtquery += " r.ResourceSpecification AS specifications, r.WaterLevel_m, r.PumpingWaterLevel_hpl, r.RatedDischarge_Q, r.RatedHead_H, r.Discharge_Dia_Dd, ";
+                        Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
+                        Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
+                        Dashdtquery += "s.InsertionDateTime as tim ,";
+                        Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                        Dashdtquery += "FROM tblEnergy s ";
+                        Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
+                        Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
+                        Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
+                        Dashdtquery += "where ";
+                        Dashdtquery += "r.ResourceID = " + resourceID + " and ";
+                        //Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,10,GETDATE())), 0) ";
+                        Dashdtquery += "InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)  ";
+                        Dashdtquery += ") ";
+                        Dashdtquery += "AS SourceTable ";
+                        Dashdtquery += "PIVOT ";
+                        Dashdtquery += "( ";
+                        Dashdtquery += "SUM(pVal) FOR pID ";
+                        Dashdtquery += "IN ";
+                        Dashdtquery += "( ";
+                        Dashdtquery += "[V1N.],[V2N.],[V3N.],[I1.],[I2.],[I3.],[Frequency.],[PKVA.],[PF.],[Remote.],[PumpStatus],[CurrentTrip.],[VoltageTrip.],[TimeSchedule.],[ChlorineLevel.],[WaterFlow(Cusec).],[PKVAR.],[PKW.],[V12],[V13],[V23],[PrimingLevel],[Pressure(Bar)],[Manual],[vib_z],[vib_y],[vib_x] ";
+                        Dashdtquery += ") ";
+                        Dashdtquery += ")  ";
+                        Dashdtquery += "AS PivotTable ";
+                        Dashdtquery += ")  ";
+                        Dashdtquery += "SELECT* FROM cte ";
+                        Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
+                        Dashdtquery += "tim DESC";
+                        SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
+                        SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
+                        Dashdt.Clear();
+                        sda.Fill(Dashdt);
+                        if (Dashdt.Rows.Count > 0)
+                        {
+                            TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes),FinalTimeFrom);
+                            tubewellDataList1.Add(sd);
+                        }
+                        else
+                        {
+                            TubewellDataClass sd = new TubewellDataClass();
+                            sd.locationName = drRes["ResourceLocation"].ToString();
+                            sd.Specification = drRes["ResourceSpecification"].ToString();
+                            sd.pumpStatus = new List<double>();
+                            tubewellDataList1.Add(sd);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Get stack trace for the exception with source file information
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                }
+                conn.Close();
+            }
+            string selectedResource = "";
+            if (resources == "All")
+            {
+                selectedResource = "All Tubewell Locations";
+            }
+            else
+            {
+                selectedResource = "" + resources + " Tubewell";
+            }
+            
+
+
+
+            ////////////////////////////////////////////////////////////////////////
+
+            string scriptString = "";
+
+
+            ///////////////////////////
+
+            scriptString = "var chart1 = new CanvasJS.Chart(\"chartContainer1\", { theme: \"light2\", animationEnabled: true, title:{ text: \"ENERGY MONITORING STATS\" },exportEnabled: true, dataPointWidth: 30, subtitles: [{text: \"  Data Fetched from " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "  \" }], axisY:{labelFontSize: 11, labelFormatter: function(){ return \" \"; }},axisX:{labelFontSize: 11}, legend: { cursor: \"pointer\", itemclick: toogleDataSeries, fontSize: 11, horizontalAlign: \"center\"}, toolTip: {fontSize: 12, fontWeight: \"bold\", shared: true }, data: [";
+
+            scriptString += "{ type: \"stackedColumn\", name: \"Motor Rating\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    scriptString += "{ y: '<b>" + item.Specification + "</b>' , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+            scriptString += "]},";
+
+            scriptString += "{ type: \"stackedColumn\", name: \"Total Working Hours\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    scriptString += "{ y: '<b>" + Math.Round((item.WorkingInHours),1) + "</b>' , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Power Factor\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double pff = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            pff += item.powerFactor[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    pff = Math.Round((pff / counter), 2);
+                    scriptString += "{ y: '<b>" + pff + "<b>' , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Average Voltage V (ln)\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    if (item.workingHoursToday != null)
+                    {
+                        double i1s = 0;
+                        double i2s = 0;
+                        double i3s = 0;
+                        int counter = 0;
+                        for (int i = 0; i < item.pumpStatus.Count; i++)
+                        {
+                            if (item.pumpStatus[i] == 1)
+                            {
+                                i1s += item.V1N[i];
+                                i2s += item.V2N[i];
+                                i3s += item.V3N[i];
+                                counter++;
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        if (counter == 0)
+                        {
+                            counter = 1;
+                        }
+                        i1s = Math.Round((i1s / counter), 2);
+                        i2s = Math.Round((i2s / counter), 2);
+                        i3s = Math.Round((i3s / counter), 2);
+                        double averageis = Math.Round(((i1s + i2s + i3s) / 3), 2);
+                        scriptString += "{ y: " + averageis + " , label: \"" + item.locationName + "\" },";
+                    }
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Average Voltage V (ll)\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double i1s = 0;
+                    double i2s = 0;
+                    double i3s = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            i1s += item.V12[i];
+                            i2s += item.V13[i];
+                            i3s += item.V23[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    i1s = Math.Round((i1s / counter), 2);
+                    i2s = Math.Round((i2s / counter), 2);
+                    i3s = Math.Round((i3s / counter), 2);
+                    double averageis = Math.Round(((i1s + i2s + i3s) / 3), 2);
+                    scriptString += "{ y: " + averageis + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Average Current\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double i1s = 0;
+                    double i2s = 0;
+                    double i3s = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            i1s += item.I1[i];
+                            i2s += item.I2[i];
+                            i3s += item.I3[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    i1s = Math.Round((i1s / counter), 2);
+                    i2s = Math.Round((i2s / counter), 2);
+                    i3s = Math.Round((i3s / counter), 2);
+                    double averageis = Math.Round(((i1s + i2s + i3s) / 3), 2);
+                    scriptString += "{ y: " + averageis + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Frequency (Hz)\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double freq = item.frequency.Average();
+                    scriptString += "{ y: " + freq + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Average PKVA\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double pkvas = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            pkvas += item.pkva[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    pkvas = Math.Round((pkvas / counter), 2);
+                    scriptString += "{ y: " + pkvas + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Average PKVAR\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double pkvars = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            pkvars += item.pkvar[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    pkvars = Math.Round((pkvars / counter), 2);
+                    scriptString += "{ y: " + pkvars + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+
+            scriptString += "]},";
+            scriptString += "{ type: \"stackedColumn\", name: \"Average PKW\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double pkws = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            pkws += item.pkw[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    pkws = Math.Round((pkws / counter), 2);
+                    scriptString += "{ y: " + pkws + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+            scriptString += "]},";
+
+            //scriptString += "{ type: \"stackedColumn\", name: \"Average Efficiency (%)\", showInLegend: true, dataPoints: [";
+
+            //foreach (var item in tubewellDataList)
+            //{
+            //    if (item.workingHoursToday != null)
+            //    {
+            //        double pkws = 0;
+            //        int counter = 0;
+            //        for (int i = 0; i < item.pumpStatus.Count; i++)
+            //        {
+            //            if (item.pumpStatus[i] == 1)
+            //            {
+            //                pkws += item.pkw[i];
+            //                counter++;
+            //            }
+            //            else
+            //            {
+
+            //            }
+            //        }
+            //        if (counter == 0)
+            //        {
+            //            counter = 1;
+            //        }
+            //        pkws = Math.Round((pkws / counter), 2);
+            //        pkws = Math.Round((pkws * 100 / (Convert.ToDouble(item.Specification) * 0.746)), 2);
+            //        scriptString += "{ y: " + pkws + " , label: \"" + item.locationName + "\" },";
+            //    }
+            //    else
+            //    {
+            //        scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+            //    }
+            //}
+            //scriptString += "]},";
+
+            scriptString += "{ type: \"stackedColumn\", name: \"Units Consumed\", showInLegend: true, dataPoints: [";
+
+            foreach (var item in tubewellDataList1)
+            {
+                if (item.workingHoursToday != null)
+                {
+                    double pkws = 0;
+                    int counter = 0;
+                    for (int i = 0; i < item.pumpStatus.Count; i++)
+                    {
+                        if (item.pumpStatus[i] == 1)
+                        {
+                            pkws += item.pkw[i];
+                            counter++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        counter = 1;
+                    }
+                    pkws = Math.Round((pkws / counter), 2);
+                    double units = Math.Round((pkws * item.WorkingInHours), 2);
+                    scriptString += "{ y: " + units + " , label: \"" + item.locationName + "\" },";
+                }
+                else
+                {
+                    scriptString += "{ y: null , label: \"" + item.locationName + "\" },";
+                }
+            }
+
+            //scriptString += "{ y: 80 , label: \"C-II Block Johar Town\" },";
+            //scriptString += "{ y: 80 , label: \"A-III Block Johar Town\" },";
+            //scriptString += "{ y: 150 , label: \"D-II Block Johar Town\" },";
+            //scriptString += "{ y: 150 , label: \"E Block Johar Town\" },";
+            //scriptString += "{ y: 80 , label: \"Campus View Johar Town\" },";
+            //scriptString += "{ y: 150 , label: \"F-I Block Johar Town\" },";
+            //scriptString += "{ y: 150 , label: \"C Block Jubilee Town\" },";
+            scriptString += "]}";
+
+            scriptString += "] })";
+
+            string NewscripString = scriptString;
+            ViewData["chartData"] = NewscripString;
+
+            ////////////////////////////////////////////////////////////////////////
+
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string getResFromTemp = "";
+                    if (resources == "All")
+                    {
+                        getResFromTemp += "select DISTINCT r.ResourceID, r.ResourceLocation, r.ResourceSpecification from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells'";
+                    }
+                    else
+                    {
+                        getResFromTemp += "select DISTINCT r.ResourceID, r.ResourceLocation, r.ResourceSpecification from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells' and r.ResourceLocation = '" + resources + "' ";
+                    }
+
+                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
+                    dtRes.Clear();
+                    sdaRes.Fill(dtRes);
+                    string resourceLocation = "";
+                    int ite = 0;
+                    double noOfDays = ((Convert.ToDateTime(FinalTimeTo).Date) - (Convert.ToDateTime(FinalTimeFrom).Date)).TotalDays;
+                    for (int daysCount = 0; daysCount <= noOfDays; daysCount++)
+                    {
+                        DateTime ftf = DateTime.Now;
+                        DateTime ftt = DateTime.Now;
+                        if (noOfDays == 0)
+                        {
+                            ftf = FinalTimeFrom;
+                            ftt = FinalTimeTo;
+                        }
+                        if (daysCount == 0 && noOfDays > 0)
+                        {
+                            ftf = FinalTimeFrom;
+                            ftt = FinalTimeFrom.Date.AddDays(daysCount + 1).AddSeconds(-1);
+                        }
+                        if (daysCount > 0 && noOfDays > 0 && daysCount != noOfDays)
+                        {
+                            ftf = FinalTimeFrom.Date.AddDays(daysCount);
+                            ftt = FinalTimeFrom.Date.AddDays(daysCount + 1).AddSeconds(-1);
+                        }
+                        if (noOfDays > 0 && daysCount == noOfDays)
+                        {
+                            ftf = FinalTimeFrom.Date.AddDays(daysCount);
+                            ftt = FinalTimeTo;
+                        }
+                        foreach (DataRow drRes in dtRes.Rows)
+                        {
+                            //getting resourceID 
+                            resourceID = Convert.ToInt32(drRes["ResourceID"]);
+                            //getting resourceLocation 
+                            resourceLocation = drRes["ResourceLocation"].ToString();
+                            //query will get the list of data available against given resourceID (latest first)
+                            string Dashdtquery = ";WITH cte AS ( ";
+                            Dashdtquery += "SELECT* FROM ";
+                            Dashdtquery += "( ";
+                            Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
+                            Dashdtquery += " r.ResourceSpecification AS specifications, r.WaterLevel_m, r.PumpingWaterLevel_hpl, r.RatedDischarge_Q, r.RatedHead_H, r.Discharge_Dia_Dd, ";
+                            Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
+                            Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
+                            Dashdtquery += "s.InsertionDateTime as tim ,";
+                            Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
+                            Dashdtquery += "FROM tblEnergy s ";
+                            Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
+                            Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
+                            Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
+                            Dashdtquery += "where ";
+                            Dashdtquery += "r.ResourceID = " + resourceID + " and ";
+                            //Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,10,GETDATE())), 0) ";
+                            Dashdtquery += "InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + ftf + "', 103), 121) and InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + ftt + "', 103), 121)  ";
+                            Dashdtquery += ") ";
+                            Dashdtquery += "AS SourceTable ";
+                            Dashdtquery += "PIVOT ";
+                            Dashdtquery += "( ";
+                            Dashdtquery += "SUM(pVal) FOR pID ";
+                            Dashdtquery += "IN ";
+                            Dashdtquery += "( ";
+                            Dashdtquery += "[V1N.],[V2N.],[V3N.],[I1.],[I2.],[I3.],[Frequency.],[PKVA.],[PF.],[Remote.],[PumpStatus],[CurrentTrip.],[VoltageTrip.],[TimeSchedule.],[ChlorineLevel.],[WaterFlow(Cusec).],[PKVAR.],[PKW.],[V12],[V13],[V23],[PrimingLevel],[Pressure(Bar)],[Manual],[vib_z],[vib_y],[vib_x] ";
+                            Dashdtquery += ") ";
+                            Dashdtquery += ")  ";
+                            Dashdtquery += "AS PivotTable ";
+                            Dashdtquery += ")  ";
+                            Dashdtquery += "SELECT* FROM cte ";
+                            Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
+                            Dashdtquery += "tim DESC";
+                            SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
+                            SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
+                            Dashdt.Clear();
+                            sda.Fill(Dashdt);
+                            if (Dashdt.Rows.Count > 0)
+                            {
+                                TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes), ftf);
+                                sd.noOfDays = Convert.ToInt32(noOfDays);
+                                tubewellDataList.Add(sd);
+                            }
+                            else
+                            {
+                                TubewellDataClass sd = new TubewellDataClass();
+                                sd.locationName = drRes["ResourceLocation"].ToString();
+                                sd.pumpStatus = new List<double>();
+                                sd.workingHoursTodayManual = "-";
+                                sd.workingHoursTodayRemote = "-";
+                                sd.workingHoursTodayScheduling = "-";
+                                sd.logDate = ftf.ToShortDateString();
+                                sd.noOfDays = Convert.ToInt32(noOfDays);
+                                tubewellDataList.Add(sd);
+                            }
+                        }
+                    }
+                    //iterate through the list of resources within the desired set of resources chosen
+
+                }
+                catch (Exception ex)
+                {
+                    // Get stack trace for the exception with source file information
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                }
+                conn.Close();
+            }
+            Session["ReportTitle"] = "Energy Monitoring Report of " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
+
+
+            ////////////////////////////////////////////////////////////////////////
+            mymodel.SummaryList = tubewellDataList1;
+            mymodel.DaywiseList = tubewellDataList;
+            return PartialView(mymodel);
         }
         public ActionResult RemoteStatusReport()
         {

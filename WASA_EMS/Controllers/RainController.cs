@@ -27,7 +27,7 @@ namespace WASA_EMS.Controllers
                 try
                 {
                     conn.Open();
-                    string getResFromTemp = "select DISTINCT r.resourceID, r.resourceLocationName from tblResource r inner join tblResourceType rt on r.resourceTypeID = rt.resourceTypeID inner join tblSheet s on r.resourceID = s.resourceID where rt.resourceTypeName = 'Rain Guages' and s.sheetInsertionDateTime >= '" + FinalTimeFrom + "' and s.sheetInsertionDateTime <= '" + FinalTimeTo + "' ";
+                    string getResFromTemp = "select DISTINCT r.resourceID, r.resourceLocationName from tblResource r inner join tblResourceType rt on r.resourceTypeID = rt.resourceTypeID inner join tblSheet s on r.resourceID = s.resourceID where rt.resourceTypeName = 'Rain Guages' and s.sheetInsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and s.sheetInsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121) ";
                     SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
                     dtRes.Clear();
                     sdaRes.Fill(dtRes);
@@ -37,7 +37,7 @@ namespace WASA_EMS.Controllers
                     {
                         resourceID = Convert.ToInt32(drRes["resourceID"]);
                         //query will get the list of data available against given resourceID (latest first)
-                        string Dashdtquery = ";WITH cte AS ( SELECT DISTINCT r.resourceName AS Location, '3' AS Min_Level, s.parameterValue AS Current_Level, p.parameterUnit as pUnit, r.resourceNumber as rnum, s.sheetInsertionDateTime as tim,  ROW_NUMBER() OVER (PARTITION BY s.resourceID ORDER BY s.sheetInsertionDateTime DESC) AS rn FROM tblSheet s inner join tblResource r on s.resourceID = r.resourceID inner join tblParameter p on s.parameterID = p.parameterID inner join tblResourceType rt on r.resourceTypeID = rt.resourceTypeID where r.resourceID = " + resourceID + " AND s.sheetInsertionDateTime >= '" + FinalTimeFrom + "' and s.sheetInsertionDateTime <= '" + FinalTimeTo + "') SELECT * FROM cte order by cast(rnum as INT) ASC, tim DESC ";
+                        string Dashdtquery = ";WITH cte AS ( SELECT DISTINCT r.resourceName AS Location, '3' AS Min_Level, s.parameterValue AS Current_Level, p.parameterUnit as pUnit, r.resourceNumber as rnum, s.sheetInsertionDateTime as tim,  ROW_NUMBER() OVER (PARTITION BY s.resourceID ORDER BY s.sheetInsertionDateTime DESC) AS rn FROM tblSheet s inner join tblResource r on s.resourceID = r.resourceID inner join tblParameter p on s.parameterID = p.parameterID inner join tblResourceType rt on r.resourceTypeID = rt.resourceTypeID where r.resourceID = " + resourceID + " AND s.sheetInsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and s.sheetInsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121)) SELECT * FROM cte order by cast(rnum as INT) ASC, tim DESC ";
                         SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
                         SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
                         Dashdt.Clear();
@@ -985,8 +985,9 @@ namespace WASA_EMS.Controllers
         {
             ttlogixc_rmsWasa01Entities db = new ttlogixc_rmsWasa01Entities();
             string resource = review["resource"].ToString();
-            DateTime dateFrom = DateTime.Parse(review["dateFrom"].ToString());
-            DateTime dateTo = DateTime.Parse(review["dateTo"].ToString());
+            string thedatefrom = review["dateFrom"].ToString();
+            DateTime dateFrom = DateTime.ParseExact(thedatefrom, "dd/MM/yyyy", null);
+            DateTime dateTo = DateTime.ParseExact(review["dateTo"].ToString(), "dd/MM/yyyy", null);
             string df_date = dateFrom.ToString("d");
             string dt_date = dateTo.ToString("d");
             string TF = review["timeFrom"];
@@ -1062,7 +1063,7 @@ namespace WASA_EMS.Controllers
                             aquery += "ORDER BY e.sheetInsertionDateTime DESC) ";
                             aquery += "FROM tblSheet e ";
                             aquery += "inner join tblResource r on e.resourceID = r.resourceID ";
-                            aquery += "WHERE e.resourceID = " + Convert.ToInt32(drRes["resourceID"]) + " and e.parameterID = " + Convert.ToInt32(drPar["parameterID"]) + " and e.sheetInsertionDateTime >='" + FinalTimeFrom + "' and e.sheetInsertionDateTime <='" + FinalTimeTo + "' ";
+                            aquery += "WHERE e.resourceID = " + Convert.ToInt32(drRes["resourceID"]) + " and e.parameterID = " + Convert.ToInt32(drPar["parameterID"]) + " and e.sheetInsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeFrom + "', 103), 121) and e.sheetInsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + FinalTimeTo + "', 103), 121) ";
                             aquery += ") ";
                             aquery += "SELECT top 14400 parameterID, parameterValue, sheetInsertionDateTime FROM CTE WHERE RN < 14401 Order by sheetInsertionDateTime ASC";
                             string theQuery = aquery;

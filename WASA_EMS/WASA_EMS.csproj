@@ -270,6 +270,7 @@
     <Compile Include="Controllers\RecyclingPlantController - Copy.cs" />
     <Compile Include="Controllers\RecyclingPlantController.cs" />
     <Compile Include="Controllers\ResourceController.cs" />
+    <Compile Include="Controllers\StorageTankController.cs" />
     <Compile Include="Controllers\SwitchController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\TubewellsController_7Jan21.cs" />
@@ -413,6 +414,8 @@
     <Compile Include="RangeAndResourceSelector.cs" />
     <Compile Include="RecyclingPlantController_With_13Hours_Increment.cs" />
     <Compile Include="ResourceSellector.cs" />
+    <Compile Include="StorageSpellData.cs" />
+    <Compile Include="StorageTankTableData.cs" />
     <Compile Include="TubewellParameterChartClass.cs" />
     <Compile Include="webServe.asmx.cs">
       <DependentUpon>webServe.asmx</DependentUpon>
@@ -6574,7 +6577,7 @@
     <Content Include="Views\Tubewells\RemoteStatusReport.cshtml" />
     <Content Include="Views\Tubewells\_StatusReportView.cshtml" />
     <Content Include="Views\Tubewells\_WaterDischargeReportView.cshtml" />
-    <Content Include="Views\Tubewells\_EnergyMonitoringReportView.cshtml" />
+    <Content Include="Views\Tubewells\_EnergyMonitoringReportView2.cshtml" />
     <Content Include="Views\Tubewells\_RemoteStatusReportView.cshtml" />
     <Content Include="Views\Home\_DashboardView_ORIGINAL.cshtml" />
     <Content Include="Views\Home\_TableRecords.cshtml" />
@@ -6633,6 +6636,15 @@
     <Content Include="Views\Switch\_SwitchRecords2.cshtml" />
     <Content Include="Views\Tubewells\ParameterizedData.cshtml" />
     <Content Include="Views\Tubewells\_ParameterizedDataView.cshtml" />
+    <Content Include="Views\Tubewells\EnergyMonitoringReport2.cshtml" />
+    <Content Include="Views\Tubewells\_EnergyMonitoringReportView.cshtml" />
+    <Content Include="Views\StorageTank\Dashboard.cshtml" />
+    <Content Include="Views\StorageTank\EnergyMonitoringReport.cshtml" />
+    <Content Include="Views\StorageTank\PumpStatusReport.cshtml" />
+    <Content Include="Views\StorageTank\TankStorageReport.cshtml" />
+    <Content Include="Views\Shared\_StorageTankDashboardBottom.cshtml" />
+    <Content Include="Views\Shared\_StorageTankDashboardMid.cshtml" />
+    <Content Include="Views\Shared\_StorageTankDashboardTop.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

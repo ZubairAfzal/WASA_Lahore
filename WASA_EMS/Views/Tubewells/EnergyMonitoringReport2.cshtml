@@ -1,10 +1,11 @@
-@model RangeAndResourceSelector
+﻿
 @{
-    ViewBag.Title = "Mode Status Report";
+    ViewBag.Title = "Status Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link href="~/Content/custom.css" rel="stylesheet" />
 <link href="~/Content/datatables.min.css" rel="stylesheet" />
@@ -21,7 +22,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script src="~/Metronic/assets/global/scripts/bootstrap-select.min.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>*@
 
 
 <script src="~/Metronic/assets/global/plugins/moment.min.js"></script>
@@ -31,24 +33,19 @@
 <script src="~/Metronic/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js"></script>
 <script>
     $(function () {
-        //var date = new Date();
-        //var maxDate = "-" + date.getDate() + "D";
-        //var minDate = "-1M " + "-" + (date.getDate() - 1) + "D";
-        $("#dateFrom").datepicker({
-            dateFormat: 'dd/mm/yy',
-            //maxDate: maxDate,
-            //minDate: minDate 
-        });
-        $("#dateTo").datepicker({
-            dateFormat: 'dd/mm/yy',
-            //maxDate: maxDate,
-            //minDate: minDate
+        $(".date-picker").datepicker({
+            dateFormat: 'dd/mm/yy'
         });
     });
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
         var table = $('#example').DataTable({
+            "formatNumber": function (toFormat) {
+                return toFormat.toString().replace(
+                    /\B(?=(\d{3})+(?!\d))/g, "'"
+                );
+            }
         });
     });
 </script>
@@ -62,9 +59,9 @@
         $.ajax({
             type: 'GET',
             dataType: 'html',
-            url: '_RemoteStatusReportView',
+            url: '_EnergyMonitoringReportView2',
             cache: false,
-            data: { resources: resN, datFrom: df, timFrom: tf, datTo: dt, timTo: tt},
+            data: { resources: resN, datFrom: df, timFrom: tf, datTo: dt, timTo: tt },
             success: function (result) {
                 $('#StatusReportDiv').html(result);
             },
@@ -84,16 +81,27 @@
     //},  200000);
 </script>
 
+<script>
+    $('select').selectpicker();
+    $('.select').selectpicker('selectAll');
+    $('.select').selectpicker('deselectAll');
+</script>
+<style>
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100% !important;
+    }
+</style>
 
 <div class="row">
-    <div class="col-lg-12 col-xs-12 col-sm-12">
+    <div class="container-fluid">
         <div class="portlet light ">
             <div class="portlet-body">
 
 
                 <!-- DataTable Row -->
+
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="container-fluid">
                         <!-- BEGIN EXAMPLE TABLE PORTLET-->
                         <div class="portlet light bordered">
                             <div class="tabbable-line boxless tabbable-reversed">
@@ -103,11 +111,11 @@
                                             <div class="portlet-title">
                                                 <div class="caption">
                                                     <i class="fa icon-settings"></i>
-                                                    <span style="font-family:Open Sans,sans-serif;">Mode Status Report</span>
+                                                    <span style="font-family:Open Sans,sans-serif;">Energy Monitoring Report</span>
                                                 </div>
 
                                             </div>
-                                            @using (Html.BeginForm("RemoteStatusReport", "Tubewells"))
+                                            @using (Html.BeginForm("EnergyMonitoringReport2", "Tubewells"))
                                             {
                                             <div class="portlet-body form">
 
@@ -119,11 +127,11 @@
 																	<label style = "margin-top: 1px; font-weight: 400; float:left;">Location Name:</label>
 																	@if (ViewBag.SelectedResource != null)
 																	{
-																		@Html.DropDownList("resource", new SelectList(ViewBag.ResourceList, ViewBag.SelectedResource), new { @class = "form-control", @style = "color:black;" })
+																		@Html.DropDownList("resource", new MultiSelectList(ViewBag.ResourceList, ViewBag.SelectedResource), new { multiple = "multiple", @class = "selectpicker" })
 																	}
 																	else
 																	{
-																		@Html.DropDownList("resource", new SelectList(ViewBag.ResourceList), new { @class = "form-control", @style = "color:black;" })
+																		@Html.DropDownList("resource", new MultiSelectList(ViewBag.ResourceList), new { multiple = "multiple", @class = "selectpicker" })
 																	}
 																</div>
 															</div>
@@ -426,3 +434,21 @@
     </div>
 </div>
 
+
+@*<section class="scripts">
+
+        <script type="text/javascript">
+            window.onload = function () {
+                @Html.Raw(ViewData["chartData"])
+                chart1.render();
+                function toogleDataSeries(e) {
+                    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                        e.dataSeries.visible = false;
+                    } else {
+                        e.dataSeries.visible = true;
+                    }
+                    chart1.render();
+                }
+            }
+        </script>
+    </section>*@

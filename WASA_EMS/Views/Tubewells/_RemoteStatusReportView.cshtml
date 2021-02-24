@@ -277,6 +277,72 @@
                                             }*@
                                     </tr>
                                 }
+
+                                @{ 
+                                    string minutesToTime(double minutes)
+                                    {
+                                        var pTime = TimeSpan.FromMinutes(minutes);
+                                        int phour = (int)pTime.TotalHours;
+                                        int pmin = (int)pTime.Minutes;
+                                        int psec = (int)pTime.Seconds;
+                                        string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                                        return pstr;
+                                    }
+                                }
+
+                                @{int noOfDays = Model.First().noOfDays + 1; }
+                                    @{int count = Model.Count(); }
+                                    @{int locations = count / noOfDays; }
+                                @for (int i = 0; i < locations; i++)
+                                {
+                                    <tr>
+                                        <td>Summary</td>
+                                        <td style="text-align:left !important">@Model.ElementAt(i).locationName</td>
+                                        <td>
+                                            @{ double manaulTime = 0;}
+                                            @for (int j = 0; j < count; j = j + locations)
+                                            {
+                                                manaulTime += Model.ElementAt(j + i).WorkingInHoursManual;
+                                            }
+                                            @{var pTimem = TimeSpan.FromMinutes(manaulTime);}
+                                            @{int phourm = (int)pTimem.TotalHours;}
+                                            @{int pminm = (int)pTimem.Minutes;}
+                                            @{string pstrm = " " + phourm.ToString() + " Hours, " + pminm.ToString() + " Minutes";}
+                                            @pstrm
+                                        </td>
+                                        <td>
+                                            @{ double remoteTime = 0;}
+                                            @for (int j = 0; j < count; j = j + locations)
+                                            {
+                                                remoteTime += Model.ElementAt(j + i).WorkingInHoursRemote;
+                                            }
+                                            @{var pTimer = TimeSpan.FromMinutes(remoteTime);}
+                                            @{int phourr = (int)pTimer.TotalHours;}
+                                            @{int pminr = (int)pTimer.Minutes;}
+                                            @{string pstrr = " " + phourr.ToString() + " Hours, " + pminr.ToString() + " Minutes";}
+                                            @pstrr
+                                        </td>
+                                        <td>
+                                            @{ double schedulingTime = 0;}
+                                            @for (int j = 0; j < count; j = j + locations)
+                                            {
+                                                schedulingTime += Model.ElementAt(j + i).WorkingInHoursScheduling;
+                                            }
+                                            @{var pTimes = TimeSpan.FromMinutes(schedulingTime);}
+                                            @{int phours = (int)pTimes.TotalHours;}
+                                            @{int pmins = (int)pTimes.Minutes;}
+                                            @{string pstrs = " " + phours.ToString() + " Hours, " + pmins.ToString() + " Minutes";}
+                                            @pstrs
+                                        </td>
+                                        <td>
+                                            @{var pTimet = TimeSpan.FromMinutes(manaulTime + remoteTime + schedulingTime);}
+                                            @{int phourt = (int)pTimet.TotalHours;}
+                                            @{int pmint = (int)pTimet.Minutes;}
+                                            @{string pstrt = " " + phourt.ToString() + " Hours, " + pmint.ToString() + " Minutes";}
+                                            @pstrt
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
 
