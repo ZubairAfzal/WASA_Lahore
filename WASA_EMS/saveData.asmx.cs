@@ -17703,6 +17703,72 @@ namespace WASA_EMS
 
         }
 
+        [WebMethod]
+        public string WhatsAppDataDisposal()
+        {
+            BAL bal = new BAL();
+            string disposalData = bal.DisposalLastDayReport();
+            return disposalData;
+        }
+
+        [WebMethod]
+        public string DisposalData()
+        {
+            BAL bal = new BAL();
+            string disposalData = bal.DisposalCurrentDayReport();
+            return disposalData;
+        }
+
+
+        [WebMethod]
+        public string WhatsAppDataTubewell()
+        {
+            BAL bal = new BAL();
+            string tubewellData = bal.TubewellLastDayReport();
+            return tubewellData;
+        }
+
+        [WebMethod]
+        public string TubewellsData()
+        {
+            BAL bal = new BAL();
+            string tubewellData = bal.TubewellCurrentDayReport();
+            return tubewellData;
+        }
+
+
+        [WebMethod]
+        public string WhatsAppDataRecyclingPlant()
+        {
+            BAL bal = new BAL();
+            string recyclingData = bal.RecyclingPlantLastDayReport();
+            return recyclingData;
+        }
+
+        [WebMethod]
+        public string RecyclingPlantData()
+        {
+            BAL bal = new BAL();
+            string recyclingData = bal.RecyclingPlantCurrentDayReport();
+            return recyclingData;
+        }
+
+        [WebMethod]
+        public string PondingDashboardData()
+        {
+            BAL bal = new BAL();
+            string pondingData = bal.getPondingTableListUpdated2();
+            return pondingData;
+        }
+
+        [WebMethod]
+        public string RainDashboardData()
+        {
+            BAL bal = new BAL();
+            string rainData = bal.getRainTableList();
+            return rainData;
+        }
+
     }
 }
 

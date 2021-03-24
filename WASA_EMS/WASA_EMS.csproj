@@ -273,10 +273,7 @@
     <Compile Include="Controllers\StorageTankController.cs" />
     <Compile Include="Controllers\SwitchController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
-    <Compile Include="Controllers\TubewellsController_7Jan21.cs" />
-    <Compile Include="Controllers\TubewellsController_BeforeRoundOff.cs" />
-    <Compile Include="Controllers\TubewellsController_Before_vib_mm_s_X_Y_Z.cs" />
-    <Compile Include="Controllers\TubewellsController_old.cs" />
+    <Compile Include="Controllers\TubewellsController_1March21.cs" />
     <Compile Include="Controllers\TubewellsController.cs" />
     <Compile Include="DataPoint.cs" />
     <Compile Include="DisposalDataClass - Copy.cs" />
@@ -284,6 +281,7 @@
     <Compile Include="DisposalDataClass.cs" />
     <Compile Include="DisposalsController_With_13Hours_Increment.cs" />
     <Compile Include="DisposalTableClass.cs" />
+    <Compile Include="DisposalWorkingHoursList.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -413,10 +411,13 @@
     <Compile Include="RainTableClass.cs" />
     <Compile Include="RangeAndResourceSelector.cs" />
     <Compile Include="RecyclingPlantController_With_13Hours_Increment.cs" />
+    <Compile Include="RecyclingPlantWorkingHoursList.cs" />
     <Compile Include="ResourceSellector.cs" />
     <Compile Include="StorageSpellData.cs" />
     <Compile Include="StorageTankTableData.cs" />
+    <Compile Include="TubewellDashboardClass.cs" />
     <Compile Include="TubewellParameterChartClass.cs" />
+    <Compile Include="TubewellsWorkingHoursList.cs" />
     <Compile Include="webServe.asmx.cs">
       <DependentUpon>webServe.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -440,6 +441,7 @@
     <Compile Include="DisposalSpellData.cs" />
     <Compile Include="TubewellsController_With_13Hours_Increment.cs" />
     <Compile Include="TubewellSpellData.cs" />
+    <Compile Include="WhatsAppDaily.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\img\2177462-128.png" />
@@ -6645,6 +6647,8 @@
     <Content Include="Views\Shared\_StorageTankDashboardBottom.cshtml" />
     <Content Include="Views\Shared\_StorageTankDashboardMid.cshtml" />
     <Content Include="Views\Shared\_StorageTankDashboardTop.cshtml" />
+    <Content Include="Views\Shared\_Layout_2Mar21.cshtml" />
+    <Content Include="Views\Tubewells\_RemoteStatusReportView2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

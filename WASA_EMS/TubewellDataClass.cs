@@ -58,6 +58,7 @@ namespace WASA_EMS
         public List<double> Vibration_m { get; set; }
         public List<double> Vibration_m_s { get; set; }
         public List<double> Vibration_m_s_2 { get; set; }
+        public List<string> LogTime { get; set; }
         public string logDate { get; set; }
         public int noOfDays { get; set; }
     }   

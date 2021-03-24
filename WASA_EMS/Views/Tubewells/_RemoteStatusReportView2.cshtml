@@ -198,10 +198,83 @@
         }
 
     </script>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
+    <script>
+        am4core.ready(function () {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart
+            var chart = am4core.create("chartContainer1", am4charts.XYChart);
+            chart.paddingRight = 20;
+
+            chart.data = generateChartData();
+
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.baseInterval = {
+                "timeUnit": "minute",
+                "count": 1
+            };
+            dateAxis.tooltipDateFormat = "HH:mm, d MMMM";
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.tooltip.disabled = true;
+            valueAxis.title.text = "Unique visitors";
+
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.dataFields.dateX = "date";
+            series.dataFields.valueY = "visits";
+            //series.tooltipText = function (text, valueY) {
+            //    if (valueY > 380) {
+            //        return "ON";
+            //    }
+            //    else {
+            //        return "OFF";
+            //    }
+            //}
+            //series.tooltipText = "[bold]ON[/]";
+            series.tooltipText = "Value: [bold]{valueY}[/]";
+            series.fillOpacity = 0.3;
+
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.lineY.opacity = 0;
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            chart.scrollbarX.series.push(series);
+
+
+            dateAxis.start = 0.8;
+            dateAxis.keepSelection = true;
+
+
+
+            function generateChartData() {
+                var chartData = [];
+                //var jsonObj = @ViewData["AllData"];
+                //jsonObj = jsonObj.replace(/&quot;/g, '\\"');
+                var jsonObj = JSON.stringify(@ViewData["AllData"], null, 2);
+                console.log(jsonObj);
+                jsonObj = JSON.parse(jsonObj);
+
+                for (var i = 0; i < jsonObj[1].logTime.count; i++) {
+                    // add data item to the array
+                    chartData.push({
+                        date: jsonObj[1].logTime[i],
+                        value: jsonObj[1].pumpStatus[i]
+                    });
+                }
+                return chartData;
+            }
+
+        }); // end am4core.ready()
+    </script>
     <script type="text/javascript">
 		$(document).ready(function () {
-			@Html.Raw(ViewData["chartData"])
+			@*@Html.Raw(ViewData["chartData"])
 			chart1.render();
 			function toogleDataSeries(e) {
 				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
@@ -210,7 +283,7 @@
 					e.dataSeries.visible = true;
 				}
 				chart1.render();
-			}
+			}*@
 			var groupColumn = 0;
 			if (!$.fn.dataTable.isDataTable('#tubeWellTable')) {
 				function getBase64FromImageUrl(url) {

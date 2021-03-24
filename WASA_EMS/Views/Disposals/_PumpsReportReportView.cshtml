@@ -3,6 +3,28 @@
 @using Newtonsoft.Json;
 @model IEnumerable<DisposalDataClassFinal>
 
+
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+<link href="~/Metronic/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="~/Metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+<!-- END GLOBAL MANDATORY STYLES -->
+<link href="~/Metronic/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" />
+
+<link href="~/Metronic/assets/global/plugins/morris/morris.css" rel="stylesheet" />
+
+<link href="~/Metronic/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/Metronic/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" />
+<link href="~/Metronic/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" />
+<link href="~/Metronic/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="~/Content/custom.css" rel="stylesheet" />
+<link href="~/Content/datatables.min.css" rel="stylesheet" />
+<link href="~/Metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+
 <style>
     div#chartContainer1 {
         position: relative;
@@ -24,7 +46,101 @@
     }
 </style>
 
-<script type="text/javascript">
+
+<body>
+    <div class="portlet-title">
+        <div class="row" style="opacity:0.9">
+            <div class="portlet-body">
+                <div class="widget stacked">
+                    <div class="widget-content">
+                        <div>
+                            <center>
+                                <div id="chartContainer1" style="width: 95%; height: 500px"></div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
+    <div class="row" style="opacity:0.9">
+        <div class="portlet-body">
+            <div class="widget stacked" style="margin-top:70px; ">
+                <div class="widget-content">
+                    <div>
+                        <center>
+
+
+
+                            <table id="tubeWellTable" class="display" style="width:100%">
+                                <thead>
+                                    <tr style="background-color: #a8c9cd;">
+                                        <th>Name of Location</th>
+                                        <th>Pump No. 1</th>
+                                        <th>Pump No. 2</th>
+                                        <th>Pump No. 3</th>
+                                        <th>Pump No. 4</th>
+                                        <th>Pump No. 5</th>
+                                        <th>Pump No. 6</th>
+                                        <th>Pump No. 7</th>
+                                        <th>Pump No. 8</th>
+                                        <th>Pump No. 9</th>
+                                        <th>Pump No. 10</th>
+                                        <th>Total Working Hours</th>
+                                        @*<th>Well 1 Level</th>
+                                            <th>Well 2 Level</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td style="text-align:left !important">Shaukat Khanum Disposal Station</td>
+                                            <td>@item.WorkingInHoursPump1</td>
+                                            <td>@item.WorkingInHoursPump2</td>
+                                            <td>@item.WorkingInHoursPump3</td>
+                                            <td>@item.WorkingInHoursPump4</td>
+                                            <td>@item.WorkingInHoursPump5</td>
+                                            <td>@item.WorkingInHoursPump6</td>
+                                            <td>@item.WorkingInHoursPump7</td>
+                                            <td>@item.WorkingInHoursPump8</td>
+                                            <td>@item.WorkingInHoursPump9</td>
+                                            <td>@item.WorkingInHoursPump10</td>
+                                            <td>@item.TotalWorkingInHours</td>
+                                            @*<td>@(Math.Round(Convert.ToDouble(item.Well1Level_Average), 2)) ft</td>
+                                                <td>@(Math.Round(Convert.ToDouble(item.Well2Level_Average), 2)) ft</td>*@
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        if (typeof jQuery == 'undefined') {
+            document.write('<script type="text/javascript" src="../../Metronic/assets/global/scripts/jquery.min.js"></' + 'script> ');
+            document.write('<script type = "text/javascript" src = "../../Scripts/jquery-ui.js" ></' + 'script> ');
+
+            document.write('<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></' + 'scrip> ');
+            document.write('<script type = "text/javascript" src = "../../Metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js"></' + 'script> ');
+            document.write('<script type="text/javascript" src="../../Metronic/assets/global/scripts/datatables.min.js"></' + 'script>');
+            document.getElementById("tubeWellTable").style.fontSize = "14";
+            //document.getElementById("tubeWellTable").style.width = "90%";
+            document.body.style.padding = "20";
+        }
+
+    </script>
+    <script type="text/javascript">
 
     $(document).ready(function () {
         //alert('call');
@@ -151,84 +267,7 @@
         }
     });
     //var jsonDisposal = @ViewData["TheDisposalData"]
-</script>
+    </script>
 
-<div class="portlet-title">
-    <div class="row" style="opacity:0.9">
-        <div class="portlet-body">
-            <div class="widget stacked">
-                <div class="widget-content">
-                    <div>
-                        <center>
-                            <div id="chartContainer1" style="width: 95%; height: 500px"></div>
-                        </center>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
-<div class="row" style="opacity:0.9">
-    <div class="portlet-body">
-        <div class="widget stacked" style="margin-top:70px; ">
-            <div class="widget-content">
-                <div>
-                    <center>
-
-
-
-                        <table id="tubeWellTable" class="display" style="width:100%">
-                            <thead>
-                                <tr style="background-color: #a8c9cd;">
-                                    <th>Name of Location</th>
-                                    <th>Pump No. 1</th>
-                                    <th>Pump No. 2</th>
-                                    <th>Pump No. 3</th>
-                                    <th>Pump No. 4</th>
-                                    <th>Pump No. 5</th>
-                                    <th>Pump No. 6</th>
-                                    <th>Pump No. 7</th>
-                                    <th>Pump No. 8</th>
-                                    <th>Pump No. 9</th>
-                                    <th>Pump No. 10</th>
-									<th>Total Working Hours</th>
-                                    @*<th>Well 1 Level</th>
-                                    <th>Well 2 Level</th>*@
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td style="text-align:left !important">Shaukat Khanum Disposal Station</td>
-                                        <td>@item.WorkingInHoursPump1</td>
-                                        <td>@item.WorkingInHoursPump2</td>
-                                        <td>@item.WorkingInHoursPump3</td>
-                                        <td>@item.WorkingInHoursPump4</td>
-                                        <td>@item.WorkingInHoursPump5</td>
-                                        <td>@item.WorkingInHoursPump6</td>
-                                        <td>@item.WorkingInHoursPump7</td>
-                                        <td>@item.WorkingInHoursPump8</td>
-                                        <td>@item.WorkingInHoursPump9</td>
-                                        <td>@item.WorkingInHoursPump10</td>
-                                        <td>@item.TotalWorkingInHours</td>
-                                        @*<td>@(Math.Round(Convert.ToDouble(item.Well1Level_Average), 2)) ft</td>
-                                        <td>@(Math.Round(Convert.ToDouble(item.Well2Level_Average), 2)) ft</td>*@
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-
-
-
-                    </center>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+</body>
 

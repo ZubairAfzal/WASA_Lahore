@@ -31,6 +31,14 @@ namespace WASA_EMS
     public class webServe : System.Web.Services.WebService
     {
         [WebMethod]
+        public string WhatsAppData()
+        {
+            DateTime FinalTimeFrom = DateTime.Now.AddDays(-1).Date;
+            DateTime FinalTimeTo = DateTime.Now.AddHours(0).AddDays(0).Date.AddSeconds(-1);
+
+            return "";
+        }
+        [WebMethod]
         public string GetData()
         {
             int c_id = 4;

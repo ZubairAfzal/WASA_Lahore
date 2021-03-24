@@ -14,7 +14,7 @@ using WASA_EMS.Models;
 namespace WASA_EMS.Controllers
 {
 
-    public class TubewellsController : Controller
+    public class TubewellsController_1March21 : Controller
     {
         // GET: Tubewells
         public ActionResult Home()
@@ -4040,7 +4040,6 @@ namespace WASA_EMS.Controllers
             rs.timeTo = TT;
             return View(rs);
         }
-
         [HttpGet]
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
         public PartialViewResult _RemoteStatusReportView(string resources, string datFrom, string timFrom, string datTo, string timTo)
@@ -4290,224 +4289,6 @@ namespace WASA_EMS.Controllers
                             sda.Fill(Dashdt);
                             if (Dashdt.Rows.Count > 0)
                             {
-                                TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes), ftf);
-                                sd.noOfDays = Convert.ToInt32(noOfDays);
-                                tubewellDataList.Add(sd);
-                            }
-                            else
-                            {
-                                TubewellDataClass sd = new TubewellDataClass();
-                                sd.locationName = drRes["ResourceLocation"].ToString();
-                                sd.pumpStatus = new List<double>();
-                                //sd.I1 = null;
-                                //sd.I2 = null;
-                                //sd.I3 = null;
-                                //sd.manualStatus = null;
-                                //sd.pkva = null;
-                                //sd.pkvar = null;
-                                //sd.pkw = null;
-                                //sd.powerFactor = null;
-                                //sd.pressure = null;
-                                //sd.primingTankLevel = null;
-                                //sd.remoteControll = null;
-                                //sd.schedulingStatus = null;
-                                //sd.V12 = null;
-                                //sd.V13 = null;
-                                //sd.V1N = null;
-                                //sd.V23 = null;
-                                //sd.V2N = null;
-                                //sd.V3N = null;
-                                //sd.voltageTrip = null;
-                                //sd.waterDischarge = null;
-                                //sd.waterFlow = null;
-                                //sd.workingHoursToday = null;
-                                sd.workingHoursTodayManual = "-";
-                                sd.workingHoursTodayRemote = "-";
-                                sd.workingHoursTodayScheduling = "-";
-                                sd.logDate = ftf.ToShortDateString();
-                                sd.noOfDays = Convert.ToInt32(noOfDays);
-                                tubewellDataList.Add(sd);
-                            }
-                        }
-                    }
-                    //iterate through the list of resources within the desired set of resources chosen
-
-                }
-                catch (Exception ex)
-                {
-                    // Get stack trace for the exception with source file information
-                    var st = new StackTrace(ex, true);
-                    // Get the top stack frame
-                    var frame = st.GetFrame(0);
-                    // Get the line number from the stack frame
-                    var line = frame.GetFileLineNumber();
-                }
-                conn.Close();
-            }
-            string selectedResource = "";
-            if (resources == "All")
-            {
-                selectedResource = "All Tubewell Locations";
-            }
-            else
-            {
-                selectedResource = "" + resources + " Tubewell";
-            }
-            Session["ReportTitle"] = "Mode Status Report of " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-            return PartialView(tubewellDataList);
-        }
-
-        [HttpGet]
-        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
-        public PartialViewResult _RemoteStatusReportView2(string resources, string datFrom, string timFrom, string datTo, string timTo)
-        {
-            DateTime FinalTimeFrom = DateTime.Now;
-            DateTime FinalTimeTo = DateTime.Now;
-            if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
-            {
-                FinalTimeFrom = DateTime.Now.AddHours(0).Date;
-                FinalTimeTo = DateTime.Now.AddHours(0).AddDays(1).Date.AddSeconds(-1);
-            }
-            else
-            {
-                DateTime dateFrom = DateTime.Parse(datFrom);
-                DateTime dateTo = DateTime.Parse(datTo);
-                string df_date = dateFrom.ToString("d");
-                string dt_date = dateTo.ToString("d");
-                string TF = timFrom;
-                string TT = timTo;
-                string abc = timFrom;
-                string[] abc1 = abc.Split(',');
-                string a = abc1[0];
-                if (abc1.Length > 1)
-                {
-                    TF = abc1[1];
-                }
-                else
-                {
-                    TF = abc1[0];
-                }
-                DataTable dt121 = new DataTable();
-                Session["TimeFrom"] = TF;
-                DateTime timeFrom = DateTime.Parse(TF);
-                string cba = timTo;
-                string[] cba1 = cba.Split(',');
-                TT = cba1[0];
-                DateTime timeTo = DateTime.Parse(TT);
-                string tf_time = timeFrom.ToString("t");
-                string tt_time = timeTo.ToString("t");
-                if (tt_time == "12:00 AM" || tt_time == "11:59 PM")
-                {
-                    tt_time = "11:59:59 PM";
-                }
-                FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
-                FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
-            }
-            DataTable dtRes = new DataTable();
-            DataTable Dashdt = new DataTable();
-            var tubewellDataList = new List<TubewellDataClass>();
-            int resourceID = 0;
-
-            ////////////////////////////////////////////////////////////////////////
-
-            string scriptString = "";
-            
-            string NewscripString = scriptString;
-            ViewData["chartData"] = NewscripString;
-
-            ////////////////////////////////////////////////////////////////////////
-
-
-            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string getResFromTemp = "";
-                    if (resources == "All")
-                    {
-                        getResFromTemp += "select DISTINCT r.ResourceID, r.ResourceLocation, r.ResourceSpecification from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells'";
-                    }
-                    else
-                    {
-                        getResFromTemp += "select DISTINCT r.ResourceID, r.ResourceLocation, r.ResourceSpecification from tblResource r inner join tblTemplate rt on r.TemplateID = rt.TemplateID where rt.TemplateName = 'Tubewells' and r.ResourceLocation = '" + resources + "' ";
-                    }
-
-                    SqlDataAdapter sdaRes = new SqlDataAdapter(getResFromTemp, conn);
-                    dtRes.Clear();
-                    sdaRes.Fill(dtRes);
-                    string resourceLocation = "";
-                    int ite = 0;
-                    double noOfDays = ((Convert.ToDateTime(FinalTimeTo).Date) - (Convert.ToDateTime(FinalTimeFrom).Date)).TotalDays;
-                    for (int daysCount = 0; daysCount <= noOfDays; daysCount++)
-                    {
-                        DateTime ftf = DateTime.Now;
-                        DateTime ftt = DateTime.Now;
-                        if (noOfDays == 0)
-                        {
-                            ftf = FinalTimeFrom;
-                            ftt = FinalTimeTo;
-                        }
-                        if (daysCount == 0 && noOfDays > 0)
-                        {
-                            ftf = FinalTimeFrom;
-                            ftt = FinalTimeFrom.Date.AddDays(daysCount + 1).AddSeconds(-1);
-                        }
-                        if (daysCount > 0 && noOfDays > 0 && daysCount != noOfDays)
-                        {
-                            ftf = FinalTimeFrom.Date.AddDays(daysCount);
-                            ftt = FinalTimeFrom.Date.AddDays(daysCount + 1).AddSeconds(-1);
-                        }
-                        if (noOfDays > 0 && daysCount == noOfDays)
-                        {
-                            ftf = FinalTimeFrom.Date.AddDays(daysCount);
-                            ftt = FinalTimeTo;
-                        }
-                        foreach (DataRow drRes in dtRes.Rows)
-                        {
-                            //getting resourceID 
-                            resourceID = Convert.ToInt32(drRes["ResourceID"]);
-                            //getting resourceLocation 
-                            resourceLocation = drRes["ResourceLocation"].ToString();
-                            //query will get the list of data available against given resourceID (latest first)
-                            string Dashdtquery = ";WITH cte AS ( ";
-                            Dashdtquery += "SELECT* FROM ";
-                            Dashdtquery += "( ";
-                            Dashdtquery += "SELECT DISTINCT r.resourceName AS Location, ";
-                            Dashdtquery += " r.ResourceSpecification AS specifications, r.WaterLevel_m, r.PumpingWaterLevel_hpl, r.RatedDischarge_Q, r.RatedHead_H, r.Discharge_Dia_Dd, ";
-                            Dashdtquery += "r.ResourceID, p.ParameterName AS pID, ";
-                            Dashdtquery += "CAST(s.ParameterValue AS NUMERIC(18,2)) AS pVal, ";
-                            Dashdtquery += "s.InsertionDateTime as tim ,";
-                            Dashdtquery += "DATEDIFF(minute, s.InsertionDateTime, DATEADD(hour, 0,GETDATE ())) as DeltaMinutes ";
-                            Dashdtquery += "FROM tblEnergy s ";
-                            Dashdtquery += "inner join tblResource r on s.ResourceID = r.ResourceID ";
-                            Dashdtquery += "inner join tblParameter p on s.ParameterID = p.ParameterID ";
-                            Dashdtquery += "inner join tblTemplate rt on r.TemplateID = rt.TemplateID ";
-                            Dashdtquery += "where ";
-                            Dashdtquery += "r.ResourceID = " + resourceID + " and ";
-                            //Dashdtquery += "InsertionDateTime > DATEADD(day, DATEDIFF(day, 0, DATEADD(hour,10,GETDATE())), 0) ";
-                            Dashdtquery += "InsertionDateTime >= CONVERT(CHAR(24), CONVERT(DATETIME, '" + ftf + "', 103), 121) and InsertionDateTime <= CONVERT(CHAR(24), CONVERT(DATETIME, '" + ftt + "', 103), 121)  ";
-                            Dashdtquery += ") ";
-                            Dashdtquery += "AS SourceTable ";
-                            Dashdtquery += "PIVOT ";
-                            Dashdtquery += "( ";
-                            Dashdtquery += "SUM(pVal) FOR pID ";
-                            Dashdtquery += "IN ";
-                            Dashdtquery += "( ";
-                            Dashdtquery += "[V1N.],[V2N.],[V3N.],[I1.],[I2.],[I3.],[Frequency.],[PKVA.],[PF.],[Remote.],[PumpStatus],[CurrentTrip.],[VoltageTrip.],[TimeSchedule.],[ChlorineLevel.],[WaterFlow(Cusec).],[PKVAR.],[PKW.],[V12],[V13],[V23],[PrimingLevel],[Pressure(Bar)],[Manual],[vib_z],[vib_y],[vib_x] ";
-                            Dashdtquery += ") ";
-                            Dashdtquery += ")  ";
-                            Dashdtquery += "AS PivotTable ";
-                            Dashdtquery += ")  ";
-                            Dashdtquery += "SELECT* FROM cte ";
-                            Dashdtquery += "order by cast(ResourceID as INT) ASC, ";
-                            Dashdtquery += "tim DESC";
-                            SqlCommand cmd = new SqlCommand(Dashdtquery, conn);
-                            SqlDataAdapter sda = new SqlDataAdapter(Dashdtquery, conn);
-                            Dashdt.Clear();
-                            sda.Fill(Dashdt);
-                            if (Dashdt.Rows.Count > 0)
-                            {
                                 TubewellDataClass sd = getAllSpellsForRemoteStatus(Dashdt, dtRes.Rows.IndexOf(drRes),ftf);
                                 sd.noOfDays = Convert.ToInt32(noOfDays);
                                 tubewellDataList.Add(sd);
@@ -4572,7 +4353,6 @@ namespace WASA_EMS.Controllers
                 selectedResource = "" + resources + " Tubewell";
             }
             Session["ReportTitle"] = "Mode Status Report of " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-            ViewData["AllData"] = JsonConvert.SerializeObject(tubewellDataList);
             return PartialView(tubewellDataList);
         }
         public void report()
@@ -5898,7 +5678,6 @@ namespace WASA_EMS.Controllers
                 tableData.Vibration_m = new List<double>();
                 tableData.Vibration_m_s = new List<double>();
                 tableData.Vibration_m_s_2 = new List<double>();
-                tableData.LogTime = new List<string>();
 
                 tableData.workingHoursTodayManual = "";
                 tableData.workingHoursTodayRemote = "";
@@ -6154,15 +5933,6 @@ namespace WASA_EMS.Controllers
                     {
                         tableData.pressure.Add(Convert.ToDouble(dr["Pressure(Bar)"]));
                     }
-                    ps = dr["tim"];
-                    if (ps == DBNull.Value)
-                    {
-                        tableData.LogTime.Add(tableData.LogTime.LastOrDefault());
-                    }
-                    else
-                    {
-                        tableData.LogTime.Add(dr["tim"].ToString());
-                    }
 
                     object value = dr["vib_x"];
                     if (value == DBNull.Value)
@@ -6241,7 +6011,6 @@ namespace WASA_EMS.Controllers
                 tableData.Vibration_m = new List<double>();
                 tableData.Vibration_m_s = new List<double>();
                 tableData.Vibration_m_s_2 = new List<double>();
-                tableData.LogTime = new List<string>();
 
                 foreach (DataRow dr in dt.Rows)
                 {
@@ -6492,15 +6261,6 @@ namespace WASA_EMS.Controllers
                     else
                     {
                         tableData.pressure.Add(Convert.ToDouble(dr["Pressure(Bar)"]));
-                    }
-                    ps = dr["tim"];
-                    if (ps == DBNull.Value)
-                    {
-                        tableData.LogTime.Add(tableData.LogTime.LastOrDefault());
-                    }
-                    else
-                    {
-                        tableData.LogTime.Add(dr["tim"].ToString());
                     }
 
                     object value = dr["vib_x"];
@@ -7617,10 +7377,6 @@ namespace WASA_EMS.Controllers
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
         public PartialViewResult _TubewellDashboardLocationWise(string resources, string parameter, string datFrom, string timFrom, string datTo, string timTo)
         {
-            if (parameter == "")
-            {
-                parameter = "all";
-            }
             DateTime FinalTimeFrom = DateTime.Now;
             DateTime FinalTimeTo = DateTime.Now;
 
@@ -7733,7 +7489,14 @@ namespace WASA_EMS.Controllers
                             Dashdtquery += "SUM(pVal) FOR pID ";
                             Dashdtquery += "IN ";
                             Dashdtquery += "( ";
-                            Dashdtquery += "[V1N.],[V2N.],[V3N.],[I1.],[I2.],[I3.],[Frequency.],[PKVA.],[PF.],[Remote.],[PumpStatus],[CurrentTrip.],[VoltageTrip.],[TimeSchedule.],[ChlorineLevel.],[WaterFlow(Cusec).],[PKVAR.],[PKW.],[V12],[V13],[V23],[PrimingLevel],[Pressure(Bar)],[Manual],[vib_z],[vib_y],[vib_x] ";
+                            if (drRes["ParameterName"].ToString() == "PumpStatus" || drRes["ParameterName"].ToString() == "Remote." || drRes["ParameterName"].ToString() == "TimeSchedule." || drRes["ParameterName"].ToString() == "Manual")
+                            {
+                                Dashdtquery += "[PumpStatus] , [Remote.] , [TimeSchedule.] , [Manual] ";
+                            }
+                            else
+                            {
+                                Dashdtquery += "[PumpStatus], [Remote.] , [TimeSchedule.] , [Manual] ,[" + drRes["ParameterName"].ToString() + "]  ";
+                            }
                             Dashdtquery += ") ";
                             Dashdtquery += ")  ";
                             Dashdtquery += "AS PivotTable ";

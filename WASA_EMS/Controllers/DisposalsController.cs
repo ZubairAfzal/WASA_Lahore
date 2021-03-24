@@ -3150,6 +3150,7 @@ namespace WASA_EMS.Controllers
         /// <Spell For Pump 4>
 
         ////////////////////////////Spell For Pump 5///////////////////////////////////////////
+        
         public DisposalDataClass getAllSpellsForPump5(DataTable dt)
         {
             var tableData = new DisposalDataClass();
@@ -3459,6 +3460,7 @@ namespace WASA_EMS.Controllers
 
 
         ////////////////////////////Spell For Pump 6///////////////////////////////////////////
+
         public DisposalDataClass getAllSpellsForPump6(DataTable dt)
         {
             var tableData = new DisposalDataClass();
@@ -3774,6 +3776,7 @@ namespace WASA_EMS.Controllers
 
 
         ////////////////////////////Spell For Pump 7///////////////////////////////////////////
+
         public DisposalDataClass getAllSpellsForPump7(DataTable dt)
         {
             var tableData = new DisposalDataClass();
@@ -4083,6 +4086,7 @@ namespace WASA_EMS.Controllers
 
 
         ////////////////////////////Spell For Pump 8///////////////////////////////////////////
+
         public DisposalDataClass getAllSpellsForPump8(DataTable dt)
         {
             var tableData = new DisposalDataClass();
@@ -4392,6 +4396,7 @@ namespace WASA_EMS.Controllers
 
 
         ////////////////////////////Spell For Pump 9///////////////////////////////////////////
+
         public DisposalDataClass getAllSpellsForPump9(DataTable dt)
         {
             var tableData = new DisposalDataClass();
@@ -4701,6 +4706,7 @@ namespace WASA_EMS.Controllers
 
 
         ////////////////////////////Spell For Pump 10///////////////////////////////////////////
+
         public DisposalDataClass getAllSpellsForPump10(DataTable dt)
         {
             var tableData = new DisposalDataClass();

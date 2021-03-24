@@ -610,13 +610,26 @@ div#chartContainer1 {
 
     div#chartContainer1:after {
         content: "";
-        display: block;
         position: absolute;
-        bottom: 0;
+        bottom: 490px;
         left: 0;
-        background: #fff;
-        width: 57px;
-        height: 14px;
+        background: #fbfdff;
+        width: 61px;
+        height: 10px;
+    }
+
+div#chartContainer2 {
+    position: relative;
+}
+
+    div#chartContainer2:after {
+        content: "";
+        position: absolute;
+        bottom: 190px;
+        left: 0px;
+        background: #fbfdff;
+        width: 61px;
+        height: 10px;
     }
 
 a.canvasjs-chart-credit {
