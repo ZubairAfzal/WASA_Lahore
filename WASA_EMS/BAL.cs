@@ -5225,6 +5225,7 @@ namespace WASA_EMS
                 tableData.Vibration_m = new List<double>();
                 tableData.Vibration_m_s = new List<double>();
                 tableData.Vibration_m_s_2 = new List<double>();
+                tableData.LogTime = new List<string>();
 
                 tableData.workingHoursTodayManual = "";
                 tableData.workingHoursTodayRemote = "";
@@ -5481,6 +5482,16 @@ namespace WASA_EMS
                         tableData.pressure.Add(Convert.ToDouble(dr["Pressure(Bar)"]));
                     }
 
+                    ps = dr["tim"];
+                    if (ps == DBNull.Value)
+                    {
+                        tableData.LogTime.Add(tableData.LogTime.LastOrDefault());
+                    }
+                    else
+                    {
+                        tableData.LogTime.Add(dr["tim"].ToString());
+                    }
+
                     object value = dr["vib_x"];
                     if (value == DBNull.Value)
                     {
@@ -5558,6 +5569,7 @@ namespace WASA_EMS
                 tableData.Vibration_m = new List<double>();
                 tableData.Vibration_m_s = new List<double>();
                 tableData.Vibration_m_s_2 = new List<double>();
+                tableData.LogTime = new List<string>();
 
                 foreach (DataRow dr in dt.Rows)
                 {
@@ -5809,7 +5821,15 @@ namespace WASA_EMS
                     {
                         tableData.pressure.Add(Convert.ToDouble(dr["Pressure(Bar)"]));
                     }
-
+                    ps = dr["tim"];
+                    if (ps == DBNull.Value)
+                    {
+                        tableData.LogTime.Add(tableData.LogTime.LastOrDefault());
+                    }
+                    else
+                    {
+                        tableData.LogTime.Add(dr["tim"].ToString());
+                    }
                     object value = dr["vib_x"];
                     if (value == DBNull.Value)
                     {

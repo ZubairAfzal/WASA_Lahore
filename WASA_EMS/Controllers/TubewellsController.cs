@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using WASA_EMS.Models;
 
 namespace WASA_EMS.Controllers
@@ -4361,6 +4362,8 @@ namespace WASA_EMS.Controllers
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 20)]
         public PartialViewResult _RemoteStatusReportView2(string resources, string datFrom, string timFrom, string datTo, string timTo)
         {
+
+            var tubewellDataList = new List<TubewellDataClass>();
             DateTime FinalTimeFrom = DateTime.Now;
             DateTime FinalTimeTo = DateTime.Now;
             if (datFrom == "" && timFrom == "" && datTo == "" && timTo == "")
@@ -4405,7 +4408,6 @@ namespace WASA_EMS.Controllers
             }
             DataTable dtRes = new DataTable();
             DataTable Dashdt = new DataTable();
-            var tubewellDataList = new List<TubewellDataClass>();
             int resourceID = 0;
 
             ////////////////////////////////////////////////////////////////////////
@@ -4572,7 +4574,9 @@ namespace WASA_EMS.Controllers
                 selectedResource = "" + resources + " Tubewell";
             }
             Session["ReportTitle"] = "Mode Status Report of " + selectedResource + " between " + FinalTimeFrom + " to " + FinalTimeTo + "";
-            ViewData["AllData"] = JsonConvert.SerializeObject(tubewellDataList);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            ViewData["AllData"] = serializer.Serialize(tubewellDataList);
+            //JsonConvert.SerializeObject(tubewellDataList);
             return PartialView(tubewellDataList);
         }
         public void report()

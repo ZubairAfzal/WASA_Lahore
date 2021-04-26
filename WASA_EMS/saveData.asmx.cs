@@ -17721,6 +17721,7 @@ namespace WASA_EMS
 
 
         [WebMethod]
+        [ScriptMethod(UseHttpGet = true, XmlSerializeString = false, ResponseFormat = ResponseFormat.Json)]
         public string WhatsAppDataTubewell()
         {
             BAL bal = new BAL();
@@ -17729,6 +17730,7 @@ namespace WASA_EMS
         }
 
         [WebMethod]
+        [ScriptMethod(UseHttpGet = true, XmlSerializeString = false, ResponseFormat = ResponseFormat.Json)]
         public string TubewellsData()
         {
             BAL bal = new BAL();
