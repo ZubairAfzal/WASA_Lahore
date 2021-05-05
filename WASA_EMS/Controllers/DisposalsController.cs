@@ -71,7 +71,7 @@ namespace WASA_EMS.Controllers
             string tt_time = timeTo.ToString("t");
             if (tt_time == "12:00 AM")
             {
-                tt_time = "11:59 PM";
+                tt_time = "11:59:59 PM";
             }
             DateTime FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
             DateTime FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
@@ -139,7 +139,7 @@ namespace WASA_EMS.Controllers
                 string tt_time = timeTo.ToString("t");
                 if (tt_time == "12:00 AM")
                 {
-                    tt_time = "11:59 PM";
+                    tt_time = "11:59:59 PM";
                 }
                 FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
                 FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
@@ -393,7 +393,7 @@ namespace WASA_EMS.Controllers
             string tt_time = timeTo.ToString("t");
             if (tt_time == "12:00 AM")
             {
-                tt_time = "11:59 PM";
+                tt_time = "11:59:59 PM";
             }
             DateTime FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
             DateTime FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);
@@ -461,7 +461,7 @@ namespace WASA_EMS.Controllers
                 string tt_time = timeTo.ToString("t");
                 if (tt_time == "12:00 AM")
                 {
-                    tt_time = "11:59 PM";
+                    tt_time = "11:59:59 PM";
                 }
                 FinalTimeFrom = Convert.ToDateTime(df_date + " " + tf_time);
                 FinalTimeTo = Convert.ToDateTime(dt_date + " " + tt_time);

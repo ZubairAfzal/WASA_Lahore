@@ -1000,6 +1000,22 @@ namespace WASA_EMS
                         df.WorkingInHoursPump10 = "0";
                         df.WorkingHoursPump10 = 0;
                     }
+                    df.TotalWorkingHours = df.WorkingHoursPump1 +
+                        df.WorkingHoursPump2 +
+                        df.WorkingHoursPump3 +
+                        df.WorkingHoursPump4 +
+                        df.WorkingHoursPump5 +
+                        df.WorkingHoursPump6 +
+                        df.WorkingHoursPump7 +
+                        df.WorkingHoursPump8 +
+                        df.WorkingHoursPump9 +
+                        df.WorkingHoursPump10;
+                    var pp = TimeSpan.FromMinutes(df.TotalWorkingHours * 1);
+                    int phour = (int)pp.TotalHours;
+                    int pmin = (int)pp.Minutes;
+                    int psec = (int)pp.Seconds;
+                    string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                    df.TotalWorkingInHours = pstr;
                     disposalFinalDataList.Add(df);
                 }
                 catch (Exception ex)
@@ -1515,6 +1531,22 @@ namespace WASA_EMS
                         df.WorkingInHoursPump10 = "0";
                         df.WorkingHoursPump10 = 0;
                     }
+                    df.TotalWorkingHours = df.WorkingHoursPump1 +
+                        df.WorkingHoursPump2 +
+                        df.WorkingHoursPump3 +
+                        df.WorkingHoursPump4 +
+                        df.WorkingHoursPump5 +
+                        df.WorkingHoursPump6 +
+                        df.WorkingHoursPump7 +
+                        df.WorkingHoursPump8 +
+                        df.WorkingHoursPump9 +
+                        df.WorkingHoursPump10;
+                    var pp = TimeSpan.FromMinutes(df.TotalWorkingHours * 1);
+                    int phour = (int)pp.TotalHours;
+                    int pmin = (int)pp.Minutes;
+                    int psec = (int)pp.Seconds;
+                    string pstr = " " + phour.ToString() + " Hours, " + pmin.ToString() + " Minutes";
+                    df.TotalWorkingInHours = pstr;
                     disposalFinalDataList.Add(df);
                 }
                 catch (Exception ex)

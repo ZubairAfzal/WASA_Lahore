@@ -662,380 +662,555 @@ else
     <script src="~/Metronic/assets/global/plugins/amcharts/amstockcharts/amstock.js"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript" src="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.js"></script>
+
+
     <script>
-			function disposalWatsapp() {
-				var activeDisposals = 0;
-				var disposalLocations = new Array();
-				var disposalWorkingHours = new Array();
-				var disposalTank1Levels = new Array();
-				var disposalTank2Levels = new Array();
+        function disposalWatsappToday() {
+            var activeDisposals = 0;
+            var disposalLocations = new Array();
+            var disposalWorkingHours = new Array();
+            var disposalTank1Levels = new Array();
+            var disposalTank2Levels = new Array();
+            var totalTime;
 
 
-				$.ajax
-					({
-						type: "POST",
-						url: "../saveData.asmx/WhatsAppDataDisposal",
-						data: "{ }",
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "../saveData.asmx/WhatsAppDisposalToday",
+                    data: "{ }",
 
-						contentType: "application/json; charset=utf-8",
-						dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
 
-						async: false,
-						success: function (resp) {
-							var disposalActiveCount = 0;
-							var disposalData = eval(resp.d);
-							for (i = 0; i < disposalData.length; i++) {
-								disposalLocations.push('Shaukat Khanum Disposal Station');
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump1) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump2) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump3) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump4) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump5) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump6) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump7) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump8) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump9) / 60 * 100) / 100);
-								disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump10) / 60 * 100) / 100);
-
-								disposalTank1Levels.push(Math.round(disposalData[i].Well1Level_Average * 100) / 100);
-								disposalTank2Levels.push(Math.round(disposalData[i].Well2Level_Average * 100) / 100);
-								if (disposalData[i].WorkingHoursPump1 +
-									disposalData[i].WorkingHoursPump2 +
-									disposalData[i].WorkingHoursPump3 +
-									disposalData[i].WorkingHoursPump4 +
-									disposalData[i].WorkingHoursPump5 +
-									disposalData[i].WorkingHoursPump6 +
-									disposalData[i].WorkingHoursPump7 +
-									disposalData[i].WorkingHoursPump8 +
-									disposalData[i].WorkingHoursPump9 +
-									disposalData[i].WorkingHoursPump10
-									> 0) {
-									disposalActiveCount++;
-								}
-							}
-							activeDisposals = disposalActiveCount;
-
-						},
-
-					});
-				var totalTime = 0;
-				for (i = 0; i < disposalWorkingHours.length; i++)
-				{
-					totalTime += disposalWorkingHours[i];
-				}
-				var d = new Date();
-				d.setDate(d.getDate() - 1);
-				var theDate = d.toLocaleDateString('en-GB');
-				newd = d.toLocaleDateString('en-029');
-				d = formatDate(newd);
-
-				function hoursToTime(num) {
-					//console.log(num);
-					num = num * 60;
-					var hours = Math.floor(num / 60);
-					var minutes = Math.round(num % 60);
-					return hours + " Hours, " + minutes + " Minutes";
-				}
-
-				function formatDate(date) {
-					var d = new Date(date),
-						month = '' + (d.getMonth() + 1),
-						day = '' + d.getDate(),
-						year = d.getFullYear();
-
-					if (month.length < 2) month = '0' + month;
-					if (day.length < 2) day = '0' + day;
-
-					return [year, month, day].join('/');
-				}
-
-				var timeOfToday = new Date().toLocaleTimeString();
-
-				//console.log(d);
-
-				window.location.href = (
-					'https://api.whatsapp.com/send?text=' + encodeURIComponent("*SUMMARY OF WASA SCADA SYSTEM AT SHOUKAT KHANUM DISPOSAL STATION ON " + theDate + " AT " + timeOfToday +"*"
-						+ "\r\n\r\n" + "*DISPOSAL STATIONS:*" + "\r\n\r\n" + "-Total Disposal = 1" + "\r\n" + "-Total Running Disposal = " + activeDisposals + "\r\n" + "-Power Source = Wapda / Gen. Set "
-						+ "\r\n\r\n" + "*SHAUKAT KHANUM DISPOSAL STATION:*" + "\r\n\r\n" + "*Total Motor Running Hours = " + hoursToTime(parseFloat(totalTime)) + "*" + "\r\n\r\n"
-						+ "*Motor No. 1 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[0])) + " " + "\r\n"
-						+ "*Motor No. 2 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[1])) + " " + "\r\n"
-						+ "*Motor No. 3 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[2])) + " " + "\r\n"
-						+ "*Motor No. 4 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[3])) + " " + "\r\n"
-						+ "*Motor No. 5 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[4])) + " " + "\r\n"
-						+ "*Motor No. 6 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[5])) + " " + "\r\n"
-						+ "*Motor No. 7 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[6])) + " " + "\r\n"
-						+ "*Motor No. 8 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[7])) + " " + "\r\n"
-						+ "*Motor No. 9 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[8])) + " " + "\r\n"
-						+ "*Motor No. 10 Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[9])) + " " + "\r\n\r\n"
-						+ " *Average Level Tank No. 1 = " + disposalTank1Levels[0] + " (ft)" + "\r\n" + " *Average Level Tank No. 2 = " + disposalTank2Levels[0] + " (ft)" + "\r\n\r\n"  +
-
-						"If you want to see the details of the activity, Please feel free to open the following link to reports:" +
-						"\r\n\r\n") +
+                    async: false,
+                    success: function (resp) {
+                        var disposalActiveCount = 0;
+                        var disposalData = eval(resp.d);
+                        for (i = 0; i < disposalData.length; i++) {
+                            disposalLocations.push('Shaukat Khanum Disposal Station');
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump1) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump2) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump3) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump4) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump5) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump6) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump7) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump8) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump9) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump10) / 60 * 100) / 100);
 
 
-					"*1) Motor Status Report of Disposal Station* " + "\r\n" +
-					encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_PumpsReportReportView?resources=All&datFrom=') +
-					encodeURIComponent(d) +
-					encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-					encodeURIComponent(d) +
-					encodeURIComponent('&timTo=12%3A00%20AM')
-					+ "%0A%0A" +
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump1);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump2);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump3);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump4);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump5);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump6);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump7);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump8);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump9);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump10);
 
-					"*2) Wet Well Level Report of Disposal Station* " + "\r\n" +
-					encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_WellsReportView?resources=All&datFrom=') +
-					encodeURIComponent(d) +
-					encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-					encodeURIComponent(d) +
-					encodeURIComponent('&timTo=12%3A00%20AM')
-					+ "%0A%0A" +
+                            totalTime = disposalData[i].TotalWorkingInHours;
 
-					encodeURIComponent("For further detail, please log on to http://wasalhr.ttlogix.com" + "\r\n\r\n" +
-						"*SENT USING WASA RMCS – WASA, LAHORE AUTOMATION DRIVE.* " + "\r\n")
-				);
+                            disposalTank1Levels.push(Math.round(disposalData[i].Well1Level_Average * 100) / 100);
+                            disposalTank2Levels.push(Math.round(disposalData[i].Well2Level_Average * 100) / 100);
+                            if (disposalData[i].WorkingHoursPump1 +
+                                disposalData[i].WorkingHoursPump2 +
+                                disposalData[i].WorkingHoursPump3 +
+                                disposalData[i].WorkingHoursPump4 +
+                                disposalData[i].WorkingHoursPump5 +
+                                disposalData[i].WorkingHoursPump6 +
+                                disposalData[i].WorkingHoursPump7 +
+                                disposalData[i].WorkingHoursPump8 +
+                                disposalData[i].WorkingHoursPump9 +
+                                disposalData[i].WorkingHoursPump10
+                                > 0) {
+                                disposalActiveCount++;
+                            }
+                        }
+                        activeDisposals = disposalActiveCount;
 
-			}
+                    },
+
+                });
+            //var totalTime = 0;
+            //for (i = 0; i < disposalWorkingHours.length; i++)
+            //{
+            //	totalTime += disposalWorkingHours[i];
+            //}
+            var d = new Date();
+            d.setDate(d.getDate());
+            var theDate = d.toLocaleDateString('en-GB');
+            newd = d.toLocaleDateString('en-029');
+            d = formatDate(newd);
+
+            function hoursToTime(num) {
+                //console.log(num);
+                num = num * 60;
+                var hours = Math.floor(num / 60);
+                var minutes = Math.round(num % 60);
+                return hours + " Hours, " + minutes + " Minutes";
+            }
+
+            function formatDate(date) {
+                var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+
+                return [year, month, day].join('/');
+            }
+
+            var timeOfToday = new Date().toLocaleTimeString();
+
+
+            //alert(hoursToTime(parseFloat(tubewellWorkingHours[0])));
+            //console.log(d);
+
+            window.location.href = (
+                'https://api.whatsapp.com/send?text=' + encodeURIComponent("*SUMMARY OF WASA SCADA SYSTEM AT SHOUKAT KHANUM DISPOSAL STATION TODAY (" + theDate + ") AT " + timeOfToday + "*"
+                    + "\r\n\r\n" + "*DISPOSAL STATIONS:*" + "\r\n\r\n" + "-Total Disposal = 1" + "\r\n" + "-Total Running Disposal = " + activeDisposals + "\r\n" + "-Power Source = Wapda / Gen. Set "
+                    + "\r\n\r\n" + "*SHAUKAT KHANUM DISPOSAL STATION:*" + "\r\n\r\n" + "*Total Motor Running Hours = " + totalTime + "*" + "\r\n\r\n"
+                    + "*Motor No. 1 Running Hours = " + disposalWorkingHours[0] + " " + "\r\n"
+                    + "*Motor No. 2 Running Hours = " + disposalWorkingHours[1] + " " + "\r\n"
+                    + "*Motor No. 3 Running Hours = " + disposalWorkingHours[2] + " " + "\r\n"
+                    + "*Motor No. 4 Running Hours = " + disposalWorkingHours[3] + " " + "\r\n"
+                    + "*Motor No. 5 Running Hours = " + disposalWorkingHours[4] + " " + "\r\n"
+                    + "*Motor No. 6 Running Hours = " + disposalWorkingHours[5] + " " + "\r\n"
+                    + "*Motor No. 7 Running Hours = " + disposalWorkingHours[6] + " " + "\r\n"
+                    + "*Motor No. 8 Running Hours = " + disposalWorkingHours[7] + " " + "\r\n"
+                    + "*Motor No. 9 Running Hours = " + disposalWorkingHours[8] + " " + "\r\n"
+                    + "*Motor No. 10 Running Hours = " + disposalWorkingHours[9] + " " + "\r\n\r\n"
+                    + " *Average Level Tank No. 1 = " + disposalTank1Levels[0] + " (ft)" + "\r\n" + " *Average Level Tank No. 2 = " + disposalTank2Levels[0] + " (ft)" + "\r\n\r\n" +
+
+                    "If you want to see the details of the activity, Please feel free to open the following link to reports:" +
+                    "\r\n\r\n") +
+
+
+                "*1) Motor Status Report of Disposal Station* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_PumpsReportReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                "*2) Wet Well Level Report of Disposal Station* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_WellsReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                encodeURIComponent("For further detail, please log on to http://wasalhr.ttlogix.com" + "\r\n\r\n" +
+                    "*SENT USING WASA RMCS – WASA, LAHORE AUTOMATION DRIVE.* " + "\r\n")
+            );
+
+        }
 
     </script>
+
     <script>
-            function openWatsapp() {
-                var activeTubewells = 0;
-                var activeDisposals = 0;
-                var activeRecyclingPlants = 0;
-                var chlorineStatus = 'Available';
-                var tubewellLocations = new Array();
-                var tubewellWorkingHours = new Array();
-                var disposalLocations = new Array();
-                var disposalWorkingHours = new Array();
-                var disposalTank1Levels = new Array();
-                var disposalTank2Levels = new Array();
-                var recyclingLocations = new Array();
-                var recylcingPump1WorkingHours = new Array();
-                var recylcingPump2WorkingHours = new Array();
-                var recylcingPump3WorkingHours = new Array();
+        function disposalWatsapp() {
+            var activeDisposals = 0;
+            var disposalLocations = new Array();
+            var disposalWorkingHours = new Array();
+            var disposalTank1Levels = new Array();
+            var disposalTank2Levels = new Array();
+            var totalTime;
 
-                $.ajax
-                    ({
-                        type: "POST",
-                        url: "../saveData.asmx/WhatsAppDataTubewell",
-                        data: "{ }",
 
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "../saveData.asmx/WhatsAppDataDisposal",
+                    data: "{ }",
 
-                        async: false,
-                        success: function (resp) {
-                            var tubewellActiveCount = 0;
-                            var tubewellData = eval(resp.d);
-                            for (i = 0; i < tubewellData.length; i++) {
-                                tubewellLocations.push(tubewellData[i].locationName);
-                                tubewellWorkingHours.push(Math.round(tubewellData[i].WorkingInHours * 100) / 100);
-                                if (tubewellData[i].WorkingInHours > 0) {
-                                    tubewellActiveCount++;
-                                }
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    async: false,
+                    success: function (resp) {
+                        var disposalActiveCount = 0;
+                        var disposalData = eval(resp.d);
+                        for (i = 0; i < disposalData.length; i++) {
+                            disposalLocations.push('Shaukat Khanum Disposal Station');
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump1) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump2) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump3) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump4) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump5) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump6) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump7) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump8) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump9) / 60 * 100) / 100);
+                            //disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump10) / 60 * 100) / 100);
+
+
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump1);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump2);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump3);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump4);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump5);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump6);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump7);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump8);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump9);
+                            disposalWorkingHours.push(disposalData[i].WorkingInHoursPump10);
+
+                            totalTime = disposalData[i].TotalWorkingInHours;
+
+                            disposalTank1Levels.push(Math.round(disposalData[i].Well1Level_Average * 100) / 100);
+                            disposalTank2Levels.push(Math.round(disposalData[i].Well2Level_Average * 100) / 100);
+                            if (disposalData[i].WorkingHoursPump1 +
+                                disposalData[i].WorkingHoursPump2 +
+                                disposalData[i].WorkingHoursPump3 +
+                                disposalData[i].WorkingHoursPump4 +
+                                disposalData[i].WorkingHoursPump5 +
+                                disposalData[i].WorkingHoursPump6 +
+                                disposalData[i].WorkingHoursPump7 +
+                                disposalData[i].WorkingHoursPump8 +
+                                disposalData[i].WorkingHoursPump9 +
+                                disposalData[i].WorkingHoursPump10
+                                > 0) {
+                                disposalActiveCount++;
                             }
-                            activeTubewells = tubewellActiveCount;
+                        }
+                        activeDisposals = disposalActiveCount;
 
-                        },
+                    },
 
-                    });
-                console.log(tubewellWorkingHours);
-                $.ajax
-                    ({
-                        type: "POST",
-                        url: "../saveData.asmx/WhatsAppDataDisposal",
-                        data: "{ }",
+                });
+            //var totalTime = 0;
+            //for (i = 0; i < disposalWorkingHours.length; i++)
+            //{
+            //	totalTime += disposalWorkingHours[i];
+            //}
+            var d = new Date();
+            d.setDate(d.getDate() - 1);
+            var theDate = d.toLocaleDateString('en-GB');
+            newd = d.toLocaleDateString('en-029');
+            d = formatDate(newd);
 
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-
-                        async: false,
-                        success: function (resp) {
-                            var disposalActiveCount = 0;
-                            var disposalData = eval(resp.d);
-                            for (i = 0; i < disposalData.length; i++) {
-                                disposalLocations.push('Shaukat Khanum Disposal Station');
-                                disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump1 +
-                                    disposalData[i].WorkingHoursPump2 +
-                                    disposalData[i].WorkingHoursPump3 +
-                                    disposalData[i].WorkingHoursPump4 +
-                                    disposalData[i].WorkingHoursPump5 +
-                                    disposalData[i].WorkingHoursPump6 +
-                                    disposalData[i].WorkingHoursPump7 +
-                                    disposalData[i].WorkingHoursPump8 +
-                                    disposalData[i].WorkingHoursPump9 +
-                                    disposalData[i].WorkingHoursPump10) / 60 * 100) / 100);
-                                disposalTank1Levels.push(Math.round(disposalData[i].Well1Level_Average * 100) / 100);
-                                disposalTank2Levels.push(Math.round(disposalData[i].Well2Level_Average * 100) / 100);
-                                if (disposalData[i].WorkingHoursPump1 +
-                                    disposalData[i].WorkingHoursPump2 +
-                                    disposalData[i].WorkingHoursPump3 +
-                                    disposalData[i].WorkingHoursPump4 +
-                                    disposalData[i].WorkingHoursPump5 +
-                                    disposalData[i].WorkingHoursPump6 +
-                                    disposalData[i].WorkingHoursPump7 +
-                                    disposalData[i].WorkingHoursPump8 +
-                                    disposalData[i].WorkingHoursPump9 +
-                                    disposalData[i].WorkingHoursPump10
-                                    > 0) {
-                                    disposalActiveCount++;
-                                }
-                            }
-                            activeDisposals = disposalActiveCount;
-
-                        },
-
-                    });
-
-                $.ajax
-                    ({
-                        type: "POST",
-                        url: "../saveData.asmx/WhatsAppDataRecyclingPlant",
-                        data: "{ }",
-
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-
-                        async: false,
-                        success: function (resp) {
-                            var recyclingPlantActiveCount = 0;
-                            var recyclingPlantData = eval(resp.d);
-                            for (i = 0; i < recyclingPlantData.length; i++) {
-                                recyclingLocations.push(recyclingPlantData[i].LocationName);
-                                recylcingPump1WorkingHours.push(Math.round(recyclingPlantData[i].WorkingHoursPump1 * 100) / 100);
-                                recylcingPump2WorkingHours.push(Math.round(recyclingPlantData[i].WorkingHoursPump2 * 100) / 100);
-                                recylcingPump3WorkingHours.push(Math.round(recyclingPlantData[i].WorkingHoursPump3 * 100) / 100);
-                                if (recyclingPlantData[i].WorkingHoursPump1 + recyclingPlantData[i].WorkingHoursPump2 > 0) {
-                                    recyclingPlantActiveCount++;
-                                }
-                            }
-                            activeRecyclingPlants = recyclingPlantActiveCount;
-
-                        },
-
-                    });
-
-                var d = new Date();
-                d.setDate(d.getDate() - 1);
-                var theDate = d.toLocaleDateString('en-GB');
-                newd = d.toLocaleDateString('en-029');
-                d = formatDate(newd);
-
-                function hoursToTime(num) {
-                    //console.log(num);
-                    num = num * 60;
-                    var hours = Math.floor(num / 60);
-                    var minutes = Math.round(num % 60);
-                    return hours + " Hours, " + minutes + " Minutes ";
-                }
-
-                function hoursToTimeRecycling(num) {
-                    //console.log(num);
-                    //num = num * 60;
-                    var hours = Math.floor(num / 60);
-                    var minutes = Math.round(num % 60);
-                    return hours + " Hours, " + minutes + " Minutes ";
-                }
-
-                function formatDate(date) {
-                    var d = new Date(date),
-                        month = '' + (d.getMonth() + 1),
-                        day = '' + d.getDate(),
-                        year = d.getFullYear();
-
-                    if (month.length < 2) month = '0' + month;
-                    if (day.length < 2) day = '0' + day;
-
-                    return [year, month, day].join('/');
-                }
-
-                //console.log(d);
-
-                window.location.href = (
-                    'https://api.whatsapp.com/send?text=' + encodeURIComponent("*DAILY SUMMARY OF WASA SCADA SYSTEM ON " + theDate + " AT 11:59:59 PM*\r\n\r\n" + "*TUBEWELLS:*" + "\r\n" + "-Total Tubewells = 7" + "\r\n" + "-Total Running Tubewells = "
-                        + activeTubewells + "\r\n" + "-Chlorine Status = Available" + "\r\n\r\n" + "*Tubewell Name and Working Hours:*"
-                        + "\r\n" + "*C-II Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[0]))
-                        + "\r\n" + "*A-III Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[1]))
-                        + "\r\n" + "*D-II Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[2]))
-                        + "\r\n" + "*E Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[3]))
-                        + "\r\n" + "*Campus View Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[4]))
-                        + "\r\n" + "*F-I Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[5]))
-                        + "\r\n" + "*C Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[6]))
-                        + "\r\n\r\n" + "*DISPOSAL STATIONS:*" + "\r\n" + "-Total Disposal = 1" + "\r\n" + "-Total Running Disposal = " + activeDisposals
-                        + "\r\n\r\n" + "*Shaukat Khanum Disposal Station*" + "\r\n" + "*Total Motor Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[0])) + " " + "\r\n" + " * Average Level Tank No. 1 = " + disposalTank1Levels[0] + " (ft)" + "\r\n" + " * Average Level Tank No. 2 = " + disposalTank2Levels[0] + " (ft)" + "\r\n\r\n" + "*RECYCLING PLANTS:* " + "\r\n" +
-                        "-Total Recycling Plants = 2" + "\r\n" + "-Total Running Recycling Plants = " + activeRecyclingPlants + "" + "\r\n\r\n" +
-                        "*Total Petrol Station Johar Town:*" + "\r\n" + "*Submercible Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump1WorkingHours[0])) + " " + "\r\n" + "*Filtered Water Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump2WorkingHours[0])) + " " +
-                        "\r\n\r\n" +
-                        "*Attock Petroleum Davis Road:*" + "\r\n" + "*Submercible Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump1WorkingHours[1])) + " " + "\r\n" + "*Filtered Water Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump2WorkingHours[1])) + " " +
-                        "\r\n\r\n" +
-                        "If you want to see the details of the whole day activity, Please feel free to open the following link to reports:" +
-                        "\r\n\r\n") +
-
-                    "*1) Energy Monitoring Report* " + "\r\n" +
-
-                    encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_EnergyMonitoringReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-                    + "%0A%0A" +
-
-                    "*2) Water Flow Report* " + "\r\n" +
-                    encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_WaterDischargeReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-
-                    + "%0A%0A" +
-
-                    "*3) Mode Status Report* " + "\r\n" +
-                    encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_RemoteStatusReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-                    + "%0A%0A" +
-
-                    "*4) Vibration Report* " + "\r\n" +
-                    encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_VibrationAnalysisReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-                    + "%0A%0A" +
-
-                    "*5) Recycling Plant Report* " + "\r\n" +
-                    encodeURIComponent('http://wasalhr.ttlogix.com/RecyclingPlant/_PumpReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-                    + "%0A%0A" +
-
-
-                    "*6) Motor Status Report of Disposal Station* " + "\r\n" +
-                    encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_PumpsReportReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-                    + "%0A%0A" +
-
-                    "*7) Wet Well Level Report of Disposal Station* " + "\r\n" +
-                    encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_WellsReportView?resources=All&datFrom=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
-                    encodeURIComponent(d) +
-                    encodeURIComponent('&timTo=12%3A00%20AM')
-                    + "%0A%0A" +
-
-                    encodeURIComponent("For further detail, please log on to http://wasalhr.ttlogix.com" + "\r\n\r\n" +
-                        "*SENT USING WASA RMCS – WASA, LAHORE AUTOMATION DRIVE.* " + "\r\n")
-                );
-
-                // Yahan per text add kar do jo sender karna hai
-
+            function hoursToTime(num) {
+                //console.log(num);
+                num = num * 60;
+                var hours = Math.floor(num / 60);
+                var minutes = Math.round(num % 60);
+                return hours + " Hours, " + minutes + " Minutes";
             }
+
+            function formatDate(date) {
+                var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+
+                return [year, month, day].join('/');
+            }
+
+            var timeOfToday = new Date().toLocaleTimeString();
+
+
+            alert(hoursToTime(parseFloat(tubewellWorkingHours[0])));
+            //console.log(d);
+
+            window.location.href = (
+                'https://api.whatsapp.com/send?text=' + encodeURIComponent("*SUMMARY OF WASA SCADA SYSTEM AT SHOUKAT KHANUM DISPOSAL STATION ON " + theDate + " AT " + timeOfToday + "*"
+                    + "\r\n\r\n" + "*DISPOSAL STATIONS:*" + "\r\n\r\n" + "-Total Disposal = 1" + "\r\n" + "-Total Running Disposal = " + activeDisposals + "\r\n" + "-Power Source = Wapda / Gen. Set "
+                    + "\r\n\r\n" + "*SHAUKAT KHANUM DISPOSAL STATION:*" + "\r\n\r\n" + "*Total Motor Running Hours = " + totalTime + "*" + "\r\n\r\n"
+                    + "*Motor No. 1 Running Hours = " + disposalWorkingHours[0] + " " + "\r\n"
+                    + "*Motor No. 2 Running Hours = " + disposalWorkingHours[1] + " " + "\r\n"
+                    + "*Motor No. 3 Running Hours = " + disposalWorkingHours[2] + " " + "\r\n"
+                    + "*Motor No. 4 Running Hours = " + disposalWorkingHours[3] + " " + "\r\n"
+                    + "*Motor No. 5 Running Hours = " + disposalWorkingHours[4] + " " + "\r\n"
+                    + "*Motor No. 6 Running Hours = " + disposalWorkingHours[5] + " " + "\r\n"
+                    + "*Motor No. 7 Running Hours = " + disposalWorkingHours[6] + " " + "\r\n"
+                    + "*Motor No. 8 Running Hours = " + disposalWorkingHours[7] + " " + "\r\n"
+                    + "*Motor No. 9 Running Hours = " + disposalWorkingHours[8] + " " + "\r\n"
+                    + "*Motor No. 10 Running Hours = " + disposalWorkingHours[9] + " " + "\r\n\r\n"
+                    + " *Average Level Tank No. 1 = " + disposalTank1Levels[0] + " (ft)" + "\r\n" + " *Average Level Tank No. 2 = " + disposalTank2Levels[0] + " (ft)" + "\r\n\r\n" +
+
+                    "If you want to see the details of the activity, Please feel free to open the following link to reports:" +
+                    "\r\n\r\n") +
+
+
+                "*1) Motor Status Report of Disposal Station* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_PumpsReportReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                "*2) Wet Well Level Report of Disposal Station* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_WellsReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                encodeURIComponent("For further detail, please log on to http://wasalhr.ttlogix.com" + "\r\n\r\n" +
+                    "*SENT USING WASA RMCS – WASA, LAHORE AUTOMATION DRIVE.* " + "\r\n")
+            );
+
+        }
+
+    </script>
+
+
+
+    <script>
+        function openWatsapp() {
+            var activeTubewells = 0;
+            var activeDisposals = 0;
+            var activeRecyclingPlants = 0;
+            var chlorineStatus = 'Available';
+            var tubewellLocations = new Array();
+            var tubewellWorkingHours = new Array();
+            var disposalLocations = new Array();
+            var disposalWorkingHours = new Array();
+            var disposalTank1Levels = new Array();
+            var disposalTank2Levels = new Array();
+            var recyclingLocations = new Array();
+            var recylcingPump1WorkingHours = new Array();
+            var recylcingPump2WorkingHours = new Array();
+            var recylcingPump3WorkingHours = new Array();
+
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "../saveData.asmx/WhatsAppDataTubewell",
+                    data: "{ }",
+
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    async: false,
+                    success: function (resp) {
+                        var tubewellActiveCount = 0;
+                        var tubewellData = eval(resp.d);
+                        for (i = 0; i < tubewellData.length; i++) {
+                            tubewellLocations.push(tubewellData[i].locationName);
+                            tubewellWorkingHours.push(Math.round(tubewellData[i].WorkingInHours * 100) / 100);
+                            if (tubewellData[i].WorkingInHours > 0) {
+                                tubewellActiveCount++;
+                            }
+                        }
+                        activeTubewells = tubewellActiveCount;
+
+                    },
+
+                });
+            console.log(tubewellWorkingHours);
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "../saveData.asmx/WhatsAppDataDisposal",
+                    data: "{ }",
+
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    async: false,
+                    success: function (resp) {
+                        var disposalActiveCount = 0;
+                        var disposalData = eval(resp.d);
+                        for (i = 0; i < disposalData.length; i++) {
+                            disposalLocations.push('Shaukat Khanum Disposal Station');
+                            disposalWorkingHours.push(Math.round((disposalData[i].WorkingHoursPump1 +
+                                disposalData[i].WorkingHoursPump2 +
+                                disposalData[i].WorkingHoursPump3 +
+                                disposalData[i].WorkingHoursPump4 +
+                                disposalData[i].WorkingHoursPump5 +
+                                disposalData[i].WorkingHoursPump6 +
+                                disposalData[i].WorkingHoursPump7 +
+                                disposalData[i].WorkingHoursPump8 +
+                                disposalData[i].WorkingHoursPump9 +
+                                disposalData[i].WorkingHoursPump10) / 60 * 100) / 100);
+                            disposalTank1Levels.push(Math.round(disposalData[i].Well1Level_Average * 100) / 100);
+                            disposalTank2Levels.push(Math.round(disposalData[i].Well2Level_Average * 100) / 100);
+                            if (disposalData[i].WorkingHoursPump1 +
+                                disposalData[i].WorkingHoursPump2 +
+                                disposalData[i].WorkingHoursPump3 +
+                                disposalData[i].WorkingHoursPump4 +
+                                disposalData[i].WorkingHoursPump5 +
+                                disposalData[i].WorkingHoursPump6 +
+                                disposalData[i].WorkingHoursPump7 +
+                                disposalData[i].WorkingHoursPump8 +
+                                disposalData[i].WorkingHoursPump9 +
+                                disposalData[i].WorkingHoursPump10
+                                > 0) {
+                                disposalActiveCount++;
+                            }
+                        }
+                        activeDisposals = disposalActiveCount;
+
+                    },
+
+                });
+
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "../saveData.asmx/WhatsAppDataRecyclingPlant",
+                    data: "{ }",
+
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    async: false,
+                    success: function (resp) {
+                        var recyclingPlantActiveCount = 0;
+                        var recyclingPlantData = eval(resp.d);
+                        for (i = 0; i < recyclingPlantData.length; i++) {
+                            recyclingLocations.push(recyclingPlantData[i].LocationName);
+                            recylcingPump1WorkingHours.push(Math.round(recyclingPlantData[i].WorkingHoursPump1 * 100) / 100);
+                            recylcingPump2WorkingHours.push(Math.round(recyclingPlantData[i].WorkingHoursPump2 * 100) / 100);
+                            recylcingPump3WorkingHours.push(Math.round(recyclingPlantData[i].WorkingHoursPump3 * 100) / 100);
+                            if (recyclingPlantData[i].WorkingHoursPump1 + recyclingPlantData[i].WorkingHoursPump2 > 0) {
+                                recyclingPlantActiveCount++;
+                            }
+                        }
+                        activeRecyclingPlants = recyclingPlantActiveCount;
+
+                    },
+
+                });
+
+            var d = new Date();
+            d.setDate(d.getDate() - 1);
+            var theDate = d.toLocaleDateString('en-GB');
+            newd = d.toLocaleDateString('en-029');
+            d = formatDate(newd);
+
+            function hoursToTime(num) {
+                //console.log(num);
+                num = num * 60;
+                var hours = Math.floor(num / 60);
+                var minutes = Math.round(num % 60);
+                return hours + " Hours, " + minutes + " Minutes ";
+            }
+
+            function hoursToTimeRecycling(num) {
+                //console.log(num);
+                //num = num * 60;
+                var hours = Math.floor(num / 60);
+                var minutes = Math.round(num % 60);
+                return hours + " Hours, " + minutes + " Minutes ";
+            }
+
+            function formatDate(date) {
+                var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+
+                return [year, month, day].join('/');
+            }
+
+
+            //console.log(d);
+
+            window.location.href = (
+                'https://api.whatsapp.com/send?text=' + encodeURIComponent("*DAILY SUMMARY OF WASA SCADA SYSTEM ON " + theDate + " AT 11:59:59 PM*\r\n\r\n" + "*TUBEWELLS:*" + "\r\n" + "-Total Tubewells = 7" + "\r\n" + "-Total Running Tubewells = "
+                    + activeTubewells + "\r\n" + "-Chlorine Status = Available" + "\r\n\r\n" + "*Tubewell Name and Working Hours:*"
+                    + "\r\n" + "*C-II Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[0]))
+                    + "\r\n" + "*A-III Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[1]))
+                    + "\r\n" + "*D-II Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[2]))
+                    + "\r\n" + "*E Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[3]))
+                    + "\r\n" + "*Campus View Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[4]))
+                    + "\r\n" + "*F-I Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[5]))
+                    + "\r\n" + "*C Block Tubewell = " + hoursToTime(parseFloat(tubewellWorkingHours[6]))
+                    + "\r\n\r\n" + "*DISPOSAL STATIONS:*" + "\r\n" + "-Total Disposal = 1" + "\r\n" + "-Total Running Disposal = " + activeDisposals
+                    + "\r\n\r\n" + "*Shaukat Khanum Disposal Station*" + "\r\n" + "*Total Motor Running Hours = " + hoursToTime(parseFloat(disposalWorkingHours[0])) + " " + "\r\n" + " * Average Level Tank No. 1 = " + disposalTank1Levels[0] + " (ft)" + "\r\n" + " * Average Level Tank No. 2 = " + disposalTank2Levels[0] + " (ft)" + "\r\n\r\n" + "*RECYCLING PLANTS:* " + "\r\n" +
+                    "-Total Recycling Plants = 2" + "\r\n" + "-Total Running Recycling Plants = " + activeRecyclingPlants + "" + "\r\n\r\n" +
+                    "*Total Petrol Station Johar Town:*" + "\r\n" + "*Submercible Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump1WorkingHours[0])) + " " + "\r\n" + "*Filtered Water Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump2WorkingHours[0])) + " " +
+                    "\r\n\r\n" +
+                    "*Attock Petroleum Davis Road:*" + "\r\n" + "*Submercible Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump1WorkingHours[1])) + " " + "\r\n" + "*Filtered Water Pump Running Hours = " + hoursToTimeRecycling(parseFloat(recylcingPump2WorkingHours[1])) + " " +
+                    "\r\n\r\n" +
+                    "If you want to see the details of the whole day activity, Please feel free to open the following link to reports:" +
+                    "\r\n\r\n") +
+
+                "*1) Energy Monitoring Report* " + "\r\n" +
+
+                encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_EnergyMonitoringReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                "*2) Water Flow Report* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_WaterDischargeReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+
+                + "%0A%0A" +
+
+                "*3) Mode Status Report* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_RemoteStatusReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                "*4) Vibration Report* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Tubewells/_VibrationAnalysisReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                "*5) Recycling Plant Report* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/RecyclingPlant/_PumpReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+
+                "*6) Motor Status Report of Disposal Station* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_PumpsReportReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                "*7) Wet Well Level Report of Disposal Station* " + "\r\n" +
+                encodeURIComponent('http://wasalhr.ttlogix.com/Disposals/_WellsReportView?resources=All&datFrom=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timFrom=12%3A00%20AM&datTo=') +
+                encodeURIComponent(d) +
+                encodeURIComponent('&timTo=12%3A00%20AM')
+                + "%0A%0A" +
+
+                encodeURIComponent("For further detail, please log on to http://wasalhr.ttlogix.com" + "\r\n\r\n" +
+                    "*SENT USING WASA RMCS – WASA, LAHORE AUTOMATION DRIVE.* " + "\r\n")
+            );
+
+            // Yahan per text add kar do jo sender karna hai
+
+        }
 
     </script>
 
@@ -1131,13 +1306,12 @@ else
                                 //$('span.count').html(count);
                                 //$('span.noti').css("color", "white");
                                 //$('span.count').css({ "background-color": "red", "color": "white" });
-								$('span.count').show();
+                                $('span.count').show();
                                 $('span.count').html(count);
                             }
-							else
-							{
-								$('span.count').hide();
-							}
+                            else {
+                                $('span.count').hide();
+                            }
                         }
                     })
                     //count = parseInt($('span.count').html()) || 0;
@@ -1171,344 +1345,344 @@ else
 
 
     <script>
-            $(document).ready(function () {
-                var Dashboard = function () {
+        $(document).ready(function () {
+            var Dashboard = function () {
 
-                    return {
+                return {
 
-                        initAmChart1: function () {
-                            if ("undefined" != typeof AmCharts ) {
+                    initAmChart1: function () {
+                        if ("undefined" != typeof AmCharts) {
 
 
-                                var disposalChartData;
-                                var eArray = [];
-                                var pondingArr = [];
-                                $.getJSON('/Ponding/LoadPondingChartData/', function (data) {
-                                    //alert(data);
-                                    //console.log(data);
-                                    var parsedObj = $.parseJSON(data);
-                                    //console.log(data);
-                                    $.each(parsedObj, function (key, obj) {
-                                        var colr = "";
-                                        var thePonding = 0;
-                                        if (obj.DeltaMinutes > -520) {
-                                            colr = "#08a3cc";
-                                            thePonding = 0;
+                            var disposalChartData;
+                            var eArray = [];
+                            var pondingArr = [];
+                            $.getJSON('/Ponding/LoadPondingChartData/', function (data) {
+                                //alert(data);
+                                //console.log(data);
+                                var parsedObj = $.parseJSON(data);
+                                //console.log(data);
+                                $.each(parsedObj, function (key, obj) {
+                                    var colr = "";
+                                    var thePonding = 0;
+                                    if (obj.DeltaMinutes > -520) {
+                                        colr = "#08a3cc";
+                                        thePonding = 0;
+                                    }
+                                    else {
+                                        var maxThreshold = data.maxThrs;
+                                        if (maxThreshold == "") {
+                                            maxThreshold = 10;
                                         }
-                                        else {
-                                            var maxThreshold = data.maxThrs;
-                                            if (maxThreshold == "") {
-                                                maxThreshold = 10;
-                                            }
-                                            thePonding = Math.round((obj.ponding / 2.54), 1);
-                                            if (thePonding < maxThreshold) {
-                                                colr = "#00ff00";
-                                            }
-                                            else {
-                                                colr = "#ff0000";
-                                            }
-                                        }
-                                        var eObj = {
-                                            category: obj.category,
-                                            ponding: thePonding,
-                                            townName: obj.townName,
-                                            townName2: obj.townName2,
-                                            collr: colr
-                                        };
-                                        eArray.push(eObj);
-                                        pondingArr.push(obj.ponding);
-                                    });
-                                    var e = eArray;
-                                    AmCharts.makeChart("dashboard_amchart_1", {
-                                        type: "serial",
-                                        fontSize: 12,
-                                        fontFamily: "Open Sans",
-                                        dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                        dataProvider: e,
-                                        addClassNames: !0,
-                                        startDuration: 1,
-                                        color: "#6c7b88",
-                                        marginLeft: 0,
-                                        categoryField: "category",
-                                        categoryAxis: {
-                                            equalSpacing: false,
-                                            labelRotation: 60,
-                                            autoGridCount: !1,
-                                            gridCount: 50,
-                                            gridAlpha: .1,
-                                            gridColor: "#FFFFFF",
-                                            axisColor: "#555555",
-                                        },
-                                        valueAxes: [{
-                                            id: "a1",
-                                            title: "Water Level at Each Ponding Location",
-                                            gridAlpha: 0,
-                                            axisAlpha: 0
-                                        },],
-                                        graphs: [{
-                                            id: "g1",
-                                            valueField: "ponding",
-                                            title: "Water Level",
-                                            type: "column",
-                                            "topRadius": 1,
-                                            fillAlphas: .7,
-                                            valueAxis: "a1",
-                                            balloonText: "[[value]] inch",
-                                            //legendValueText: "[[value]] inch",
-                                            legendValueText: "[[category]] : [[value]] inch Ponding",
-                                            //legendPeriodValueText: "Average: [[value.average]] inch",
-                                            lineColor: "collr",
-                                            alphaField: "alpha",
-                                            colorField: "collr",
-                                            fillColors: "collr"
-                                        },
-                                        ],
-                                        "depth3D": 40,
-                                        "angle": 30,
-                                        "chartCursor": {
-                                            "categoryBalloonEnabled": false,
-                                            "cursorAlpha": 0,
-                                            "zoomable": false
-                                        },
-                                        chartCursor: {
-                                            zoomable: !1,
-                                            categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                            cursorAlpha: 0,
-                                            categoryBalloonColor: "#e26a6a",
-                                            categoryBalloonAlpha: .8,
-                                            valueBalloonsEnabled: !1
-                                        },
-                                        legend: {
-                                            bulletType: "round",
-                                            equalWidths: !1,
-                                            valueWidth: 120,
-                                            useGraphSettings: !0,
-                                            color: "#6c7b88"
-                                        }
-                                    })
-                                });
-
-                            }
-                        },
-
-                        initAmChart2: function () {
-                            if ("undefined" != typeof AmCharts) {
-
-
-                                var disposalChartData;
-                                var eArray = [];
-                                var pondingArr = [];
-                                $.getJSON('/Rain/LoadRainChartData/', function (data) {
-                                    var parsedObj = $.parseJSON(data);
-                                    //alert(data);
-                                    $.each(parsedObj, function (key, obj) {
-                                        var colr = "";
-                                        if (obj.ponding < 3) {
-                                            colr = "#08a3cc";
+                                        thePonding = Math.round((obj.ponding / 2.54), 1);
+                                        if (thePonding < maxThreshold) {
+                                            colr = "#00ff00";
                                         }
                                         else {
                                             colr = "#ff0000";
                                         }
-                                        var eObj = {
-                                            category: obj.category,
-                                            ponding: obj.ponding,
-                                            townName: obj.townName,
-                                            townName2: obj.townName2,
-                                            collr: colr
-                                        };
-                                        eArray.push(eObj);
-                                        pondingArr.push(obj.ponding);
-                                    });
-                                    var e = eArray;
-                                    AmCharts.makeChart("dashboard_amchart_2", {
-                                        type: "serial",
-                                        fontSize: 12,
-                                        fontFamily: "Open Sans",
-                                        dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                        dataProvider: e,
-                                        addClassNames: !0,
-                                        startDuration: 1,
-                                        color: "#6c7b88",
-                                        marginLeft: 0,
-                                        categoryField: "category",
-                                        categoryAxis: {
-                                            equalSpacing: false,
-                                            labelRotation: 40,
-                                            autoGridCount: !1,
-                                            gridCount: 50,
-                                            gridAlpha: .1,
-                                            gridColor: "#FFFFFF",
-                                            axisColor: "#555555",
-                                        },
-                                        valueAxes: [{
-                                            id: "a1",
-                                            title: "Rain Intensity By Each Rain Gauge",
-                                            gridAlpha: 0,
-                                            axisAlpha: 0
-                                        },],
-                                        graphs: [{
-                                            id: "g1",
-                                            valueField: "ponding",
-                                            title: "Rain Intensity",
-                                            type: "column",
-                                            "topRadius": 1,
-                                            fillAlphas: .7,
-                                            valueAxis: "a1",
-                                            balloonText: "[[value]] mm",
-                                            legendValueText: "[[category]] : [[value]] mm Rain",
-                                            legendPeriodValueText: "Average: [[value.average]] mm",
-                                            lineColor: "collr",
-                                            alphaField: "alpha",
-                                            colorField: "collr",
-                                            fillColors: "collr"
-                                        }
-                                        ],
-                                        "depth3D": 40,
-                                        "angle": 30,
-                                        "chartCursor": {
-                                            "categoryBalloonEnabled": false,
-                                            "cursorAlpha": 0,
-                                            "zoomable": false
-                                        },
-                                        chartCursor: {
-                                            zoomable: !1,
-                                            categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                            cursorAlpha: 0,
-                                            categoryBalloonColor: "#e26a6a",
-                                            categoryBalloonAlpha: .8,
-                                            valueBalloonsEnabled: !1
-                                        },
-                                        legend: {
-                                            bulletType: "round",
-                                            equalWidths: !1,
-                                            valueWidth: 120,
-                                            useGraphSettings: !0,
-                                            color: "#6c7b88"
-                                        }
-                                    })
+                                    }
+                                    var eObj = {
+                                        category: obj.category,
+                                        ponding: thePonding,
+                                        townName: obj.townName,
+                                        townName2: obj.townName2,
+                                        collr: colr
+                                    };
+                                    eArray.push(eObj);
+                                    pondingArr.push(obj.ponding);
                                 });
+                                var e = eArray;
+                                AmCharts.makeChart("dashboard_amchart_1", {
+                                    type: "serial",
+                                    fontSize: 12,
+                                    fontFamily: "Open Sans",
+                                    dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
+                                    dataProvider: e,
+                                    addClassNames: !0,
+                                    startDuration: 1,
+                                    color: "#6c7b88",
+                                    marginLeft: 0,
+                                    categoryField: "category",
+                                    categoryAxis: {
+                                        equalSpacing: false,
+                                        labelRotation: 60,
+                                        autoGridCount: !1,
+                                        gridCount: 50,
+                                        gridAlpha: .1,
+                                        gridColor: "#FFFFFF",
+                                        axisColor: "#555555",
+                                    },
+                                    valueAxes: [{
+                                        id: "a1",
+                                        title: "Water Level at Each Ponding Location",
+                                        gridAlpha: 0,
+                                        axisAlpha: 0
+                                    },],
+                                    graphs: [{
+                                        id: "g1",
+                                        valueField: "ponding",
+                                        title: "Water Level",
+                                        type: "column",
+                                        "topRadius": 1,
+                                        fillAlphas: .7,
+                                        valueAxis: "a1",
+                                        balloonText: "[[value]] inch",
+                                        //legendValueText: "[[value]] inch",
+                                        legendValueText: "[[category]] : [[value]] inch Ponding",
+                                        //legendPeriodValueText: "Average: [[value.average]] inch",
+                                        lineColor: "collr",
+                                        alphaField: "alpha",
+                                        colorField: "collr",
+                                        fillColors: "collr"
+                                    },
+                                    ],
+                                    "depth3D": 40,
+                                    "angle": 30,
+                                    "chartCursor": {
+                                        "categoryBalloonEnabled": false,
+                                        "cursorAlpha": 0,
+                                        "zoomable": false
+                                    },
+                                    chartCursor: {
+                                        zoomable: !1,
+                                        categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
+                                        cursorAlpha: 0,
+                                        categoryBalloonColor: "#e26a6a",
+                                        categoryBalloonAlpha: .8,
+                                        valueBalloonsEnabled: !1
+                                    },
+                                    legend: {
+                                        bulletType: "round",
+                                        equalWidths: !1,
+                                        valueWidth: 120,
+                                        useGraphSettings: !0,
+                                        color: "#6c7b88"
+                                    }
+                                })
+                            });
 
-                            }
-                        },
-
-						initAmChart5: function () {
-                            if ("undefined" != typeof AmCharts) {
-
-
-                                var disposalChartData;
-                                var eArray = [];
-                                var pondingArr = [];
-                                $.getJSON('/StorageTank/LoadStorageChartData/', function (data) {
-                                    //console.log(data);
-                                    var parsedObj = $.parseJSON(data);
-                                    //console.log(data);
-                                    $.each(parsedObj, function (key, obj) {
-                                        var colr = "#00ff00";
-
-                                        var eObj = {
-                                            category: obj.category,
-                                            pName: 'Tank Level',
-                                            ponding: obj.ponding,
-                                            collr: colr
-                                        };
-                                        eArray.push(eObj);
-                                        pondingArr.push(obj.ponding);
-                                    });
-                                    var e = eArray;
-                                    AmCharts.makeChart("dashboard_amchart_5", {
-                                        type: "serial",
-                                        fontSize: 12,
-                                        fontFamily: "Open Sans",
-                                        dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                        dataProvider: e,
-                                        addClassNames: !0,
-                                        startDuration: 1,
-                                        color: "#6c7b88",
-                                        marginLeft: 0,
-                                        categoryField: "category",
-                                        categoryAxis: {
-                                            equalSpacing: false,
-                                            labelRotation: 60,
-                                            autoGridCount: !1,
-                                            gridCount: 50,
-                                            gridAlpha: .1,
-                                            gridColor: "#FFFFFF",
-                                            axisColor: "#555555",
-                                        },
-                                        valueAxes: [{
-                                            id: "a1",
-                                            title: "Storage Tanks Well Level",
-                                            gridAlpha: 0,
-                                            axisAlpha: 0
-                                        },],
-                                        graphs: [{
-                                            id: "g1",
-                                            valueField: "ponding",
-                                            //title: "Value",
-                                            type: "column",
-                                            "topRadius": 1,
-                                            fillAlphas: .7,
-                                            valueAxis: "a1",
-                                            balloonText: "[[value]] ft",
-                                            //legendValueText: "[[value]] inch",
-                                            legendValueText: "Tank Level ",
-                                            //legendPeriodValueText: "Average: [[value.average]] inch",
-                                            lineColor: "collr",
-                                            alphaField: "alpha",
-                                            colorField: "collr",
-                                            fillColors: "collr"
-                                        },
-                                        ],
-                                        "depth3D": 40,
-                                        "angle": 30,
-                                        "chartCursor": {
-                                            "categoryBalloonEnabled": false,
-                                            "cursorAlpha": 0,
-                                            "zoomable": false
-                                        },
-                                        chartCursor: {
-                                            zoomable: !1,
-                                            categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
-                                            cursorAlpha: 0,
-                                            categoryBalloonColor: "#e26a6a",
-                                            categoryBalloonAlpha: .8,
-                                            valueBalloonsEnabled: !1
-                                        }
-                                    })
-                                });
-
-                            }
-                        },
-
-
-
-                        init: function () {
-
-                            this.initAmChart1();
-                            this.initAmChart2();
-							this.initAmChart5();
                         }
-                    };
+                    },
 
-                }();
+                    initAmChart2: function () {
+                        if ("undefined" != typeof AmCharts) {
 
-                if (App.isAngularJsApp() === false) {
-                    jQuery(document).ready(function () {
-                        Dashboard.init(); // init metronic core componets
-                    });
-                }
-            });
+
+                            var disposalChartData;
+                            var eArray = [];
+                            var pondingArr = [];
+                            $.getJSON('/Rain/LoadRainChartData/', function (data) {
+                                var parsedObj = $.parseJSON(data);
+                                //alert(data);
+                                $.each(parsedObj, function (key, obj) {
+                                    var colr = "";
+                                    if (obj.ponding < 3) {
+                                        colr = "#08a3cc";
+                                    }
+                                    else {
+                                        colr = "#ff0000";
+                                    }
+                                    var eObj = {
+                                        category: obj.category,
+                                        ponding: obj.ponding,
+                                        townName: obj.townName,
+                                        townName2: obj.townName2,
+                                        collr: colr
+                                    };
+                                    eArray.push(eObj);
+                                    pondingArr.push(obj.ponding);
+                                });
+                                var e = eArray;
+                                AmCharts.makeChart("dashboard_amchart_2", {
+                                    type: "serial",
+                                    fontSize: 12,
+                                    fontFamily: "Open Sans",
+                                    dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
+                                    dataProvider: e,
+                                    addClassNames: !0,
+                                    startDuration: 1,
+                                    color: "#6c7b88",
+                                    marginLeft: 0,
+                                    categoryField: "category",
+                                    categoryAxis: {
+                                        equalSpacing: false,
+                                        labelRotation: 40,
+                                        autoGridCount: !1,
+                                        gridCount: 50,
+                                        gridAlpha: .1,
+                                        gridColor: "#FFFFFF",
+                                        axisColor: "#555555",
+                                    },
+                                    valueAxes: [{
+                                        id: "a1",
+                                        title: "Rain Intensity By Each Rain Gauge",
+                                        gridAlpha: 0,
+                                        axisAlpha: 0
+                                    },],
+                                    graphs: [{
+                                        id: "g1",
+                                        valueField: "ponding",
+                                        title: "Rain Intensity",
+                                        type: "column",
+                                        "topRadius": 1,
+                                        fillAlphas: .7,
+                                        valueAxis: "a1",
+                                        balloonText: "[[value]] mm",
+                                        legendValueText: "[[category]] : [[value]] mm Rain",
+                                        legendPeriodValueText: "Average: [[value.average]] mm",
+                                        lineColor: "collr",
+                                        alphaField: "alpha",
+                                        colorField: "collr",
+                                        fillColors: "collr"
+                                    }
+                                    ],
+                                    "depth3D": 40,
+                                    "angle": 30,
+                                    "chartCursor": {
+                                        "categoryBalloonEnabled": false,
+                                        "cursorAlpha": 0,
+                                        "zoomable": false
+                                    },
+                                    chartCursor: {
+                                        zoomable: !1,
+                                        categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
+                                        cursorAlpha: 0,
+                                        categoryBalloonColor: "#e26a6a",
+                                        categoryBalloonAlpha: .8,
+                                        valueBalloonsEnabled: !1
+                                    },
+                                    legend: {
+                                        bulletType: "round",
+                                        equalWidths: !1,
+                                        valueWidth: 120,
+                                        useGraphSettings: !0,
+                                        color: "#6c7b88"
+                                    }
+                                })
+                            });
+
+                        }
+                    },
+
+                    initAmChart5: function () {
+                        if ("undefined" != typeof AmCharts) {
+
+
+                            var disposalChartData;
+                            var eArray = [];
+                            var pondingArr = [];
+                            $.getJSON('/StorageTank/LoadStorageChartData/', function (data) {
+                                //console.log(data);
+                                var parsedObj = $.parseJSON(data);
+                                //console.log(data);
+                                $.each(parsedObj, function (key, obj) {
+                                    var colr = "#00ff00";
+
+                                    var eObj = {
+                                        category: obj.category,
+                                        pName: 'Tank Level',
+                                        ponding: obj.ponding,
+                                        collr: colr
+                                    };
+                                    eArray.push(eObj);
+                                    pondingArr.push(obj.ponding);
+                                });
+                                var e = eArray;
+                                AmCharts.makeChart("dashboard_amchart_5", {
+                                    type: "serial",
+                                    fontSize: 12,
+                                    fontFamily: "Open Sans",
+                                    dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
+                                    dataProvider: e,
+                                    addClassNames: !0,
+                                    startDuration: 1,
+                                    color: "#6c7b88",
+                                    marginLeft: 0,
+                                    categoryField: "category",
+                                    categoryAxis: {
+                                        equalSpacing: false,
+                                        labelRotation: 60,
+                                        autoGridCount: !1,
+                                        gridCount: 50,
+                                        gridAlpha: .1,
+                                        gridColor: "#FFFFFF",
+                                        axisColor: "#555555",
+                                    },
+                                    valueAxes: [{
+                                        id: "a1",
+                                        title: "Storage Tanks Well Level",
+                                        gridAlpha: 0,
+                                        axisAlpha: 0
+                                    },],
+                                    graphs: [{
+                                        id: "g1",
+                                        valueField: "ponding",
+                                        //title: "Value",
+                                        type: "column",
+                                        "topRadius": 1,
+                                        fillAlphas: .7,
+                                        valueAxis: "a1",
+                                        balloonText: "[[value]] ft",
+                                        //legendValueText: "[[value]] inch",
+                                        legendValueText: "Tank Level ",
+                                        //legendPeriodValueText: "Average: [[value.average]] inch",
+                                        lineColor: "collr",
+                                        alphaField: "alpha",
+                                        colorField: "collr",
+                                        fillColors: "collr"
+                                    },
+                                    ],
+                                    "depth3D": 40,
+                                    "angle": 30,
+                                    "chartCursor": {
+                                        "categoryBalloonEnabled": false,
+                                        "cursorAlpha": 0,
+                                        "zoomable": false
+                                    },
+                                    chartCursor: {
+                                        zoomable: !1,
+                                        categoryBalloonDateFormat: "YYYY-MM-DD JJ:NN:SS",
+                                        cursorAlpha: 0,
+                                        categoryBalloonColor: "#e26a6a",
+                                        categoryBalloonAlpha: .8,
+                                        valueBalloonsEnabled: !1
+                                    }
+                                })
+                            });
+
+                        }
+                    },
+
+
+
+                    init: function () {
+
+                        this.initAmChart1();
+                        this.initAmChart2();
+                        this.initAmChart5();
+                    }
+                };
+
+            }();
+
+            if (App.isAngularJsApp() === false) {
+                jQuery(document).ready(function () {
+                    Dashboard.init(); // init metronic core componets
+                });
+            }
+        });
 
     </script>
 
 
     <!--  END OF SIGNALR SCRIPTS  -->
     <script>
-            $(document).ready(function () {
-                $('#clickmewow').click(function () {
-                    $('#radio1003').attr('checked', 'checked');
-                });
-            })
+        $(document).ready(function () {
+            $('#clickmewow').click(function () {
+                $('#radio1003').attr('checked', 'checked');
+            });
+        })
     </script>
 
 
